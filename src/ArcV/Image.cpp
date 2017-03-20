@@ -1,10 +1,5 @@
 #include "Image.hpp"
 
-template <Type T>
-Image<T>::Image(const std::string& fileName) {
-  read(fileName);
-}
-
 bool validate(std::istream& file) {
   png_byte header[PNG_HEADER_SIZE];
 
@@ -51,7 +46,74 @@ void Image<PNG>::read(const std::string& fileName) {
   }
 
   png_set_read_fn(pngReadStruct, static_cast<png_voidp>(&file), readPng);
-  //TODO: load image
+
+  // Setting the amount signature bytes we've already read
+  png_set_sig_bytes(pngReadStruct, PNG_HEADER_SIZE);
+
+  // Calling png_read_info with our pngReadStruct as image handle, and pngInfoStruct to receive file infos
+  png_read_info(pngReadStruct, pngInfoStruct);
+
+  // Getting image's width & height
+  png_uint_32 imgWidth = png_get_image_width(pngReadStruct, pngInfoStruct);
+  png_uint_32 imgHeight = png_get_image_height(pngReadStruct, pngInfoStruct);
+
+  // Getting bits per channel (not per pixel)
+  png_uint_32 bitDepth = png_get_bit_depth(pngReadStruct, pngInfoStruct);
+  // Getting number of channels
+  png_uint_32 channels = png_get_channels(pngReadStruct, pngInfoStruct);
+  // Getting color type (RGB, RGBA, luminance, alpha, palette, etc)
+  png_uint_32 colorType = png_get_color_type(pngReadStruct, pngInfoStruct);
+
+  // Refining color type (if colored or grayscale)
+  switch (colorType) {
+    case PNG_COLOR_TYPE_PALETTE:
+      png_set_palette_to_rgb(pngReadStruct);
+
+      // If RBG image, setting channels to 3
+      channels = 3;
+      break;
+
+    case PNG_COLOR_TYPE_GRAY:
+      if (bitDepth < 8)
+        png_set_expand_gray_1_2_4_to_8(pngReadStruct);
+
+      // Updating bitdepth info
+      bitDepth = 8;
+      break;
+
+    default:
+      break;
+  }
+
+  // Adding full alpha channel to the image if it possesses transparency
+  if (png_get_valid(pngReadStruct, pngInfoStruct, PNG_INFO_tRNS)) {
+    png_set_tRNS_to_alpha(pngReadStruct);
+    channels += 1;
+  }
+
+  // Defining an array to contain image's rows of pixels
+  png_bytep rowPtrs[imgHeight];
+
+  // Defining an array to contain image's pixels
+  data = new char[imgWidth * imgHeight * bitDepth * channels / 8];
+
+  const unsigned int rowLength = imgWidth * bitDepth * channels / 8;
+
+  // Adding every pixel into previously allocated rows
+  for (unsigned int i = 0; i < imgHeight; i++) {
+    //Set the pointer to the data pointer + i times the row stride.
+    //Notice that the row order is reversed with q.
+    //This is how at least OpenGL expects it,
+    //and how many other image loaders present the data.
+    rowPtrs[i] = (png_bytep)data + ((imgHeight - i - 1) * rowLength);
+  }
+
+  //And here it is! The actuall reading of the image!
+  //Read the imagedata and write it to the adresses pointed to
+  //by rowptrs (in other words: our image databuffer)
+  png_read_image(pngReadStruct, rowPtrs);
+
+  png_destroy_read_struct(&pngReadStruct, static_cast<png_infopp>(0), static_cast<png_infopp>(0));
 }
 
 template <>

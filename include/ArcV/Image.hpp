@@ -15,12 +15,26 @@ enum Type { JPEG = 0, PNG };
 template <Type T>
 class Image {
 public:
-
-  Image<T>() {}
-  Image<T>(const std::string& fileName);
+  Image() {}
+  Image(const std::string& fileName);
 
   void read(const std::string& fileName);
   void write(const std::string& fileName);
+
+  ~Image();
+
+private:
+  char* data;
 };
+
+template <Type T>
+Image<T>::Image(const std::string& fileName) {
+  read(fileName);
+}
+
+template <Type T>
+Image<T>::~Image() {
+  delete[] data;
+}
 
 #endif

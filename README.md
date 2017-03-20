@@ -17,7 +17,7 @@ This library is made for Linux, though it is planned to make it available on Win
 
 | Objectives | Implemented |
 | :---------: | :---------: |
-| Loading (reading) an image | No |
+| Loading (reading) an image | ~ |
 | Saving (writing) an image | No |
 | Getting stream from webcam | No |
 | Operations on image matrices (change color model, set a RoI, etc) | No |
