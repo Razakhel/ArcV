@@ -7,18 +7,20 @@
 #include <fstream>
 #include <iostream>
 #include <png.h>
+#include <zlib.h>
 
 const unsigned int PNG_HEADER_SIZE = 8;
+enum Type { JPEG = 0, PNG };
 
+template <Type T>
 class Image {
 public:
-  enum Type { JPEG = 0, PNG };
 
-  Image() {}
-  Image(const std::string& fileName);
+  Image<T>() {}
+  Image<T>(const std::string& fileName);
 
   void read(const std::string& fileName);
-  void write(const std::string& fileName, Image::Type type) const;
+  void write(const std::string& fileName);
 };
 
 #endif

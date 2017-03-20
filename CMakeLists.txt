@@ -10,4 +10,6 @@ set(SOURCE_FILES src/ArcV/Image.cpp)
 #add_library(ArcV SHARED ${SOURCE_FILES})
 add_executable(ArcV ${SOURCE_FILES} main.cpp)
 
-target_link_libraries(ArcV ${LIBS} png16 jpeg)
+target_link_libraries(ArcV ${LIBS}
+						png16
+						jpeg)
