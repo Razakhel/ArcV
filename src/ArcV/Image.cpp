@@ -69,7 +69,7 @@ void Image<PNG>::read(const std::string& fileName) {
     case PNG_COLOR_TYPE_PALETTE:
       png_set_palette_to_rgb(pngReadStruct);
 
-      // If RBG image, setting channels to 3
+      // If RBG image, setting channel number to 3
       channels = 3;
       break;
 
@@ -95,22 +95,17 @@ void Image<PNG>::read(const std::string& fileName) {
   png_bytep rowPtrs[imgHeight];
 
   // Defining an array to contain image's pixels
-  data = new char[imgWidth * imgHeight * bitDepth * channels / 8];
+  data = std::make_unique<char[]>(imgWidth * imgHeight * bitDepth * channels / 8);
 
   const unsigned int rowLength = imgWidth * bitDepth * channels / 8;
 
   // Adding every pixel into previously allocated rows
-  for (unsigned int i = 0; i < imgHeight; i++) {
-    //Set the pointer to the data pointer + i times the row stride.
-    //Notice that the row order is reversed with q.
-    //This is how at least OpenGL expects it,
-    //and how many other image loaders present the data.
-    rowPtrs[i] = (png_bytep)data + ((imgHeight - i - 1) * rowLength);
+  for (unsigned int i = 0; i < imgHeight; ++i) {
+    // Preparing the rows to handle image's data
+    rowPtrs[i] = (png_bytep)&data + ((imgHeight - i - 1) * rowLength);
   }
 
-  //And here it is! The actuall reading of the image!
-  //Read the imagedata and write it to the adresses pointed to
-  //by rowptrs (in other words: our image databuffer)
+  // Recovering image data
   png_read_image(pngReadStruct, rowPtrs);
 
   png_destroy_read_struct(&pngReadStruct, static_cast<png_infopp>(0), static_cast<png_infopp>(0));

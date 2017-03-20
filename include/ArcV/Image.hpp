@@ -4,15 +4,16 @@
 #define ARCV_IMAGE_HPP
 
 #include <string>
+#include <memory>
 #include <fstream>
 #include <iostream>
 #include <png.h>
 #include <zlib.h>
 
 const unsigned int PNG_HEADER_SIZE = 8;
-enum Type { JPEG = 0, PNG };
+enum ImageType { JPEG = 0, PNG };
 
-template <Type T>
+template <ImageType T>
 class Image {
 public:
   Image() {}
@@ -21,20 +22,17 @@ public:
   void read(const std::string& fileName);
   void write(const std::string& fileName);
 
-  ~Image();
+  friend std::ostream& operator<<(std::ostream& os, Vec3& vec) {
+    return (os << "[ " << vec.x << ", " << vec.y << ", " << vec.z << " ]");
+  }
 
 private:
-  char* data;
+  std::unique_ptr<char[]> data;
 };
 
-template <Type T>
+template <ImageType T>
 Image<T>::Image(const std::string& fileName) {
   read(fileName);
 }
 
-template <Type T>
-Image<T>::~Image() {
-  delete[] data;
-}
-
-#endif
+#endif // ARCV_IMAGE_HPP

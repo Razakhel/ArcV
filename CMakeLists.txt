@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 #set(CMAKE_BUILD_TYPE Debug)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/ArcV)
-set(SOURCE_FILES src/ArcV/Image.cpp)
+set(SOURCE_FILES src/ArcV/Image.cpp src/ArcV/Mat.cpp src/ArcV/Vec.cpp)
 
 #add_library(ArcV SHARED ${SOURCE_FILES})
 add_executable(ArcV ${SOURCE_FILES} main.cpp)
