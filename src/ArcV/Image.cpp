@@ -8,7 +8,7 @@ bool validatePng(std::istream& file) {
   png_byte header[PNG_HEADER_SIZE];
 
   // Reading the 8 bytes of the header from the stream
-  file.read((char*)header, PNG_HEADER_SIZE);
+  file.read(reinterpret_cast<char*>(header), PNG_HEADER_SIZE);
 
   if (!file.good())
     return false;
@@ -21,7 +21,7 @@ void readPng(png_structp pngPtr, png_bytep data, png_size_t length) {
   // Getting IO pointer from read struct
   png_voidp ioPtr = png_get_io_ptr(pngPtr);
   // Casting pointer to std::istream* and reading <length> bytes into <data>
-  static_cast<std::istream*>(ioPtr)->read((char*)data, length);
+  static_cast<std::istream*>(ioPtr)->read(reinterpret_cast<char*>(data), length);
 }
 
 } // namespace
@@ -101,7 +101,7 @@ void Image<PNG>::read(const std::string& fileName) {
   }
 
   // Defining an array to contain image's rows of pixels
-  png_bytep rowPtrs[imgHeight];
+  std::vector<png_bytep> rowPtrs(imgHeight);
 
   // Defining an array to contain image's pixels
   data = std::make_unique<char[]>(imgWidth * imgHeight * bitDepth * channels / 8);
@@ -111,11 +111,11 @@ void Image<PNG>::read(const std::string& fileName) {
   // Adding every pixel into previously allocated rows
   for (unsigned int i = 0; i < imgHeight; ++i) {
     // Preparing the rows to handle image's data
-    rowPtrs[i] = (png_bytep)&data + ((imgHeight - i - 1) * rowLength);
+    rowPtrs[i] = reinterpret_cast<png_bytep>(data.get()) + ((imgHeight - i - 1) * rowLength);
   }
 
   // Recovering image data
-  png_read_image(pngReadStruct, rowPtrs);
+  png_read_image(pngReadStruct, rowPtrs.data());
 
   png_destroy_read_struct(&pngReadStruct, static_cast<png_infopp>(0), static_cast<png_infopp>(0));
 }
