@@ -1,6 +1,7 @@
 #include "Vec.hpp"
 #include "Mat.hpp"
 #include "Image.hpp"
+#include "Window.hpp"
 
 int main(int argc, char* argv[]) {
   Arcv::Vec3f vec1{ 3.f, 5.f, 8.f };
@@ -8,6 +9,9 @@ int main(int argc, char* argv[]) {
 
   Arcv::Image<Arcv::PNG> img;
   img.read("test3.png");
+
+  Arcv::Window window(150, 150);
+  window.show();
 
   return 0;
 }
