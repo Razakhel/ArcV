@@ -111,7 +111,7 @@ void Image<PNG>::read(const std::string& fileName) {
   // Adding every pixel into previously allocated rows
   for (unsigned int i = 0; i < imgHeight; ++i) {
     // Preparing the rows to handle image's data
-    rowPtrs[i] = reinterpret_cast<png_bytep>(data.get()) + ((imgHeight - i - 1) * rowLength);
+    rowPtrs[i] = reinterpret_cast<png_bytep>(data[(imgHeight - i - 1) * rowLength]);
   }
 
   // Recovering image data
