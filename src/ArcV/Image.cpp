@@ -1,6 +1,10 @@
 #include "Image.hpp"
 
-bool validate(std::istream& file) {
+namespace Arcv {
+
+namespace {
+
+bool validatePng(std::istream& file) {
   png_byte header[PNG_HEADER_SIZE];
 
   // Reading the 8 bytes of the header from the stream
@@ -20,11 +24,16 @@ void readPng(png_structp pngPtr, png_bytep data, png_size_t length) {
   static_cast<std::istream*>(ioPtr)->read((char*)data, length);
 }
 
+} // namespace
+
+template <>
+void Image<JPEG>::read(const std::string& fileName) {}
+
 template <>
 void Image<PNG>::read(const std::string& fileName) {
   std::ifstream file(fileName);
 
-  if (!validate(file)) {
+  if (!validatePng(file)) {
     std::cerr << "Error: " << fileName << " is not a valid PNG." << std::endl;
     return;
   }
@@ -97,7 +106,7 @@ void Image<PNG>::read(const std::string& fileName) {
   // Defining an array to contain image's pixels
   data = std::make_unique<char[]>(imgWidth * imgHeight * bitDepth * channels / 8);
 
-  const unsigned int rowLength = imgWidth * bitDepth * channels / 8;
+  const unsigned long int rowLength = imgWidth * bitDepth * channels / 8;
 
   // Adding every pixel into previously allocated rows
   for (unsigned int i = 0; i < imgHeight; ++i) {
@@ -116,3 +125,5 @@ void Image<JPEG>::write(const std::string& fileName) {}
 
 template <>
 void Image<PNG>::write(const std::string& fileName) {}
+
+} // namespace Arcv

@@ -3,11 +3,13 @@
 #ifndef ARCV_VEC_HPP
 #define ARCV_VEC_HPP
 
+namespace Arcv {
+
 template <typename T, unsigned int Size>
 class Vec {
 public:
-  Vec() : x{ T{0} }, y{ T{0} }, z{ T{0} } {}
-  Vec(const T& x, const T& y, const T& z) : x{x}, y{y}, z{z} {}
+  Vec() : x{ T{ 0 } }, y{ T{ 0 } }, z{ T{ 0 } } {}
+  Vec(const T& x, const T& y, const T& z) : x{ x }, y{ y }, z{ z } {}
   Vec(const Vec& vec) {}
 
   T dot(const Vec& vec) { return x * vec.x + y * vec.y + z * vec.z; }
@@ -26,5 +28,7 @@ using Vec3 = Vec<T, 3>;
 using Vec3i = Vec3<int>;
 using Vec3u = Vec3<unsigned int>;
 using Vec3f = Vec3<float>;
+
+} // namespace Arcv
 
 #endif // ARCV_VEC_HPP

@@ -10,29 +10,34 @@
 #include <png.h>
 #include <zlib.h>
 
+namespace Arcv {
+
 const unsigned int PNG_HEADER_SIZE = 8;
 enum ImageType { JPEG = 0, PNG };
 
 template <ImageType T>
 class Image {
-public:
+ public:
   Image() {}
-  Image(const std::string& fileName);
 
-  void read(const std::string& fileName);
-  void write(const std::string& fileName);
+  Image(const std::string &fileName);
 
-  friend std::ostream& operator<<(std::ostream& os, Vec3& vec) {
+  void read(const std::string &fileName);
+  void write(const std::string &fileName);
+
+  /*friend std::ostream& operator<<(std::ostream &os, Vec3 &vec) {
     return (os << "[ " << vec.x << ", " << vec.y << ", " << vec.z << " ]");
-  }
+  }*/
 
-private:
+ private:
   std::unique_ptr<char[]> data;
 };
 
 template <ImageType T>
-Image<T>::Image(const std::string& fileName) {
+Image<T>::Image(const std::string &fileName) {
   read(fileName);
 }
+
+} // namespace Arcv
 
 #endif // ARCV_IMAGE_HPP
