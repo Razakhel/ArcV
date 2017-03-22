@@ -17,8 +17,12 @@ public:
   void create(const uint16_t width, const uint16_t height);
   void show();
 
+  ~Window();
+
 private:
   xcb_connection_t* connection;
+  xcb_gcontext_t graphicsContext;
+  xcb_drawable_t windowId;
 };
 
 } // namespace Arcv
