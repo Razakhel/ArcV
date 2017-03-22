@@ -2,9 +2,12 @@
 
 namespace Arcv {
 
-Window::Window(const uint16_t width, const uint16_t height) {
-  connection = xcb_connect(nullptr, nullptr);
+Window::Window(const char* display, int* screen) {
+  connection = xcb_connect(display, screen);
+  assert(("Error: Could not create screen connection (wrong display and/or screen ID).", !xcb_connection_has_error(connection)));
+}
 
+void Window::create(const uint16_t width, const uint16_t height) {
   xcb_screen_t* screen = xcb_setup_roots_iterator(xcb_get_setup(connection)).data;
   unsigned int mask = 0;
   std::vector<unsigned int> values(2);
@@ -16,9 +19,9 @@ Window::Window(const uint16_t width, const uint16_t height) {
   xcb_create_window(connection,
                     XCB_COPY_FROM_PARENT,
                     window,                        // Window's ID
-                    screen->root,                  // Parent Window
+                    screen->root,                  // Parent window
                     0, 0,                          // Position x & y
-                    width, height,                 // Width & height
+                    width, height,
                     10,                            // Border width
                     XCB_WINDOW_CLASS_INPUT_OUTPUT,
                     screen->root_visual,
@@ -48,4 +51,4 @@ void Window::show() {
   }
 }
 
-}
+} // namespace Arcv
