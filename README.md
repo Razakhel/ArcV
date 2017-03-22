@@ -16,8 +16,10 @@ This library is made for Linux, though it is planned to make it available on Win
 `Computer Vision` implies vision by... computer. That being said, how can there be vision without a bit of image processing?
 
 | Objectives | Implemented |
-| :---------: | :---------: |
-| Loading (reading) an image | ~ |
+| :--------: | :---------: |
+| Creating windowing class (Linux/X) | In progress |
+| Implementing Matrix/Vector classes | In progress |
+| Loading (reading) an image (JPEG/PNG/...) | Pending tests (PNG) |
 | Saving (writing) an image | No |
 | Getting stream from webcam | No |
 | Operations on image matrices (change color model, set a RoI, etc) | No |
