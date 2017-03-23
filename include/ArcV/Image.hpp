@@ -23,11 +23,17 @@ public:
 
   Image(const std::string& fileName);
 
+  const uint8_t* getData() const { return data.get(); }
+  const png_uint_32 getWidth() const { return width; }
+  const png_uint_32 getHeight() const { return height; }
+  const png_uint_32 getBitDepth() const { return bitDepth; }
+
   void read(const std::string& fileName);
   void write(const std::string& fileName);
 
 private:
-  std::unique_ptr<char[]> data;
+  std::unique_ptr<uint8_t[]> data;
+  png_uint_32 width, height, bitDepth;
 };
 
 template <ImageType T>

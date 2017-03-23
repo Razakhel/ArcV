@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.6)
 project(ArcV)
 
 set(CMAKE_CXX_STANDARD 14)
-#set(CMAKE_BUILD_TYPE Debug)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/ArcV)
 file(

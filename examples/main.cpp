@@ -9,6 +9,7 @@ int main(int argc, char* argv[]) {
 
   Arcv::Window window;
   window.create(150, 150);
+  window.mapImage(img);
   window.show();
 
   return 0;

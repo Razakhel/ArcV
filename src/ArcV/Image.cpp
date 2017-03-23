@@ -104,7 +104,7 @@ void Image<PNG>::read(const std::string& fileName) {
   std::vector<png_bytep> rowPtrs(imgHeight);
 
   // Defining an array to contain image's pixels
-  data = std::make_unique<char[]>(imgWidth * imgHeight * bitDepth * channels / 8);
+  data = std::make_unique<uint8_t[]>(imgWidth * imgHeight * bitDepth * channels / 8);
 
   const unsigned long int rowLength = imgWidth * bitDepth * channels / 8;
 

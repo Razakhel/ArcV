@@ -13,6 +13,14 @@ void Window::create(const uint16_t width, const uint16_t height) {
   unsigned int mask;
   std::vector<unsigned int> values(2);
 
+  // Creating colormap
+  colormap = screen->default_colormap;
+  xcb_create_colormap(connection,
+                      XCB_COLORMAP_ALLOC_NONE,
+                      colormap,
+                      windowId,
+                      screen->root_visual);
+
   // Creating graphics context
   graphicsContext = xcb_generate_id(connection);
   mask = XCB_GC_FOREGROUND | XCB_GC_GRAPHICS_EXPOSURES;
@@ -44,6 +52,25 @@ void Window::create(const uint16_t width, const uint16_t height) {
   xcb_flush(connection);
 }
 
+void Window::mapImage(const Arcv::Image<PNG>& img) {
+  pixmapId = xcb_generate_id(connection);
+  xcb_create_pixmap(connection,
+                    img.getBitDepth(),
+                    pixmapId,
+                    windowId,
+                    img.getWidth(),
+                    img.getHeight());
+
+  xcb_copy_area(connection,
+                windowId,
+                windowId,
+                graphicsContext,
+                0, 0,             // Top left x & y coordinates of the region we want to copy
+                0, 0,             // Top left x & y coordinates of the region where we want to copy
+                img.getWidth(),
+                img.getHeight());
+}
+
 void Window::show() {
   bool terminate = false;
   xcb_generic_event_t* event;
@@ -59,8 +86,8 @@ void Window::show() {
         terminate = true;
         break;
 
-      /*case XCB_KEY_PRESS:
-        break;*/
+      case XCB_KEY_PRESS:
+        break;
 
       default:
         break;
@@ -70,6 +97,8 @@ void Window::show() {
 }
 
 Window::~Window() {
+  xcb_free_colormap(connection, colormap);
+  xcb_free_pixmap(connection, pixmapId);
   xcb_disconnect(connection);
 }
 
