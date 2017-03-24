@@ -18,4 +18,5 @@ target_link_libraries(
     png16
     jpeg
     xcb
+    xcb-image
 )

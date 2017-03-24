@@ -5,10 +5,10 @@
 
 int main(int argc, char* argv[]) {
   Arcv::Image<Arcv::PNG> img;
-  img.read("test3.png");
+  img.read("test.png");
 
   Arcv::Window window;
-  window.create(150, 150);
+  window.create(1000, 1000);
   window.mapImage(img);
   window.show();
 

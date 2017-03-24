@@ -7,8 +7,7 @@
 #include <cassert>
 #include <iostream>
 #include <xcb/xcb.h>
-#include <X11/Xlib.h>
-#include <X11/Xlib-xcb.h>
+#include <xcb/xcb_image.h>
 
 #include "Image.hpp"
 
@@ -25,11 +24,16 @@ public:
   ~Window();
 
 private:
+  void createWindowFrame(const uint16_t width, const uint16_t height);
+  void createGraphicsContext();
+
   xcb_connection_t* connection;
-  xcb_colormap_t colormap;
+  xcb_screen_t* screen;
   xcb_gcontext_t graphicsContext;
-  xcb_drawable_t windowId;
-  xcb_pixmap_t pixmapId;
+  xcb_window_t window;
+  xcb_pixmap_t pixmap;
+  uint8_t* imgData;
+  uint32_t imgWidth, imgHeight;
 };
 
 } // namespace Arcv

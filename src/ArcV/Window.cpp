@@ -7,68 +7,67 @@ Window::Window(const char* display, int* screen) {
   assert(("Error: Could not create screen connection (wrong display and/or screen ID).", !xcb_connection_has_error(connection)));
 }
 
-void Window::create(const uint16_t width, const uint16_t height) {
-  // Creating basic window
-  xcb_screen_t* screen = xcb_setup_roots_iterator(xcb_get_setup(connection)).data;
-  unsigned int mask;
+void Window::createWindowFrame(const uint16_t width, const uint16_t height) {
+  unsigned int mask = XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK;
   std::vector<unsigned int> values(2);
-
-  // Creating colormap
-  colormap = screen->default_colormap;
-  xcb_create_colormap(connection,
-                      XCB_COLORMAP_ALLOC_NONE,
-                      colormap,
-                      windowId,
-                      screen->root_visual);
-
-  // Creating graphics context
-  graphicsContext = xcb_generate_id(connection);
-  mask = XCB_GC_FOREGROUND | XCB_GC_GRAPHICS_EXPOSURES;
-  values[0] = screen->black_pixel;
-  values[1] = 0;
-  xcb_create_gc(connection,
-                graphicsContext,
-                screen->root,
-                mask,
-                values.data());
-
-  windowId = xcb_generate_id(connection);
-  mask = XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK;
+  window = xcb_generate_id(connection);
   values[0] = screen->white_pixel;
   values[1] = XCB_EVENT_MASK_EXPOSURE | XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_KEY_PRESS;
+
   xcb_create_window(connection,
                     XCB_COPY_FROM_PARENT,
-                    windowId,
+                    window,
                     screen->root,                  // Parent window
                     0, 0,                          // Position x & y
                     width, height,
-                    0,                            // Border width
+                    0,                             // Border width
                     XCB_WINDOW_CLASS_INPUT_OUTPUT,
                     screen->root_visual,
                     mask,
                     values.data());
+}
 
-  xcb_map_window(connection, windowId);
+void Window::createGraphicsContext() {
+  unsigned int mask = XCB_GC_FOREGROUND | XCB_GC_BACKGROUND | XCB_GC_GRAPHICS_EXPOSURES;
+  std::vector<unsigned int> values(3);
+  graphicsContext = xcb_generate_id(connection);
+  values[0] = screen->black_pixel;
+  values[1] = screen->white_pixel;
+  values[2] = 0;
+
+  xcb_create_gc(connection,
+                graphicsContext,
+                window,
+                mask,
+                values.data());
+}
+
+void Window::create(const uint16_t width, const uint16_t height) {
+  screen = xcb_setup_roots_iterator(xcb_get_setup(connection)).data;
+
+  createWindowFrame(width, height);
+  createGraphicsContext();
+
+  xcb_map_window(connection, window);
   xcb_flush(connection);
 }
 
 void Window::mapImage(const Arcv::Image<PNG>& img) {
-  pixmapId = xcb_generate_id(connection);
-  xcb_create_pixmap(connection,
-                    img.getBitDepth(),
-                    pixmapId,
-                    windowId,
-                    img.getWidth(),
-                    img.getHeight());
+  imgData = img.getData();
+  imgWidth = img.getWidth();
+  imgHeight = img.getHeight();
 
-  xcb_copy_area(connection,
-                windowId,
-                windowId,
-                graphicsContext,
-                0, 0,             // Top left x & y coordinates of the region we want to copy
-                0, 0,             // Top left x & y coordinates of the region where we want to copy
-                img.getWidth(),
-                img.getHeight());
+  pixmap = xcb_create_pixmap_from_bitmap_data(connection,
+                                              window,
+                                              imgData,
+                                              imgWidth,
+                                              imgHeight,
+                                              img.getBitDepth(),
+                                              screen->black_pixel,
+                                              screen->white_pixel,
+                                              nullptr);
+
+  xcb_flush(connection);
 }
 
 void Window::show() {
@@ -79,6 +78,14 @@ void Window::show() {
   while (!terminate && (event = xcb_wait_for_event(connection))) {
     switch (event->response_type) {
       case XCB_EXPOSE:
+        xcb_copy_area(connection,
+                      pixmap,
+                      window,
+                      graphicsContext,
+                      0, 0,             // Top left x & y coordinates of the region we want to copy
+                      0, 0,             // Top left x & y coordinates of the region where we want to copy
+                      static_cast<uint16_t>(imgWidth),
+                      static_cast<uint16_t>(imgHeight));
         xcb_flush(connection);
         break;
 
@@ -97,8 +104,7 @@ void Window::show() {
 }
 
 Window::~Window() {
-  xcb_free_colormap(connection, colormap);
-  xcb_free_pixmap(connection, pixmapId);
+  xcb_free_pixmap(connection, pixmap);
   xcb_disconnect(connection);
 }
 
