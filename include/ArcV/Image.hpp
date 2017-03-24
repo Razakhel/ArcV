@@ -7,6 +7,7 @@
 #include <memory>
 #include <vector>
 #include <fstream>
+#include <cassert>
 #include <iostream>
 #include <png.h>
 #include <zlib.h>
@@ -23,10 +24,10 @@ public:
 
   Image(const std::string& fileName);
 
-  const uint8_t* getData() const { return data.get(); }
-  const png_uint_32 getWidth() const { return width; }
-  const png_uint_32 getHeight() const { return height; }
-  const png_uint_32 getBitDepth() const { return bitDepth; }
+  uint8_t* getData() const { return data.get(); }
+  const uint32_t getWidth() const { return width; }
+  const uint32_t getHeight() const { return height; }
+  const uint32_t getBitDepth() const { return bitDepth; }
 
   void read(const std::string& fileName);
   void write(const std::string& fileName);

@@ -7,20 +7,16 @@ namespace {
 bool validatePng(std::istream& file) {
   png_byte header[PNG_HEADER_SIZE];
 
-  // Reading the 8 bytes of the header from the stream
   file.read(reinterpret_cast<char*>(header), PNG_HEADER_SIZE);
 
   if (!file.good())
     return false;
 
-  // Checking if the header's correct
   return (png_sig_cmp(header, 0, PNG_HEADER_SIZE) == 0);
 }
 
 void readPng(png_structp pngPtr, png_bytep data, png_size_t length) {
-  // Getting IO pointer from read struct
   png_voidp ioPtr = png_get_io_ptr(pngPtr);
-  // Casting pointer to std::istream* and reading <length> bytes into <data>
   static_cast<std::istream*>(ioPtr)->read(reinterpret_cast<char*>(data), length);
 }
 
@@ -33,44 +29,25 @@ template <>
 void Image<PNG>::read(const std::string& fileName) {
   std::ifstream file(fileName);
 
-  if (!validatePng(file)) {
-    std::cerr << "Error: " << fileName << " is not a valid PNG." << std::endl;
-    return;
-  }
+  assert(("Error: Not a valid PNG.", validatePng(file)));
 
-  // Creating PNG read structure and checking whether it has been created correctly
   png_structp pngReadStruct = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
-  if (!pngReadStruct) {
-    std::cerr << "Error: Couldn't initialize PNG read struct." << std::endl;
-    return;
-  }
+  assert(("Error: Couldn't initialize PNG read struct.", pngReadStruct));
 
-  // Creating PNG info structure and checking whether it has been created correctly
-  // If not, deleting read structure
   png_infop pngInfoStruct = png_create_info_struct(pngReadStruct);
-  if (!pngInfoStruct) {
-    std::cerr << "Error: Couldn't initialize PNG info struct." << std::endl;
-    png_destroy_read_struct(&pngReadStruct, static_cast<png_infopp>(0), static_cast<png_infopp>(0));
-    return;
-  }
+  assert(("Error: Couldn't initialize PNG info struct.", pngInfoStruct));
 
   png_set_read_fn(pngReadStruct, static_cast<png_voidp>(&file), readPng);
 
   // Setting the amount signature bytes we've already read
   png_set_sig_bytes(pngReadStruct, PNG_HEADER_SIZE);
 
-  // Calling png_read_info with our pngReadStruct as image handle, and pngInfoStruct to receive file infos
   png_read_info(pngReadStruct, pngInfoStruct);
 
-  // Getting image's width & height
-  png_uint_32 imgWidth = png_get_image_width(pngReadStruct, pngInfoStruct);
-  png_uint_32 imgHeight = png_get_image_height(pngReadStruct, pngInfoStruct);
-
-  // Getting bits per channel (not per pixel)
-  png_uint_32 bitDepth = png_get_bit_depth(pngReadStruct, pngInfoStruct);
-  // Getting number of channels
+  width = png_get_image_width(pngReadStruct, pngInfoStruct);
+  height = png_get_image_height(pngReadStruct, pngInfoStruct);
+  bitDepth = png_get_bit_depth(pngReadStruct, pngInfoStruct);
   png_uint_32 channels = png_get_channels(pngReadStruct, pngInfoStruct);
-  // Getting color type (RGB, RGBA, luminance, alpha, palette, etc)
   png_uint_32 colorType = png_get_color_type(pngReadStruct, pngInfoStruct);
 
   // Refining color type (if colored or grayscale)
@@ -78,7 +55,6 @@ void Image<PNG>::read(const std::string& fileName) {
     case PNG_COLOR_TYPE_PALETTE:
       png_set_palette_to_rgb(pngReadStruct);
 
-      // If RBG image, setting channel number to 3
       channels = 3;
       break;
 
@@ -86,7 +62,6 @@ void Image<PNG>::read(const std::string& fileName) {
       if (bitDepth < 8)
         png_set_expand_gray_1_2_4_to_8(pngReadStruct);
 
-      // Updating bitdepth info
       bitDepth = 8;
       break;
 
@@ -100,23 +75,19 @@ void Image<PNG>::read(const std::string& fileName) {
     channels += 1;
   }
 
-  // Defining an array to contain image's rows of pixels
-  std::vector<png_bytep> rowPtrs(imgHeight);
+  std::vector<png_bytep> rowPtrs(height);
 
   // Defining an array to contain image's pixels
-  data = std::make_unique<uint8_t[]>(imgWidth * imgHeight * bitDepth * channels / 8);
+  data = std::make_unique<uint8_t[]>(width * height * bitDepth * channels / 8);
 
-  const unsigned long int rowLength = imgWidth * bitDepth * channels / 8;
+  const unsigned long int rowLength = width * bitDepth * channels / 8;
 
-  // Adding every pixel into previously allocated rows
-  for (unsigned int i = 0; i < imgHeight; ++i) {
+  for (unsigned int i = 0; i < height; ++i) {
     // Preparing the rows to handle image's data
-    rowPtrs[i] = reinterpret_cast<png_bytep>(data[(imgHeight - i - 1) * rowLength]);
+    rowPtrs[i] = reinterpret_cast<png_bytep>(data[(height - i - 1) * rowLength]);
   }
 
-  // Recovering image data
   png_read_image(pngReadStruct, rowPtrs.data());
-
   png_destroy_read_struct(&pngReadStruct, static_cast<png_infopp>(0), static_cast<png_infopp>(0));
 }
 
