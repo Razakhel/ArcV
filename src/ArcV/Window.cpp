@@ -9,7 +9,7 @@ Window::Window(const char* display, int* screen) {
 
 void Window::createWindowFrame(const uint16_t width, const uint16_t height) {
   unsigned int mask = XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK;
-  std::vector<unsigned int> values(2);
+  std::array<unsigned int, 2> values;
   window = xcb_generate_id(connection);
   values[0] = screen->white_pixel;
   values[1] = XCB_EVENT_MASK_EXPOSURE | XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_KEY_PRESS;
@@ -29,7 +29,7 @@ void Window::createWindowFrame(const uint16_t width, const uint16_t height) {
 
 void Window::createGraphicsContext() {
   unsigned int mask = XCB_GC_FOREGROUND | XCB_GC_BACKGROUND | XCB_GC_GRAPHICS_EXPOSURES;
-  std::vector<unsigned int> values(3);
+  std::array<unsigned int, 3> values;
   graphicsContext = xcb_generate_id(connection);
   values[0] = screen->black_pixel;
   values[1] = screen->white_pixel;

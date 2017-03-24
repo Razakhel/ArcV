@@ -5,14 +5,14 @@ namespace Arcv {
 namespace {
 
 bool validatePng(std::istream& file) {
-  png_byte header[PNG_HEADER_SIZE];
+  std::array<png_byte, PNG_HEADER_SIZE> header;
 
-  file.read(reinterpret_cast<char*>(header), PNG_HEADER_SIZE);
+  file.read(reinterpret_cast<char*>(header.data()), PNG_HEADER_SIZE);
 
   if (!file.good())
     return false;
 
-  return (png_sig_cmp(header, 0, PNG_HEADER_SIZE) == 0);
+  return (png_sig_cmp(header.data(), 0, PNG_HEADER_SIZE) == 0);
 }
 
 void readPng(png_structp pngPtr, png_bytep data, png_size_t length) {
@@ -75,7 +75,7 @@ void Image<PNG>::read(const std::string& fileName) {
     channels += 1;
   }
 
-  std::vector<png_bytep> rowPtrs(height);
+  std::vector<uint8_t*> rowPtrs(height);
 
   // Defining an array to contain image's pixels
   data = std::make_unique<uint8_t[]>(width * height * bitDepth * channels / 8);
@@ -84,7 +84,7 @@ void Image<PNG>::read(const std::string& fileName) {
 
   for (unsigned int i = 0; i < height; ++i) {
     // Preparing the rows to handle image's data
-    rowPtrs[i] = reinterpret_cast<png_bytep>(data[(height - i - 1) * rowLength]);
+    rowPtrs[i] = &data.get()[(height - i - 1) * rowLength];
   }
 
   png_read_image(pngReadStruct, rowPtrs.data());
