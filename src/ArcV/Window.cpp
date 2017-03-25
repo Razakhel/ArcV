@@ -54,8 +54,8 @@ void Window::create(const uint16_t width, const uint16_t height) {
 
 void Window::mapImage(const Arcv::Image<PNG>& img) {
   imgData = img.getData();
-  imgWidth = img.getWidth();
-  imgHeight = img.getHeight();
+  uint32_t imgWidth = img.getWidth();
+  uint32_t imgHeight = img.getHeight();
 
   pixmap = xcb_create_pixmap_from_bitmap_data(connection,
                                               window,
@@ -77,17 +77,19 @@ void Window::show() {
   // Events handling loop
   while (!terminate && (event = xcb_wait_for_event(connection))) {
     switch (event->response_type) {
-      case XCB_EXPOSE:
+      case XCB_EXPOSE: {
+        xcb_expose_event_t* exposeEvent = reinterpret_cast<xcb_expose_event_t*>(event);
         xcb_copy_area(connection,
                       pixmap,
                       window,
                       graphicsContext,
-                      0, 0,             // Top left x & y coordinates of the region we want to copy
-                      0, 0,             // Top left x & y coordinates of the region where we want to copy
-                      static_cast<uint16_t>(imgWidth),
-                      static_cast<uint16_t>(imgHeight));
+                      exposeEvent->x, exposeEvent->y,             // Top left x & y coordinates of the source's region to copy
+                      exposeEvent->x, exposeEvent->y,             // Top left x & y coordinates of the destination's region to copy to
+                      exposeEvent->width,
+                      exposeEvent->height);
         xcb_flush(connection);
         break;
+      }
 
       case XCB_BUTTON_PRESS:
         terminate = true;

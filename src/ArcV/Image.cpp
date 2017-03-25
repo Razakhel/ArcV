@@ -69,25 +69,28 @@ void Image<PNG>::read(const std::string& fileName) {
       break;
   }
 
+  png_set_scale_16(pngReadStruct);
+
   // Adding full alpha channel to the image if it possesses transparency
   if (png_get_valid(pngReadStruct, pngInfoStruct, PNG_INFO_tRNS)) {
     png_set_tRNS_to_alpha(pngReadStruct);
     channels += 1;
   }
 
-  std::vector<uint8_t*> rowPtrs(height);
+  png_read_update_info(pngReadStruct, pngInfoStruct);
+
+  std::vector<png_bytep> rowPtrs(height * sizeof(png_bytepp));
 
   // Defining an array to contain image's pixels
-  data = std::make_unique<uint8_t[]>(width * height * bitDepth * channels / 8);
+  data = std::make_unique<uint8_t[]>(width * height * channels);
 
-  const unsigned long int rowLength = width * bitDepth * channels / 8;
-
-  for (unsigned int i = 0; i < height; ++i) {
+  for (png_uint_32 i = 0; i < height; ++i) {
     // Preparing the rows to handle image's data
-    rowPtrs[i] = &data.get()[(height - i - 1) * rowLength];
+    rowPtrs[i] = &data.get()[width * channels * i];
   }
 
   png_read_image(pngReadStruct, rowPtrs.data());
+  png_read_end(pngReadStruct, pngInfoStruct);
   png_destroy_read_struct(&pngReadStruct, static_cast<png_infopp>(0), static_cast<png_infopp>(0));
 }
 
