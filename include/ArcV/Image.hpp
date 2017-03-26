@@ -34,7 +34,7 @@ public:
 
 private:
   std::unique_ptr<uint8_t[]> data;
-  png_uint_32 width, height, bitDepth;
+  png_uint_32 width, height, bitDepth, channels, colorType;
 };
 
 template <ImageType T>

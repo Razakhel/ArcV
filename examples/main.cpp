@@ -6,6 +6,7 @@
 int main(int argc, char* argv[]) {
   Arcv::Image<Arcv::PNG> img;
   img.read("test.png");
+  img.write("testOut.png");
 
   Arcv::Window window;
   window.create(1000, 1000);
