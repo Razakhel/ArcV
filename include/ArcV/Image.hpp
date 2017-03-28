@@ -21,7 +21,6 @@ template <ImageType T>
 class Image {
 public:
   Image() {}
-
   Image(const std::string& fileName);
 
   uint8_t* getData() const { return data.get(); }

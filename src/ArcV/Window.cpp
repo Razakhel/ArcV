@@ -20,7 +20,7 @@ void Window::createWindowFrame(const uint16_t width, const uint16_t height) {
                     screen->root,                  // Parent window
                     0, 0,                          // Position x & y
                     width, height,
-                    0,                             // Border width
+                    50,                            // Border width
                     XCB_WINDOW_CLASS_INPUT_OUTPUT,
                     screen->root_visual,
                     mask,
@@ -53,15 +53,11 @@ void Window::create(const uint16_t width, const uint16_t height) {
 }
 
 void Window::mapImage(const Arcv::Image<PNG>& img) {
-  imgData = img.getData();
-  uint32_t imgWidth = img.getWidth();
-  uint32_t imgHeight = img.getHeight();
-
   pixmap = xcb_create_pixmap_from_bitmap_data(connection,
                                               window,
-                                              imgData,
-                                              imgWidth,
-                                              imgHeight,
+                                              img.getData(),
+                                              img.getWidth(),
+                                              img.getHeight(),
                                               img.getBitDepth(),
                                               screen->black_pixel,
                                               screen->white_pixel,
@@ -107,6 +103,7 @@ void Window::show() {
 
 Window::~Window() {
   xcb_free_pixmap(connection, pixmap);
+  xcb_destroy_window(connection, window);
   xcb_disconnect(connection);
 }
 

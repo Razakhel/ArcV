@@ -32,8 +32,6 @@ private:
   xcb_gcontext_t graphicsContext;
   xcb_window_t window;
   xcb_pixmap_t pixmap;
-
-  uint8_t* imgData;
 };
 
 } // namespace Arcv

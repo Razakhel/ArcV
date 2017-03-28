@@ -58,14 +58,12 @@ void Image<PNG>::read(const std::string& fileName) {
   switch (colorType) {
     case PNG_COLOR_TYPE_PALETTE:
       png_set_palette_to_rgb(pngReadStruct);
-
       channels = 3;
       break;
 
     case PNG_COLOR_TYPE_GRAY:
       if (bitDepth < 8)
         png_set_expand_gray_1_2_4_to_8(pngReadStruct);
-
       bitDepth = 8;
       break;
 
@@ -83,7 +81,7 @@ void Image<PNG>::read(const std::string& fileName) {
 
   png_read_update_info(pngReadStruct, pngInfoStruct);
 
-  std::vector<png_bytep> rowPtrs(height * sizeof(png_bytepp));
+  std::vector<png_bytep> rowPtrs(height);
 
   // Defining an array to contain image's pixels
   data = std::make_unique<uint8_t[]>(width * height * channels);
