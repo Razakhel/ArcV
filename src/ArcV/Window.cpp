@@ -20,7 +20,7 @@ void Window::createWindowFrame(const uint16_t width, const uint16_t height) {
                     screen->root,                  // Parent window
                     0, 0,                          // Position x & y
                     width, height,
-                    50,                            // Border width
+                    0,                            // Border width
                     XCB_WINDOW_CLASS_INPUT_OUTPUT,
                     screen->root_visual,
                     mask,
@@ -58,7 +58,7 @@ void Window::mapImage(const Arcv::Image<PNG>& img) {
                                               img.getData(),
                                               img.getWidth(),
                                               img.getHeight(),
-                                              img.getBitDepth(),
+                                              img.getBitDepth(),    // Replace by 24 to see an ugly square full of artifacts
                                               screen->black_pixel,
                                               screen->white_pixel,
                                               nullptr);

@@ -10,10 +10,10 @@ int main(int argc, char* argv[]) {
 
   Arcv::Mat mat(3000, 3000);
 
-  /*Arcv::Window window;
+  Arcv::Window window;
   window.create(1000, 1000);
   window.mapImage(img);
-  window.show();*/
+  window.show();
 
   return 0;
 }
