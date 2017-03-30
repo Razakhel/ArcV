@@ -1,3 +1,8 @@
+#include <vector>
+#include <cassert>
+#include <iostream>
+#include <xcb/xcb_image.h>
+
 #include "Window.hpp"
 
 namespace Arcv {

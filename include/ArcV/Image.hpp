@@ -3,14 +3,7 @@
 #ifndef ARCV_IMAGE_HPP
 #define ARCV_IMAGE_HPP
 
-#include <string>
 #include <memory>
-#include <vector>
-#include <fstream>
-#include <cassert>
-#include <iostream>
-#include <png.h>
-#include <zlib.h>
 
 namespace Arcv {
 
@@ -33,7 +26,7 @@ public:
 
 private:
   std::unique_ptr<uint8_t[]> data;
-  png_uint_32 width, height, bitDepth, channels, colorType;
+  uint32_t width, height, bitDepth, channels, colorType;
 };
 
 template <ImageType T>

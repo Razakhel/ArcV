@@ -3,11 +3,7 @@
 #ifndef ARCV_WINDOW_HPP
 #define ARCV_WINDOW_HPP
 
-#include <vector>
-#include <cassert>
-#include <iostream>
 #include <xcb/xcb.h>
-#include <xcb/xcb_image.h>
 
 #include "Image.hpp"
 

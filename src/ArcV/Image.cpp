@@ -1,3 +1,11 @@
+#include <array>
+#include <vector>
+#include <cassert>
+#include <fstream>
+#include <iostream>
+
+#include "png.h"
+#include "zlib.h"
 #include "Image.hpp"
 
 namespace Arcv {
@@ -8,9 +16,6 @@ bool validatePng(std::istream& file) {
   std::array<png_byte, PNG_HEADER_SIZE> header;
 
   file.read(reinterpret_cast<char*>(header.data()), PNG_HEADER_SIZE);
-
-  if (!file.good())
-    return false;
 
   return (png_sig_cmp(header.data(), 0, PNG_HEADER_SIZE) == 0);
 }
@@ -33,7 +38,7 @@ void Image<JPEG>::read(const std::string& fileName) {}
 template <>
 void Image<PNG>::read(const std::string& fileName) {
   std::ifstream file(fileName);
-  assert(("Error: Not a valid PNG.", validatePng(file)));
+  assert(("Error: Not a valid PNG.", file.good() && validatePng(file)));
 
   png_structp pngReadStruct = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
   assert(("Error: Couldn't initialize PNG read struct.", pngReadStruct));
