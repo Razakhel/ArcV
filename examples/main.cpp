@@ -1,7 +1,4 @@
-#include "Vec.hpp"
-#include "Mat.hpp"
-#include "Image.hpp"
-#include "Window.hpp"
+#include "ArcV.hpp"
 
 int main(int argc, char* argv[]) {
   Arcv::Image<Arcv::PNG> img;
