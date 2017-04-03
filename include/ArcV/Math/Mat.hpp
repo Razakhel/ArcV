@@ -9,11 +9,11 @@
 
 namespace Arcv {
 
-enum Colorspace { GRAYSCALE = 0, RBG, RGBA, HSV };
+enum Colorspace { GRAYSCALE = 0, RGB, RGBA, HSV };
 
 class Mat {
 public:
-  Mat(const unsigned int width, const unsigned int height) : width{ width }, height{ height }, data(width * height * 3) {}
+  Mat(const unsigned int width, const unsigned int height) : width{ width }, height{ height }, data(width * height) {}
 
   const unsigned int getWidth() const { return width; }
   const unsigned int getHeight() const { return height; }
@@ -28,10 +28,10 @@ public:
   Mat& operator-(const float& val);
   Mat& operator*(Mat& mat);
   Mat& operator*(const float& val);
+  float& operator[](const unsigned int index) { return data[index]; }
 
 private:
-  unsigned int width;
-  unsigned int height;
+  unsigned int width, height;
   std::vector<float> data;
 };
 

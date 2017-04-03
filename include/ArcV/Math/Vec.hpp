@@ -20,10 +20,10 @@ public:
   Vec& operator+(const float& val);
   Vec& operator-(Vec& vec);
   Vec& operator-(const float& val);
-  Vec& operator*(Vec& vec);
-  Vec& operator*(const float& val);
-  Vec& operator*=(Vec& vec) { return *this = *this * vec; }
-  Vec& operator*=(const float& val) { return *this = *this * val; }
+  Vec& operator*(Vec& vec) { return *this *= vec; }
+  Vec& operator*(const float& val) { return *this *= val; }
+  Vec& operator*=(Vec& vec);
+  Vec& operator*=(const float& val);
   float& operator[](const unsigned int index) { return data[index]; }
 
 private:

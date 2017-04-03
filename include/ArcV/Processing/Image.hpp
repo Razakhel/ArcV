@@ -16,17 +16,17 @@ public:
   Image() {}
   Image(const std::string& fileName);
 
-  uint8_t* getData() const { return data.get(); }
   const uint32_t getWidth() const { return width; }
   const uint32_t getHeight() const { return height; }
   const uint32_t getBitDepth() const { return bitDepth; }
+  uint8_t* getData() const { return data.get(); }
 
   void read(const std::string& fileName);
   void write(const std::string& fileName);
 
 private:
-  std::unique_ptr<uint8_t[]> data;
   uint32_t width, height, bitDepth, channels, colorType;
+  std::unique_ptr<uint8_t[]> data;
 };
 
 template <ImageType T>
