@@ -10,6 +10,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include/ArcV/Processing
     ${CMAKE_CURRENT_SOURCE_DIR}/include/ArcV/Utils
 )
+
 file(
     GLOB_RECURSE
     SOURCE_FILES
