@@ -57,10 +57,10 @@ void Window::create(const uint16_t width, const uint16_t height) {
   xcb_flush(connection);
 }
 
-void Window::mapImage(const Arcv::Image<PNG>& img) {
+void Window::mapImage(Arcv::Image<PNG>& img) {
   pixmap = xcb_create_pixmap_from_bitmap_data(connection,
                                               window,
-                                              img.getData(),
+                                              img.getData().data(),
                                               img.getWidth(),
                                               img.getHeight(),
                                               img.getBitDepth(),    // Replace by 24 to see an ugly square full of artifacts

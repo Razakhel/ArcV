@@ -3,8 +3,6 @@
 #ifndef ARCV_IMAGE_HPP
 #define ARCV_IMAGE_HPP
 
-#include <memory>
-
 namespace Arcv {
 
 const unsigned int PNG_HEADER_SIZE = 8;
@@ -19,14 +17,14 @@ public:
   const uint32_t getWidth() const { return width; }
   const uint32_t getHeight() const { return height; }
   const uint32_t getBitDepth() const { return bitDepth; }
-  uint8_t* getData() const { return data.get(); }
+  std::vector<uint8_t>& getData() { return data; }
 
-  void read(const std::string& fileName);
+  std::vector<uint8_t>& read(const std::string& fileName);
   void write(const std::string& fileName);
 
 private:
   uint32_t width, height, bitDepth, channels, colorType;
-  std::unique_ptr<uint8_t[]> data;
+  std::vector<uint8_t> data;
 };
 
 template <ImageType T>

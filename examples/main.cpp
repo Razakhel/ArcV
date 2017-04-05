@@ -7,7 +7,7 @@ int main(int argc, char* argv[]) {
   img.read("test.png");
   img.write("testOut.png");
 
-  Arcv::Mat mat(3000, 3000);
+  Arcv::Mat mat(3000, 3000, 3);
 
   Arcv::Vec vec(3);
   for (unsigned int i = 0; i < vec.getData().size(); ++i)

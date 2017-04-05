@@ -13,7 +13,8 @@ enum Colorspace { GRAYSCALE = 0, RGB, RGBA, HSV };
 
 class Mat {
 public:
-  Mat(const unsigned int width, const unsigned int height) : width{ width }, height{ height }, data(width * height) {}
+  Mat(const unsigned int width, const unsigned int height, const unsigned int channels)
+    : width{ width }, height{ height }, data(width * height * channels) {}
 
   const unsigned int getWidth() const { return width; }
   const unsigned int getHeight() const { return height; }
@@ -26,8 +27,10 @@ public:
   Mat& operator+(const float& val);
   Mat& operator-(Mat& mat);
   Mat& operator-(const float& val);
-  Mat& operator*(Mat& mat);
-  Mat& operator*(const float& val);
+  Mat& operator*(Mat& mat) { return *this *= mat; }
+  Mat& operator*(const float& val) { return *this *= val; }
+  Mat& operator*=(Mat& mat);
+  Mat& operator*=(const float& val);
   float& operator[](const unsigned int index) { return data[index]; }
 
 private:

@@ -14,7 +14,7 @@ public:
   Window(const char* display = nullptr, int* screen = nullptr);
 
   void create(const uint16_t width, const uint16_t height);
-  void mapImage(const Arcv::Image<PNG>& img);
+  void mapImage(Arcv::Image<PNG>& img);
   void show();
 
   ~Window();

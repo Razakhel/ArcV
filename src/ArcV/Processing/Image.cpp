@@ -32,11 +32,11 @@ void writePng(png_structp pngWritePtr, png_bytep data, png_size_t length) {
 
 } // namespace
 
-template <>
-void Image<JPEG>::read(const std::string& fileName) {}
+/*template <>
+void Image<JPEG>::read(const std::string& fileName) {}*/
 
 template <>
-void Image<PNG>::read(const std::string& fileName) {
+std::vector<uint8_t>& Image<PNG>::read(const std::string& fileName) {
   std::ifstream file(fileName);
   assert(("Error: Not a valid PNG", file.good() && validatePng(file)));
 
@@ -89,16 +89,18 @@ void Image<PNG>::read(const std::string& fileName) {
   std::vector<png_bytep> rowPtrs(height);
 
   // Defining an array to contain image's pixels
-  data = std::make_unique<uint8_t[]>(width * height * channels);
+  data.resize(width * height * channels);
 
   // Mapping row's elements to data's
   for (png_uint_32 i = 0; i < height; ++i) {
-    rowPtrs[i] = &data.get()[width * channels * i];
+    rowPtrs[i] = &data[width * channels * i];
   }
 
   png_read_image(pngReadStruct, rowPtrs.data());
   png_read_end(pngReadStruct, pngInfoStruct);
   png_destroy_read_struct(&pngReadStruct, static_cast<const png_infopp>(0), static_cast<const png_infopp>(0));
+
+  return data;
 }
 
 template <>
@@ -158,7 +160,7 @@ void Image<PNG>::write(const std::string& fileName) {
   png_write_info(pngWriteStruct, pngInfoStruct);
 
   for (png_uint_32 i = 0; i < height; ++i) {
-    png_write_row(pngWriteStruct, &data.get()[width * channels * i]);
+    png_write_row(pngWriteStruct, &data[width * channels * i]);
   }
 
   png_write_end(pngWriteStruct, pngInfoStruct);
