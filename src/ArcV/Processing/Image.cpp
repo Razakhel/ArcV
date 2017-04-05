@@ -36,7 +36,7 @@ void writePng(png_structp pngWritePtr, png_bytep data, png_size_t length) {
 void Image<JPEG>::read(const std::string& fileName) {}*/
 
 template <>
-std::vector<uint8_t>& Image<PNG>::read(const std::string& fileName) {
+Mat Image<PNG>::read(const std::string& fileName) {
   std::ifstream file(fileName);
   assert(("Error: Not a valid PNG", file.good() && validatePng(file)));
 
@@ -53,26 +53,39 @@ std::vector<uint8_t>& Image<PNG>::read(const std::string& fileName) {
 
   png_read_info(pngReadStruct, pngInfoStruct);
 
-  width = png_get_image_width(pngReadStruct, pngInfoStruct);
-  height = png_get_image_height(pngReadStruct, pngInfoStruct);
-  bitDepth = png_get_bit_depth(pngReadStruct, pngInfoStruct);
-  channels = png_get_channels(pngReadStruct, pngInfoStruct);
-  colorType = png_get_color_type(pngReadStruct, pngInfoStruct);
+  uint32_t width = static_cast<uint32_t>(png_get_image_width(pngReadStruct, pngInfoStruct));
+  uint32_t height = static_cast<uint32_t>(png_get_image_height(pngReadStruct, pngInfoStruct));
+  uint32_t bitDepth = png_get_bit_depth(pngReadStruct, pngInfoStruct);
+  uint32_t channels = png_get_channels(pngReadStruct, pngInfoStruct);
+  uint32_t colorType = png_get_color_type(pngReadStruct, pngInfoStruct);
+  Colorspace colorspace;
 
   // Refining color type (if colored or grayscale)
   switch (colorType) {
-    case PNG_COLOR_TYPE_PALETTE:
-      png_set_palette_to_rgb(pngReadStruct);
-      channels = 3;
-      break;
-
     case PNG_COLOR_TYPE_GRAY:
       if (bitDepth < 8)
         png_set_expand_gray_1_2_4_to_8(pngReadStruct);
+      colorspace = ARCV_COLORSPACE_GRAY;
       bitDepth = 8;
       break;
 
+    case PNG_COLOR_TYPE_GRAY_ALPHA:
+      colorspace = ARCV_COLORSPACE_GRAY_ALPHA;
+      break;
+
+    case PNG_COLOR_TYPE_PALETTE:
+      png_set_palette_to_rgb(pngReadStruct);
+      colorspace = ARCV_COLORSPACE_RGB;
+      channels = 3;
+      break;
+
+    case PNG_COLOR_TYPE_RGB:
     default:
+      colorspace = ARCV_COLORSPACE_RGB;
+      break;
+
+    case PNG_COLOR_TYPE_RGB_ALPHA:
+      colorspace = ARCV_COLORSPACE_RGBA;
       break;
   }
 
@@ -86,28 +99,30 @@ std::vector<uint8_t>& Image<PNG>::read(const std::string& fileName) {
 
   png_read_update_info(pngReadStruct, pngInfoStruct);
 
+  Mat mat(width, height, channels, static_cast<unsigned short>(bitDepth), colorspace);
+
   std::vector<png_bytep> rowPtrs(height);
 
   // Defining an array to contain image's pixels
-  data.resize(width * height * channels);
+  mat.getData().resize(width * height * channels);
 
   // Mapping row's elements to data's
   for (png_uint_32 i = 0; i < height; ++i) {
-    rowPtrs[i] = &data[width * channels * i];
+    rowPtrs[i] = &mat.getData()[width * channels * i];
   }
 
   png_read_image(pngReadStruct, rowPtrs.data());
   png_read_end(pngReadStruct, pngInfoStruct);
   png_destroy_read_struct(&pngReadStruct, static_cast<const png_infopp>(0), static_cast<const png_infopp>(0));
 
-  return data;
+  return mat;
 }
 
 template <>
-void Image<JPEG>::write(const std::string& fileName) {}
+void Image<JPEG>::write(const Mat& mat, const std::string& fileName) {}
 
 template <>
-void Image<PNG>::write(const std::string& fileName) {
+void Image<PNG>::write(const Mat& mat, const std::string& fileName) {
   std::ofstream file(fileName);
 
   png_structp pngWriteStruct = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
@@ -116,30 +131,35 @@ void Image<PNG>::write(const std::string& fileName) {
   png_infop pngInfoStruct = png_create_info_struct(pngWriteStruct);
   assert(("Error: Couldn't initialize PNG info struct", pngInfoStruct));
 
-  switch (channels) {
-    case 1:
+  png_uint_32 colorType;
+  unsigned short channels = 0;
+  switch (mat.getColorspace()) {
+    case ARCV_COLORSPACE_GRAY:
       colorType = PNG_COLOR_TYPE_GRAY;
+      channels = 1;
       break;
 
-    case 2:
+    case ARCV_COLORSPACE_GRAY_ALPHA:
       colorType = PNG_COLOR_TYPE_GRAY_ALPHA;
+      channels = 2;
       break;
 
-    case 3:
-      colorType = PNG_COLOR_TYPE_RGB;
-      break;
-
-    case 4:
-      colorType = PNG_COLOR_TYPE_RGBA;
-      break;
-
+    case ARCV_COLORSPACE_RGB:
+    case ARCV_COLORSPACE_HSV:
     default:
+      colorType = PNG_COLOR_TYPE_RGB;
+      channels = 3;
+      break;
+
+    case ARCV_COLORSPACE_RGBA:
+      colorType = PNG_COLOR_TYPE_RGBA;
+      channels = 4;
       break;
   }
 
   png_set_compression_level(pngWriteStruct, 6);
 
-  if (channels * bitDepth >= 16) {
+  if (channels * mat.getImgBitDepth() >= 16) {
     png_set_compression_strategy(pngWriteStruct, Z_FILTERED);
     png_set_filter(pngWriteStruct, 0, PNG_FILTER_NONE | PNG_FILTER_SUB | PNG_FILTER_PAETH);
   } else {
@@ -148,9 +168,9 @@ void Image<PNG>::write(const std::string& fileName) {
 
   png_set_IHDR(pngWriteStruct,
                pngInfoStruct,
-               width,
-               height,
-               static_cast<uint32_t>(bitDepth),
+               mat.getWidth(),
+               mat.getHeight(),
+               static_cast<uint32_t>(mat.getImgBitDepth()),
                static_cast<uint32_t>(colorType),
                PNG_INTERLACE_NONE,
                PNG_COMPRESSION_TYPE_BASE,
@@ -159,8 +179,8 @@ void Image<PNG>::write(const std::string& fileName) {
   png_set_write_fn(pngWriteStruct, &file, writePng, nullptr);
   png_write_info(pngWriteStruct, pngInfoStruct);
 
-  for (png_uint_32 i = 0; i < height; ++i) {
-    png_write_row(pngWriteStruct, &data[width * channels * i]);
+  for (png_uint_32 i = 0; i < mat.getHeight(); ++i) {
+    png_write_row(pngWriteStruct, &mat.getData()[mat.getWidth() * channels * i]);
   }
 
   png_write_end(pngWriteStruct, pngInfoStruct);

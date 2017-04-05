@@ -8,7 +8,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include/ArcV
     ${CMAKE_CURRENT_SOURCE_DIR}/include/ArcV/Math
     ${CMAKE_CURRENT_SOURCE_DIR}/include/ArcV/Processing
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/ArcV/Utils
+    #${CMAKE_CURRENT_SOURCE_DIR}/include/ArcV/Utils
 )
 
 file(
@@ -17,7 +17,7 @@ file(
     extern/*.c
     src/ArcV/Math/*.cpp
     src/ArcV/Processing/*.cpp
-    src/ArcV/Utils/*.cpp
+    #src/ArcV/Utils/*.cpp
 )
 
 #add_library(ArcV SHARED ${SOURCE_FILES})
