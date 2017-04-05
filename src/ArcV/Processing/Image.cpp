@@ -38,13 +38,13 @@ void Image<JPEG>::read(const std::string& fileName) {}
 template <>
 void Image<PNG>::read(const std::string& fileName) {
   std::ifstream file(fileName);
-  assert(("Error: Not a valid PNG.", file.good() && validatePng(file)));
+  assert(("Error: Not a valid PNG", file.good() && validatePng(file)));
 
   png_structp pngReadStruct = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
-  assert(("Error: Couldn't initialize PNG read struct.", pngReadStruct));
+  assert(("Error: Couldn't initialize PNG read struct", pngReadStruct));
 
   png_infop pngInfoStruct = png_create_info_struct(pngReadStruct);
-  assert(("Error: Couldn't initialize PNG info struct.", pngInfoStruct));
+  assert(("Error: Couldn't initialize PNG info struct", pngInfoStruct));
 
   png_set_read_fn(pngReadStruct, &file, readPng);
 
@@ -109,10 +109,10 @@ void Image<PNG>::write(const std::string& fileName) {
   std::ofstream file(fileName);
 
   png_structp pngWriteStruct = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
-  assert(("Error: Couldn't initialize PNG write struct.", pngWriteStruct));
+  assert(("Error: Couldn't initialize PNG write struct", pngWriteStruct));
 
   png_infop pngInfoStruct = png_create_info_struct(pngWriteStruct);
-  assert(("Error: Couldn't initialize PNG info struct.", pngInfoStruct));
+  assert(("Error: Couldn't initialize PNG info struct", pngInfoStruct));
 
   switch (channels) {
     case 1:
