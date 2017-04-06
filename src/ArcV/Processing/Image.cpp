@@ -6,7 +6,7 @@
 
 #include "png.h"
 #include "zlib.h"
-#include "Image.hpp"
+#include "ArcV/Processing/Image.hpp"
 
 namespace Arcv {
 

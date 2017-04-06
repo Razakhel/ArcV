@@ -3,7 +3,7 @@
 #include <iostream>
 #include <xcb/xcb_image.h>
 
-#include "Window.hpp"
+#include "ArcV/Utils/Window.hpp"
 
 namespace Arcv {
 

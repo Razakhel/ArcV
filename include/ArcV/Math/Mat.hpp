@@ -5,7 +5,7 @@
 
 #include <vector>
 
-#include "Vec.hpp"
+#include "ArcV/Math/Vec.hpp"
 
 namespace Arcv {
 

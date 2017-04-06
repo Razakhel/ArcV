@@ -5,7 +5,7 @@
 
 #include <xcb/xcb.h>
 
-#include "Image.hpp"
+#include "ArcV/Processing/Image.hpp"
 
 namespace Arcv {
 

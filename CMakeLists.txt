@@ -5,10 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/extern/png
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/ArcV
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/ArcV/Math
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/ArcV/Processing
-    #${CMAKE_CURRENT_SOURCE_DIR}/include/ArcV/Utils
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 file(

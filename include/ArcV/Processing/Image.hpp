@@ -3,7 +3,7 @@
 #ifndef ARCV_IMAGE_HPP
 #define ARCV_IMAGE_HPP
 
-#include "Mat.hpp"
+#include "ArcV/Math/Mat.hpp"
 
 namespace Arcv {
 
