@@ -18,12 +18,13 @@ This library is made for Linux, though it is planned to make it available on Win
 | Objectives | Implemented |
 | :--------: | :---------: |
 | Creating windowing class (Linux/X) | _On standby_ |
-| Implementing Matrix/Vector classes | _In progress_ |
+| Implementing Matrix/Vector classes | **Yes** |
 | Loading (reading) an image (JPEG/PNG/...) | **Yes** (PNG) |
 | Saving (writing) an image | **Yes** (PNG) |
 | Getting stream from webcam | No |
 | Operations on image matrices (change color model, set a RoI, etc) | No |
-| Detecting basic features (lines, circles, colors...) | No |
+| Operations on colors (thresholding...) | No |
+| Detecting basic features (lines, circles...) | No |
 | Detecting advanced features (objects recognition, ORB algorithm) | No |
 
 May be decided to be added:
