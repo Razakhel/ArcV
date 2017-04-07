@@ -15,6 +15,14 @@ file(
     src/ArcV/Math/*.cpp
     src/ArcV/Processing/*.cpp
     #src/ArcV/Utils/*.cpp
+
+    include/ArcV/ArcV.hpp
+    include/ArcV/Math/*.hpp
+    include/ArcV/Math/*.inl
+    include/ArcV/Processing/*.hpp
+    include/ArcV/Processing/*.inl
+    #include/ArcV/Utils/*.hpp
+    #include/ArcV/Utils/*.inl
 )
 
 #add_library(ArcV SHARED ${SOURCE_FILES})
@@ -22,6 +30,6 @@ add_executable(ArcV ${SOURCE_FILES} examples/main.cpp)
 
 target_link_libraries(
     ArcV ${LIBS}
-    xcb
-    xcb-image
+    #xcb
+    #xcb-image
 )
