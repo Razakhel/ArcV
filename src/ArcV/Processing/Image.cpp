@@ -32,11 +32,7 @@ void writePng(png_structp pngWritePtr, png_bytep data, png_size_t length) {
 
 } // namespace
 
-/*template <>
-void Image<JPEG>::read(const std::string& fileName) {}*/
-
-template <>
-Mat Image<PNG>::read(const std::string& fileName) {
+Mat Image::read(const std::string& fileName) {
   std::ifstream file(fileName);
   assert(("Error: Not a valid PNG", file.good() && validatePng(file)));
 
@@ -118,11 +114,7 @@ Mat Image<PNG>::read(const std::string& fileName) {
   return mat;
 }
 
-template <>
-void Image<JPEG>::write(const Mat& mat, const std::string& fileName) {}
-
-template <>
-void Image<PNG>::write(const Mat& mat, const std::string& fileName) {
+void Image::write(const Mat& mat, const std::string& fileName) {
   std::ofstream file(fileName);
 
   png_structp pngWriteStruct = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
