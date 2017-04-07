@@ -7,13 +7,13 @@
 
 #include "ArcV/Math/Vec.hpp"
 
-namespace Arcv {
-
 enum Colorspace { ARCV_COLORSPACE_GRAY = 0,
                   ARCV_COLORSPACE_GRAY_ALPHA,
                   ARCV_COLORSPACE_RGB,
                   ARCV_COLORSPACE_RGBA,
                   ARCV_COLORSPACE_HSV };
+
+namespace Arcv {
 
 class Mat {
 public:
@@ -31,7 +31,6 @@ public:
   const std::vector<unsigned char>& getData() const { return data; }
   std::vector<unsigned char>& getData() { return data; }
 
-  void changeColorspace();
   Mat& convolve();
 
   Mat& operator+(Mat& mat) { return *this += mat; }
@@ -50,7 +49,7 @@ public:
   Mat& operator*=(const float& val);
   Mat& operator/=(Mat& mat);
   Mat& operator/=(const float& val);
-  unsigned char& operator[](const unsigned int index) { return data[index]; }
+  unsigned char& operator[](const unsigned int index) { return data[index]; } // Implement Pixel class to return an instance?
 
 private:
   unsigned int width, height;
