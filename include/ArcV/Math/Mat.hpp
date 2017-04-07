@@ -31,6 +31,8 @@ public:
   const std::vector<unsigned char>& getData() const { return data; }
   std::vector<unsigned char>& getData() { return data; }
 
+  void setColorspace(const Colorspace colorspace) { this->colorspace = colorspace; }
+
   Mat& convolve();
 
   Mat& operator+(Mat& mat) { return *this += mat; }
