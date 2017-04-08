@@ -56,7 +56,6 @@ Mat Image::read(const std::string& fileName) {
   uint32_t colorType = png_get_color_type(pngReadStruct, pngInfoStruct);
   Colorspace colorspace;
 
-  // Refining color type (if colored or grayscale)
   switch (colorType) {
     case PNG_COLOR_TYPE_GRAY:
       if (bitDepth < 8)

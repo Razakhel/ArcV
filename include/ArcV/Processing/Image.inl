@@ -30,15 +30,14 @@ void Image::changeColorspace(Mat& mat) {
     switch (C) {
       case ARCV_COLORSPACE_GRAY: {
         unsigned int index = 0;
-        // Avoid
+        // Avoiding alpha channel, not including it into the operation
         const uint8_t alpha = static_cast<uint8_t>(mat.getColorspace() == ARCV_COLORSPACE_GRAY_ALPHA
                                                    || mat.getColorspace() == ARCV_COLORSPACE_RGBA ? 1 : 0);
 
         for (auto it = mat.getData().begin(); it != mat.getData().end(); it += channels, ++index)
-          mat.getData()[index] = static_cast<unsigned char>(std::accumulate(it, it + channels - alpha, 0) / channels);
+          mat.getData()[index] = static_cast<unsigned char>(std::accumulate(it, it + channels - alpha, 0) / (channels - alpha));
 
         mat.getData().resize(mat.getData().size() / channels);
-        mat.setColorspace(C);
         break;
       }
 
@@ -58,6 +57,8 @@ void Image::changeColorspace(Mat& mat) {
 
         break;
     }
+
+    mat.setColorspace(C);
   }
 }
 
