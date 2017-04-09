@@ -22,7 +22,7 @@ This library is made for Linux, though it is planned to make it available on Win
 | Loading (reading) an image (JPEG/PNG/...) | **Yes** (PNG) |
 | Saving (writing) an image | **Yes** (PNG) |
 | Getting stream from webcam | No |
-| Operations on image matrices (change color model, set a RoI, etc) | No |
+| Operations on image matrices (change color model, set a RoI, etc) | _In progress_ |
 | Operations on colors (thresholding...) | No |
 | Detecting basic features (lines, circles...) | No |
 | Detecting advanced features (objects recognition, ORB algorithm) | No |
