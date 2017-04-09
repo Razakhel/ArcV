@@ -5,6 +5,15 @@ namespace Arcv {
 
 namespace {
 
+void removeAlphaChannel(Mat& mat, const uint8_t channels) {
+  for (unsigned int i = channels, delta = 1; i < mat.getData().size(); i += channels, ++delta) {
+    for (unsigned int chan = i; chan < i + channels - 1; ++chan)
+      mat.getData()[chan - delta] = mat.getData()[chan];
+  }
+
+  mat.getData().resize(mat.getData().size() * (channels - 1) / channels);
+}
+
 void convertToGrayscale(Mat& mat, const uint8_t channels) {
   unsigned int index = 0;
   // Avoiding alpha channel, not including it into the operation
@@ -80,7 +89,10 @@ void Image::changeColorspace(Mat& mat) {
 
     switch (C) {
       case ARCV_COLORSPACE_GRAY:
-        convertToGrayscale(mat, channels);
+        if (mat.getColorspace() == ARCV_COLORSPACE_GRAY_ALPHA)
+          removeAlphaChannel(mat, channels);
+        else
+          convertToGrayscale(mat, channels);
         break;
 
       case ARCV_COLORSPACE_GRAY_ALPHA:
@@ -88,7 +100,8 @@ void Image::changeColorspace(Mat& mat) {
         break;
 
       case ARCV_COLORSPACE_RGB:
-
+        if (mat.getColorspace() == ARCV_COLORSPACE_RGBA)
+          removeAlphaChannel(mat, channels);
         break;
 
       case ARCV_COLORSPACE_HSV:

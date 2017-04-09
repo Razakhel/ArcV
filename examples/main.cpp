@@ -3,10 +3,10 @@
 #include "ArcV/ArcV.hpp"
 
 int main(int argc, char* argv[]) {
-  Arcv::Mat mat = Arcv::Image::read("test.png");
+  Arcv::Mat mat = Arcv::Image::read("meteor.png");
 
-  Arcv::Image::changeColorspace<ARCV_COLORSPACE_HSV>(mat);
-  Arcv::Image::write(mat, "testOut.png");
+  Arcv::Image::changeColorspace<ARCV_COLORSPACE_RGB>(mat);
+  Arcv::Image::write(mat, "output.png");
 
   return 0;
 }
