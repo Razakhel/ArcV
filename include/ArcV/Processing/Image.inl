@@ -105,7 +105,12 @@ void Image::changeColorspace(Mat& mat) {
         break;
 
       case ARCV_COLORSPACE_HSV:
-        assert(("Error: Input matrix's colorspace should be RGB", mat.getColorspace() == ARCV_COLORSPACE_RGB));
+        assert(("Error: Input matrix's colorspace should be RGB(A)",
+                mat.getColorspace() == ARCV_COLORSPACE_RGB || mat.getColorspace() == ARCV_COLORSPACE_RGBA));
+
+        if (mat.getColorspace() == ARCV_COLORSPACE_RGBA)
+          removeAlphaChannel(mat, channels);
+
         convertToHSV(mat);
         break;
 
