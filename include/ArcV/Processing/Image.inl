@@ -21,7 +21,7 @@ void convertToGrayscale(Mat& mat, const uint8_t channels) {
                                              || mat.getColorspace() == ARCV_COLORSPACE_RGBA ? 1 : 0);
 
   for (auto it = mat.getData().begin(); it != mat.getData().end(); it += channels, ++index)
-    mat.getData()[index] = static_cast<unsigned char>(std::accumulate(it, it + channels - alpha, 0) / (channels - alpha));
+    mat.getData()[index] = static_cast<uint8_t>(std::accumulate(it, it + channels - alpha, 0) / (channels - alpha));
 
   mat.getData().resize(mat.getData().size() / channels);
 }
@@ -49,11 +49,11 @@ void convertToHSV(Mat& mat) {
       else if (maxVal == blue)
         hue = 60 * ((red - green) / (maxVal - minVal)) + 240;
 
-      mat.getData()[i] = static_cast<unsigned char>(hue / 360.f * 255);
+      mat.getData()[i] = static_cast<uint8_t>(hue / 360.f * 255);
     }
 
     // Saturation
-    mat.getData()[i + 1] = static_cast<unsigned char>(maxVal == 0 ? 0 : 1 - (minVal / maxVal));
+    mat.getData()[i + 1] = static_cast<uint8_t>(maxVal == 0 ? 0 : 1 - (minVal / maxVal));
 
     // Value
     mat.getData()[i + 2] = maxVal;
@@ -102,6 +102,8 @@ void Image::changeColorspace(Mat& mat) {
       case ARCV_COLORSPACE_RGB:
         if (mat.getColorspace() == ARCV_COLORSPACE_RGBA)
           removeAlphaChannel(mat, channels);
+
+        //convertToRGB(mat);
         break;
 
       case ARCV_COLORSPACE_HSV:

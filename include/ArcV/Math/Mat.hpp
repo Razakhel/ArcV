@@ -4,6 +4,7 @@
 #define ARCV_MAT_HPP
 
 #include <vector>
+#include <cstdint>
 
 #include "ArcV/Math/Vec.hpp"
 
@@ -28,8 +29,8 @@ public:
   const unsigned int getHeight() const { return height; }
   const unsigned short getImgBitDepth() const { return imgBitDepth; }
   const Colorspace getColorspace() const { return colorspace; }
-  const std::vector<unsigned char>& getData() const { return data; }
-  std::vector<unsigned char>& getData() { return data; }
+  const std::vector<uint8_t>& getData() const { return data; }
+  std::vector<uint8_t>& getData() { return data; }
 
   void setColorspace(const Colorspace colorspace) { this->colorspace = colorspace; }
 
@@ -51,13 +52,13 @@ public:
   Mat& operator*=(const float& val);
   Mat& operator/=(Mat& mat);
   Mat& operator/=(const float& val);
-  unsigned char& operator[](const unsigned int index) { return data[index]; } // Implement Pixel class to return an instance?
+  uint8_t& operator[](const unsigned int index) { return data[index]; } // Implement Pixel class to return an instance?
 
 private:
   unsigned int width, height;
   unsigned short imgBitDepth;
   Colorspace colorspace;
-  std::vector<unsigned char> data;
+  std::vector<uint8_t> data;
 };
 
 } // namespace Arcv
