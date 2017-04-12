@@ -3,6 +3,8 @@
 #ifndef ARCV_IMAGE_HPP
 #define ARCV_IMAGE_HPP
 
+#include <string>
+
 #include "ArcV/Math/Mat.hpp"
 
 enum ImageType { ARCV_IMAGE_TYPE_JPEG = 0, ARCV_IMAGE_TYPE_PNG };

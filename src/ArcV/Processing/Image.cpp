@@ -3,8 +3,8 @@
 #include <fstream>
 #include <iostream>
 
-#include "png.h"
-#include "zlib.h"
+#include "png/png.h"
+#include "png/zlib.h"
 #include "ArcV/Processing/Image.hpp"
 
 namespace Arcv {
