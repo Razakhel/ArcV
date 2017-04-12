@@ -3,31 +3,17 @@
 #ifndef ARCV_WINDOW_HPP
 #define ARCV_WINDOW_HPP
 
-#include <xcb/xcb.h>
-
 #include "ArcV/Processing/Image.hpp"
 
 namespace Arcv {
 
 class Window {
 public:
-  Window(const char* display = nullptr, int* screen = nullptr);
+  Window(const unsigned short width, const unsigned short height);
 
-  void create(const uint16_t width, const uint16_t height);
-  void mapImage(Arcv::Image& img);
   void show();
 
   ~Window();
-
-private:
-  void createWindowFrame(const uint16_t width, const uint16_t height);
-  void createGraphicsContext();
-
-  xcb_connection_t* connection;
-  xcb_screen_t* screen;
-  xcb_gcontext_t graphicsContext;
-  xcb_window_t window;
-  xcb_pixmap_t pixmap;
 };
 
 } // namespace Arcv
