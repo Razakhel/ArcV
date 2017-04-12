@@ -40,6 +40,21 @@ if (UNIX)
 
         extern/glfw/src/cocoa*
         extern/glfw/src/win32*
+        extern/glfw/src/wl*
+        extern/glfw/src/wgl*
+        extern/glfw/src/mir*
+    )
+
+    set(
+        DEPS
+
+        X11
+        Xrandr
+        Xcursor
+        Xinerama
+        Xxf86vm
+        pthread
+        dl
     )
 elseif (WIN32)
     add_definitions(-D_GLFW_WIN32)
@@ -94,4 +109,5 @@ add_executable(ArcV ${SOURCE_FILES} examples/main.cpp)
 
 target_link_libraries(
     ArcV ${LIBS}
+    ${DEPS}
 )
