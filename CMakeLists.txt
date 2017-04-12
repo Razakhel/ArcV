@@ -11,7 +11,8 @@ include_directories(
 file(
     GLOB_RECURSE
     SOURCE_FILES
-    extern/*.c
+    extern/png/*.c
+    extern/imgui/*.cpp
     src/ArcV/Math/*.cpp
     src/ArcV/Processing/*.cpp
     #src/ArcV/Utils/*.cpp
