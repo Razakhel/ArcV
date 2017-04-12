@@ -32,7 +32,7 @@ void writePng(png_structp pngWritePtr, png_bytep data, png_size_t length) {
 } // namespace
 
 Mat Image::read(const std::string& fileName) {
-  std::ifstream file(fileName);
+  std::ifstream file(fileName, std::ios_base::in | std::ios_base::binary);
   assert(("Error: Not a valid PNG", file.good() && validatePng(file)));
 
   png_structp pngReadStruct = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
@@ -93,7 +93,7 @@ Mat Image::read(const std::string& fileName) {
 
   png_read_update_info(pngReadStruct, pngInfoStruct);
 
-  Mat mat(width, height, channels, static_cast<unsigned short>(bitDepth), colorspace);
+  Mat mat(width, height, channels, static_cast<uint8_t>(bitDepth), colorspace);
 
   std::vector<png_bytep> rowPtrs(height);
 

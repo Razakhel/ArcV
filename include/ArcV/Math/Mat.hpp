@@ -21,7 +21,7 @@ public:
   Mat(const unsigned int width,
       const unsigned int height,
       const unsigned int channels,
-      const unsigned short bitDepth,
+      const uint8_t bitDepth,
       const Colorspace colorspace)
     : width{ width }, height{ height }, imgBitDepth{ bitDepth }, colorspace{ colorspace }, data(width * height * channels) {}
 
@@ -34,7 +34,7 @@ public:
 
   void setColorspace(const Colorspace colorspace) { this->colorspace = colorspace; }
 
-  Mat& convolve();
+  Mat& convolve(const Mat& mat);
 
   Mat& operator+(Mat& mat) { return *this += mat; }
   Mat& operator+(const float& val) { return *this += val; }
@@ -56,7 +56,7 @@ public:
 
 private:
   unsigned int width, height;
-  unsigned short imgBitDepth;
+  uint8_t imgBitDepth;
   Colorspace colorspace;
   std::vector<uint8_t> data;
 };
