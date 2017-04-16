@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef ARCV_MAT_HPP
-#define ARCV_MAT_HPP
+#ifndef ARCV_MATRIX_HPP
+#define ARCV_MATRIX_HPP
 
 #include <cmath>
 #include <vector>
@@ -73,4 +73,4 @@ using Mat = Matrix<>;
 
 #include "ArcV/Math/Matrix.inl"
 
-#endif // ARCV_MAT_HPP
+#endif // ARCV_MATRIX_HPP
