@@ -5,7 +5,7 @@
 
 #include <string>
 
-#include "ArcV/Math/Mat.hpp"
+#include "ArcV/Math/Matrix.hpp"
 
 enum ImageType { ARCV_IMAGE_TYPE_JPEG = 0, ARCV_IMAGE_TYPE_PNG };
 

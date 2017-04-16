@@ -21,7 +21,7 @@ Vec& Vec::operator+=(Vec& vec) {
   return *this;
 }
 
-Vec& Vec::operator+=(const float& val) {
+Vec& Vec::operator+=(const float val) {
   for (unsigned int i = 0; i < data.size(); ++i)
     data[i] += val;
   return *this;
@@ -35,7 +35,7 @@ Vec& Vec::operator-=(Vec& vec) {
   return *this;
 }
 
-Vec& Vec::operator-=(const float& val) {
+Vec& Vec::operator-=(const float val) {
   for (unsigned int i = 0; i < data.size(); ++i)
     data[i] -= val;
   return *this;
@@ -49,7 +49,7 @@ Vec& Vec::operator*=(Vec& vec) {
   return *this;
 }
 
-Vec& Vec::operator*=(const float& val) {
+Vec& Vec::operator*=(const float val) {
   for (unsigned int i = 0; i < data.size(); ++i)
     data[i] *= val;
   return *this;
@@ -63,7 +63,7 @@ Vec& Vec::operator/=(Vec& vec) {
   return *this;
 }
 
-Vec& Vec::operator/=(const float& val) {
+Vec& Vec::operator/=(const float val) {
   for (unsigned int i = 0; i < data.size(); ++i)
     data[i] /= val;
   return *this;
