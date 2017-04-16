@@ -17,7 +17,7 @@ This library is made for Linux, though it is planned to make it available on Win
 
 | Objectives | Implemented |
 | :--------: | :---------: |
-| Creating windowing class (Linux/X) | _On standby_ |
+| Creating windowing class (Windows, Linux/X) | _In progress_ |
 | Implementing Matrix/Vector classes | **Yes** |
 | Loading (reading) an image (JPEG/PNG/...) | **Yes** (PNG) |
 | Saving (writing) an image | **Yes** (PNG) |
