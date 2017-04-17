@@ -20,7 +20,7 @@ Matrix<T>& Matrix<T>::operator+=(const Matrix& mat) {
 }
 
 template <typename T>
-Matrix<T>& Matrix<T>::operator+=(const float val) {
+Matrix<T>& Matrix<T>::operator+=(float val) {
   for (unsigned int i = 0; i < data.size(); ++i)
     data[i] += val;
   return *this;
@@ -36,7 +36,7 @@ Matrix<T>& Matrix<T>::operator-=(const Matrix& mat) {
 }
 
 template <typename T>
-Matrix<T>& Matrix<T>::operator-=(const float val) {
+Matrix<T>& Matrix<T>::operator-=(float val) {
   for (unsigned int i = 0; i < data.size(); ++i)
     data[i] -= val;
   return *this;
@@ -52,7 +52,7 @@ Matrix<T>& Matrix<T>::operator*=(const Matrix& mat) {
 }
 
 template <typename T>
-Matrix<T>& Matrix<T>::operator*=(const float val) {
+Matrix<T>& Matrix<T>::operator*=(float val) {
   for (unsigned int i = 0; i < data.size(); ++i)
     data[i] *= val;
   return *this;
@@ -68,7 +68,7 @@ Matrix<T>& Matrix<T>::operator/=(const Matrix& mat) {
 }
 
 template <typename T>
-Matrix<T>& Matrix<T>::operator/=(const float val) {
+Matrix<T>& Matrix<T>::operator/=(float val) {
   for (unsigned int i = 0; i < data.size(); ++i)
     data[i] /= val;
   return *this;

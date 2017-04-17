@@ -43,21 +43,21 @@ public:
   void convolve(const Matrix<float>& convMat);
 
   Matrix& operator+(const Matrix& mat) { return *this += mat; }
-  Matrix& operator+(const float val) { return *this += val; }
+  Matrix& operator+(float val) { return *this += val; }
   Matrix& operator-(const Matrix& mat) { return *this -= mat; }
-  Matrix& operator-(const float val) { return *this -= val; }
+  Matrix& operator-(float val) { return *this -= val; }
   Matrix& operator*(const Matrix& mat) { return *this *= mat; }
-  Matrix& operator*(const float val) { return *this *= val; }
+  Matrix& operator*(float val) { return *this *= val; }
   Matrix& operator/(const Matrix& mat) { return *this /= mat; }
-  Matrix& operator/(const float val) { return *this /= val; }
+  Matrix& operator/(float val) { return *this /= val; }
   Matrix& operator+=(const Matrix& mat);
-  Matrix& operator+=(const float val);
+  Matrix& operator+=(float val);
   Matrix& operator-=(const Matrix& mat);
-  Matrix& operator-=(const float val);
+  Matrix& operator-=(float val);
   Matrix& operator*=(const Matrix& mat);
-  Matrix& operator*=(const float val);
+  Matrix& operator*=(float val);
   Matrix& operator/=(const Matrix& mat);
-  Matrix& operator/=(const float val);
+  Matrix& operator/=(float val);
   T& operator[](const unsigned int index) { return data[index]; } // Implement Pixel class to return an instance?
 
 private:

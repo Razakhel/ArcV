@@ -18,21 +18,21 @@ public:
   const float dot(const Vec& vec) const;
 
   Vec& operator+(const Vec& vec) { return *this += vec; }
-  Vec& operator+(const float val) { return *this += val; }
+  Vec& operator+(float val) { return *this += val; }
   Vec& operator-(const Vec& vec) { return *this -= vec; }
-  Vec& operator-(const float val) { return *this -= val; }
+  Vec& operator-(float val) { return *this -= val; }
   Vec& operator*(const Vec& vec) { return *this *= vec; }
-  Vec& operator*(const float val) { return *this *= val; }
+  Vec& operator*(float val) { return *this *= val; }
   Vec& operator/(const Vec& vec) { return *this /= vec; }
-  Vec& operator/(const float val) { return *this /= val; }
+  Vec& operator/(float val) { return *this /= val; }
   Vec& operator+=(const Vec& vec);
-  Vec& operator+=(const float val);
+  Vec& operator+=(float val);
   Vec& operator-=(const Vec& vec);
-  Vec& operator-=(const float val);
+  Vec& operator-=(float val);
   Vec& operator*=(const Vec& vec);
-  Vec& operator*=(const float val);
+  Vec& operator*=(float val);
   Vec& operator/=(const Vec& vec);
-  Vec& operator/=(const float val);
+  Vec& operator/=(float val);
   float& operator[](const unsigned int index) { return data[index]; }
 
 private:
