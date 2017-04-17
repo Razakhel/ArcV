@@ -12,25 +12,26 @@ public:
   Vec(const unsigned int size) : data(size) {}
   //Vec(const Vec& vec);
 
+  const std::vector<float>& getData() const { return data; }
   std::vector<float>& getData() { return data; }
 
-  const float dot(Vec& vec) const;
+  const float dot(const Vec& vec) const;
 
-  Vec& operator+(Vec& vec) { return *this += vec; }
+  Vec& operator+(const Vec& vec) { return *this += vec; }
   Vec& operator+(const float val) { return *this += val; }
-  Vec& operator-(Vec& vec) { return *this -= vec; }
+  Vec& operator-(const Vec& vec) { return *this -= vec; }
   Vec& operator-(const float val) { return *this -= val; }
-  Vec& operator*(Vec& vec) { return *this *= vec; }
+  Vec& operator*(const Vec& vec) { return *this *= vec; }
   Vec& operator*(const float val) { return *this *= val; }
-  Vec& operator/(Vec& vec) { return *this /= vec; }
+  Vec& operator/(const Vec& vec) { return *this /= vec; }
   Vec& operator/(const float val) { return *this /= val; }
-  Vec& operator+=(Vec& vec);
+  Vec& operator+=(const Vec& vec);
   Vec& operator+=(const float val);
-  Vec& operator-=(Vec& vec);
+  Vec& operator-=(const Vec& vec);
   Vec& operator-=(const float val);
-  Vec& operator*=(Vec& vec);
+  Vec& operator*=(const Vec& vec);
   Vec& operator*=(const float val);
-  Vec& operator/=(Vec& vec);
+  Vec& operator/=(const Vec& vec);
   Vec& operator/=(const float val);
   float& operator[](const unsigned int index) { return data[index]; }
 

@@ -4,7 +4,7 @@
 
 namespace Arcv {
 
-const float Vec::dot(Vec& vec) const {
+const float Vec::dot(const Vec& vec) const {
   assert(("Error: Vectors aren't the same size", data.size() == vec.getData().size()));
 
   float res = 0.f;
@@ -13,7 +13,7 @@ const float Vec::dot(Vec& vec) const {
   return res;
 }
 
-Vec& Vec::operator+=(Vec& vec) {
+Vec& Vec::operator+=(const Vec& vec) {
   assert(("Error: Vectors aren't the same size", data.size() == vec.getData().size()));
 
   for (unsigned int i = 0; i < data.size(); ++i)
@@ -27,7 +27,7 @@ Vec& Vec::operator+=(const float val) {
   return *this;
 }
 
-Vec& Vec::operator-=(Vec& vec) {
+Vec& Vec::operator-=(const Vec& vec) {
   assert(("Error: Vectors aren't the same size", data.size() == vec.getData().size()));
 
   for (unsigned int i = 0; i < data.size(); ++i)
@@ -41,7 +41,7 @@ Vec& Vec::operator-=(const float val) {
   return *this;
 }
 
-Vec& Vec::operator*=(Vec& vec) {
+Vec& Vec::operator*=(const Vec& vec) {
   assert(("Error: Vectors aren't the same size", data.size() == vec.getData().size()));
 
   for (unsigned int i = 0; i < data.size(); ++i)
@@ -55,7 +55,7 @@ Vec& Vec::operator*=(const float val) {
   return *this;
 }
 
-Vec& Vec::operator/=(Vec& vec) {
+Vec& Vec::operator/=(const Vec& vec) {
   assert(("Error: Vectors aren't the same size", data.size() == vec.getData().size()));
 
   for (unsigned int i = 0; i < data.size(); ++i)
