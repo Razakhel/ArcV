@@ -5,6 +5,10 @@ namespace Arcv {
 
 namespace {
 
+void addAlphaChannel(Mat& mat, const uint8_t channels) {
+  // TODO: implement function
+}
+
 void removeAlphaChannel(Mat& mat, const uint8_t channels) {
   for (unsigned int i = channels, delta = 1; i < mat.getData().size(); i += channels, ++delta) {
     for (unsigned int chan = i; chan < i + channels - 1; ++chan)
@@ -65,27 +69,7 @@ void convertToHSV(Mat& mat) {
 template <Colorspace C>
 void Image::changeColorspace(Mat& mat) {
   if (C != mat.getColorspace()) {
-    uint8_t channels;
-
-    switch (mat.getColorspace()) {
-      case ARCV_COLORSPACE_GRAY:
-        channels = 1;
-        break;
-
-      case ARCV_COLORSPACE_GRAY_ALPHA:
-        channels = 2;
-        break;
-
-      case ARCV_COLORSPACE_RGB:
-      case ARCV_COLORSPACE_HSV:
-      default:
-        channels = 3;
-        break;
-
-      case ARCV_COLORSPACE_RGBA:
-        channels = 4;
-        break;
-    }
+    const uint8_t channels = getChannelCount(mat);
 
     switch (C) {
       case ARCV_COLORSPACE_GRAY:
@@ -96,14 +80,13 @@ void Image::changeColorspace(Mat& mat) {
         break;
 
       case ARCV_COLORSPACE_GRAY_ALPHA:
-
+        if (mat.getColorspace() == ARCV_COLORSPACE_GRAY)
+          addAlphaChannel(mat, channels);
         break;
 
       case ARCV_COLORSPACE_RGB:
         if (mat.getColorspace() == ARCV_COLORSPACE_RGBA)
           removeAlphaChannel(mat, channels);
-
-        //convertToRGB(mat);
         break;
 
       case ARCV_COLORSPACE_HSV:
@@ -117,7 +100,8 @@ void Image::changeColorspace(Mat& mat) {
         break;
 
       case ARCV_COLORSPACE_RGBA:
-
+        if (mat.getColorspace() == ARCV_COLORSPACE_RGB)
+          addAlphaChannel(mat, channels);
         break;
     }
 

@@ -5,6 +5,7 @@
 
 #include "png/png.h"
 #include "png/zlib.h"
+
 #include "ArcV/Processing/Image.hpp"
 
 namespace Arcv {
@@ -101,7 +102,7 @@ Mat Image::read(const std::string& fileName) {
   mat.getData().resize(width * height * channels);
 
   // Mapping row's elements to data's
-  for (png_uint_32 i = 0; i < height; ++i) {
+  for (uint32_t i = 0; i < height; ++i) {
     rowPtrs[i] = &mat.getData()[width * channels * i];
   }
 
@@ -121,7 +122,7 @@ void Image::write(const Mat& mat, const std::string& fileName) {
   png_infop pngInfoStruct = png_create_info_struct(pngWriteStruct);
   assert(("Error: Couldn't initialize PNG info struct", pngInfoStruct));
 
-  png_uint_32 colorType;
+  uint32_t colorType;
   unsigned short channels = 0;
   switch (mat.getColorspace()) {
     case ARCV_COLORSPACE_GRAY:
@@ -169,12 +170,32 @@ void Image::write(const Mat& mat, const std::string& fileName) {
   png_set_write_fn(pngWriteStruct, &file, writePng, nullptr);
   png_write_info(pngWriteStruct, pngInfoStruct);
 
-  for (png_uint_32 i = 0; i < mat.getHeight(); ++i) {
+  for (uint32_t i = 0; i < mat.getHeight(); ++i) {
     png_write_row(pngWriteStruct, &mat.getData()[mat.getWidth() * channels * i]);
   }
 
   png_write_end(pngWriteStruct, pngInfoStruct);
   png_destroy_write_struct(&pngWriteStruct, &pngInfoStruct);
+}
+
+const uint8_t Image::getChannelCount(const Mat& mat) {
+  switch (mat.getColorspace()) {
+    case ARCV_COLORSPACE_GRAY:
+      return 1;
+
+    case ARCV_COLORSPACE_GRAY_ALPHA:
+      return 2;
+
+    case ARCV_COLORSPACE_RGB:
+    case ARCV_COLORSPACE_HSV:
+      return 3;
+
+    case ARCV_COLORSPACE_RGBA:
+      return 4;
+
+    default:
+      return 0;
+  }
 }
 
 } // namespace Arcv
