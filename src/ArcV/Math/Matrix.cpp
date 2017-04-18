@@ -14,7 +14,7 @@ void Matrix<uint8_t>::convolve(const Matrix<float>& convMat) {
     for (unsigned int w = 0; w < data.size() / height; w += channels) {
       for (unsigned int chan = 0; chan < channels; ++chan) {
         // TODO: process value with convolution matrix
-        data[h * (width - 1) + w + chan] = 255;
+        data[h * width + w + chan] = 255;
       }
     }
   }
