@@ -8,4 +8,4 @@
 #include "ArcV/Processing/Image.hpp"
 #include "ArcV/Utils/Window.hpp"
 
-#endif //ARCV_ARCV_HPP
+#endif // ARCV_ARCV_HPP

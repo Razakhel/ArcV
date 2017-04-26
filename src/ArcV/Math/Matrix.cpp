@@ -7,14 +7,34 @@ namespace Arcv {
 
 template <>
 void Matrix<uint8_t>::convolve(const Matrix<float>& convMat) {
-  // TODO: handle out of range values
-  const uint8_t channels = Image::getChannelCount(*this);
+  assert(("Error: Convolution matrix must be a square one", convMat.getWidth() == convMat.getHeight()));
+  assert(("Error: Convolution matrix's size must be odd", convMat.getData().size() % 2 == 1));
 
-  for (unsigned int h = 0; h < data.size() / width; ++h) {
-    for (unsigned int w = 0; w < data.size() / height; w += channels) {
+  // TODO: make this work for any number of channels
+  Image::changeColorspace<ARCV_COLORSPACE_GRAY>(*this);
+  Mat tempMat = *this;
+
+  const uint8_t channels = Image::getChannelCount(tempMat);
+
+  for (unsigned int matHeightIndex = 0; matHeightIndex < tempMat.getData().size() / tempMat.getWidth(); ++matHeightIndex) {
+    for (unsigned int matWidthIndex = 0; matWidthIndex < tempMat.getData().size() / tempMat.getHeight(); matWidthIndex += channels) {
       for (unsigned int chan = 0; chan < channels; ++chan) {
-        // TODO: process value with convolution matrix
-        data[h * width + w + chan] = 255;
+        const unsigned int matIndex = matHeightIndex * tempMat.getWidth() + matWidthIndex + chan;
+        float value = 0;
+
+        for (unsigned int convHeightIndex = 0; convHeightIndex < convMat.getData().size() / convMat.getWidth(); ++convHeightIndex) {
+          for (unsigned int convWidthIndex = 0; convWidthIndex < convMat.getData().size() / convMat.getHeight(); ++convWidthIndex) {
+            unsigned int correspHeight = matHeightIndex - convHeightIndex;
+            unsigned int correspWidth = matWidthIndex - convWidthIndex;
+
+            if (correspHeight > tempMat.getHeight() || correspWidth > tempMat.getWidth())
+              value += 0;
+            else
+              value += convMat[convHeightIndex * convMat.getWidth() + convWidthIndex] * tempMat[correspHeight * tempMat.getWidth() + correspWidth];
+          }
+        }
+
+        data[matIndex] = static_cast<uint8_t>(value);
       }
     }
   }

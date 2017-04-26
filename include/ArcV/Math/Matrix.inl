@@ -4,7 +4,8 @@ namespace Arcv {
 
 template <typename T>
 Matrix<T>::Matrix(const std::initializer_list<std::initializer_list<T>>& list)
-    : height{ static_cast<int>(list.size()) }, width{ static_cast<int>(list.begin()->size()) } {
+    : height{ static_cast<unsigned int>(list.size()) },
+      width{ static_cast<unsigned int>(list.begin()->size()) } {
   for (auto subList = list.begin(); subList != list.end(); ++subList)
     for (auto element = subList->begin(); element != subList->end(); ++element)
       data.emplace_back(*element);
