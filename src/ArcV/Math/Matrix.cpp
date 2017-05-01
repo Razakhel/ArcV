@@ -12,13 +12,13 @@ void Matrix<uint8_t>::convolve(const Matrix<float>& convMat) {
 
   // TODO: make this work for any number of channels
   Image::changeColorspace<ARCV_COLORSPACE_GRAY>(*this);
-  Mat tempMat = *this;
+  const Mat tempMat = *this;
 
   const uint8_t channels = Image::getChannelCount(tempMat);
 
   for (unsigned int matHeightIndex = 0; matHeightIndex < tempMat.getData().size() / tempMat.getWidth(); ++matHeightIndex) {
     for (unsigned int matWidthIndex = 0; matWidthIndex < tempMat.getData().size() / tempMat.getHeight(); matWidthIndex += channels) {
-      for (unsigned int chan = 0; chan < channels; ++chan) {
+      for (uint8_t chan = 0; chan < channels; ++chan) {
         const unsigned int matIndex = matHeightIndex * tempMat.getWidth() + matWidthIndex + chan;
         float value = 0;
 
