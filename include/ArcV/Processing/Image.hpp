@@ -7,7 +7,10 @@
 
 #include "ArcV/Math/Matrix.hpp"
 
-enum ImageType { ARCV_IMAGE_TYPE_JPEG = 0, ARCV_IMAGE_TYPE_PNG };
+enum ImageType { ARCV_IMAGE_TYPE_JPEG = 0,
+                 ARCV_IMAGE_TYPE_PNG };
+
+enum FilterType { ARCV_FILTER_TYPE_GAUSSIAN_BLUR = 0 };
 
 namespace Arcv {
 
@@ -19,6 +22,7 @@ public:
   static void write(const Mat& mat, const std::string& fileName);
   static const uint8_t getChannelCount(const Mat& mat);
   template <Colorspace C> static void changeColorspace(Mat& mat);
+  template <FilterType F> static void applyFilter(Mat& mat);
 };
 
 } // namespace Arcv

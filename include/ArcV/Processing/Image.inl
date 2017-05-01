@@ -64,6 +64,14 @@ void convertToHSV(Mat& mat) {
   }
 }
 
+void applyGaussianBlur(Matrix<uint8_t>& mat) {
+  Matrix<float> kernel = {{ 1.f, 1.f, 1.f },
+                          { 1.f, 1.f, 1.f },
+                          { 1.f, 1.f, 1.f }};
+
+  mat.convolve(kernel / 9.f);
+}
+
 } // namespace
 
 template <Colorspace C>
@@ -106,6 +114,18 @@ void Image::changeColorspace(Mat& mat) {
     }
 
     mat.setColorspace(C);
+  }
+}
+
+template <FilterType F>
+void Image::applyFilter(Matrix<uint8_t>& mat) {
+  switch (F) {
+    case ARCV_FILTER_TYPE_GAUSSIAN_BLUR:
+      applyGaussianBlur(mat);
+      break;
+
+    default:
+      break;
   }
 }
 

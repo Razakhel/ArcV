@@ -5,10 +5,7 @@
 int main(int argc, char* argv[]) {
   Arcv::Mat mat = Arcv::Image::read("lena.png");   // Arcv::Mat is an Arcv::Matrix<> (<uint8_t> by default)
 
-  Arcv::Matrix<float> convol =  {{ 0.f, 0.f, 0.f },
-                                 { 0.f, 1.f, 0.f },
-                                 { 0.f, 0.f, 0.f }};
-  mat.convolve(convol);
+  Arcv::Image::applyFilter<ARCV_FILTER_TYPE_GAUSSIAN_BLUR>(mat);
 
   Arcv::Image::write(mat, "output.png");
 
