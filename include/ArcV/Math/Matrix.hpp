@@ -18,15 +18,15 @@ namespace Arcv {
 template <typename T = uint8_t>
 class Matrix {
 public:
-  Matrix(const unsigned int width,
-         const unsigned int height)
+  Matrix(unsigned int width,
+         unsigned int height)
     : width{ width }, height{ height }, data(width * height) {}
 
-  Matrix(const unsigned int width,
-         const unsigned int height,
-         const unsigned int channels,
-         const uint8_t bitDepth,
-         const Colorspace colorspace)
+  Matrix(unsigned int width,
+         unsigned int height,
+         unsigned int channels,
+         uint8_t bitDepth,
+         Colorspace colorspace)
     : width{ width }, height{ height }, imgBitDepth{ bitDepth }, colorspace{ colorspace }, data(width * height * channels) {}
 
   Matrix(const std::initializer_list<std::initializer_list<T>>& list);
@@ -67,6 +67,8 @@ private:
   Colorspace colorspace;
   std::vector<T> data;
 };
+
+template <> void Matrix<uint8_t>::convolve(const Matrix<float>& convMat);
 
 using Mat = Matrix<>;
 

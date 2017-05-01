@@ -9,7 +9,7 @@ namespace Arcv {
 
 class Vec {
 public:
-  Vec(const unsigned int size) : data(size) {}
+  Vec(unsigned int size) : data(size) {}
   //Vec(const Vec& vec);
 
   const std::vector<float>& getData() const { return data; }
