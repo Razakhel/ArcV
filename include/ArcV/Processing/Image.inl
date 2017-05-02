@@ -65,11 +65,13 @@ void convertToHSV(Mat& mat) {
 }
 
 void applyGaussianBlur(Matrix<uint8_t>& mat) {
-  Matrix<float> kernel = {{ 1.f, 1.f, 1.f },
-                          { 1.f, 1.f, 1.f },
-                          { 1.f, 1.f, 1.f }};
+  Matrix<float> kernel = {{ 1.f, 1.f, 1.f, 1.f, 1.f },
+                          { 1.f, 1.f, 1.f, 1.f, 1.f },
+                          { 1.f, 1.f, 1.f, 1.f, 1.f },
+                          { 1.f, 1.f, 1.f, 1.f, 1.f },
+                          { 1.f, 1.f, 1.f, 1.f, 1.f }};
 
-  mat.convolve(kernel / 9.f);
+  mat.convolve(kernel / kernel.getData().size());
 }
 
 } // namespace
