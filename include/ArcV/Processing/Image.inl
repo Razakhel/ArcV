@@ -53,7 +53,7 @@ void convertToHSV(Mat& mat) {
       else if (maxVal == blue)
         hue = 60 * ((red - green) / (maxVal - minVal)) + 240;
 
-      mat.getData()[i] = static_cast<uint8_t>(hue / 360.f * 255);
+      mat.getData()[i] = static_cast<uint8_t>(hue / 2);
     }
 
     // Saturation
