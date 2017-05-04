@@ -58,6 +58,7 @@ public:
   Matrix& operator*=(float val);
   Matrix& operator/=(const Matrix& mat);
   Matrix& operator/=(float val);
+  T& operator()(unsigned int widthIndex, unsigned int heightIndex) { return data[heightIndex * width + widthIndex]; }
   const T& operator[](unsigned int index) const { return data[index]; }
   T& operator[](unsigned int index) { return data[index]; } // Implement Pixel class to return an instance?
 
