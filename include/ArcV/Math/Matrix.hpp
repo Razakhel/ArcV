@@ -15,7 +15,7 @@ enum Colorspace { ARCV_COLORSPACE_GRAY = 0,
 
 namespace Arcv {
 
-template <typename T = uint8_t>
+template <typename T = float>
 class Matrix {
 public:
   Matrix(unsigned int width,
@@ -24,16 +24,19 @@ public:
 
   Matrix(unsigned int width,
          unsigned int height,
-         unsigned int channels,
+         uint8_t channels,
          uint8_t bitDepth,
          Colorspace colorspace)
     : width{ width }, height{ height }, imgBitDepth{ bitDepth }, colorspace{ colorspace }, data(width * height * channels) {}
+
+  template <typename TI> Matrix(const Matrix<TI>& mat);
 
   Matrix(const std::initializer_list<std::initializer_list<T>>& list);
 
   const unsigned int getWidth() const { return width; }
   const unsigned int getHeight() const { return height; }
   const uint8_t getImgBitDepth() const { return imgBitDepth; }
+  const uint8_t getChannels() const { return channels; }
   const Colorspace getColorspace() const { return colorspace; }
   const std::vector<T>& getData() const { return data; }
   std::vector<T>& getData() { return data; }
@@ -58,18 +61,19 @@ public:
   Matrix& operator*=(float val);
   Matrix& operator/=(const Matrix& mat);
   Matrix& operator/=(float val);
+  template <typename TI> Matrix operator=(const Matrix<TI>& mat) { return Matrix<T>(mat); }
   T& operator()(unsigned int widthIndex, unsigned int heightIndex) { return data[heightIndex * width + widthIndex]; }
   const T& operator[](unsigned int index) const { return data[index]; }
   T& operator[](unsigned int index) { return data[index]; } // Implement Pixel class to return an instance?
 
 private:
   unsigned int width, height;
-  uint8_t imgBitDepth;    // TODO: depth & colorspace have nothing to do with general matrices
+  uint8_t channels, imgBitDepth;    // TODO: channels, depth & colorspace have nothing to do with general matrices
   Colorspace colorspace;
   std::vector<T> data;
 };
 
-template <> void Matrix<uint8_t>::convolve(const Matrix<float>& convMat);
+template <> void Matrix<>::convolve(const Matrix<float>& convMat);
 
 using Mat = Matrix<>;
 
