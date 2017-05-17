@@ -27,7 +27,12 @@ public:
          uint8_t channels,
          uint8_t bitDepth,
          Colorspace colorspace)
-    : width{ width }, height{ height }, imgBitDepth{ bitDepth }, colorspace{ colorspace }, data(width * height * channels) {}
+    : width{ width },
+      height{ height },
+      channels{ channels },
+      imgBitDepth{ bitDepth },
+      colorspace{ colorspace },
+      data(width * height * channels) {}
 
   template <typename TI> Matrix(const Matrix<TI>& mat);
 
