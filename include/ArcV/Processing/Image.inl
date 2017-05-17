@@ -5,32 +5,32 @@ namespace Arcv {
 
 namespace {
 
-void addAlphaChannel(Mat& mat, const uint8_t channels) {
+void addAlphaChannel(Matrix<>& mat) {
   // TODO: implement function
 }
 
-void removeAlphaChannel(Mat& mat, const uint8_t channels) {
-  for (unsigned int i = channels, delta = 1; i < mat.getData().size(); i += channels, ++delta) {
-    for (unsigned int chan = i; chan < i + channels - 1; ++chan)
+void removeAlphaChannel(Matrix<>& mat) {
+  for (unsigned int i = mat.getChannels(), delta = 1; i < mat.getData().size(); i += mat.getChannels(), ++delta) {
+    for (unsigned int chan = i; chan < i + mat.getChannels() - 1; ++chan)
       mat.getData()[chan - delta] = mat.getData()[chan];
   }
 
-  mat.getData().resize(mat.getData().size() * (channels - 1) / channels);
+  mat.getData().resize(mat.getData().size() * (mat.getChannels() - 1) / mat.getChannels());
 }
 
-void convertToGrayscale(Mat& mat, const uint8_t channels) {
+void convertToGrayscale(Matrix<>& mat) {
   unsigned int index = 0;
   // Avoiding alpha channel, not including it into the operation
-  const uint8_t alpha = static_cast<uint8_t>(mat.getColorspace() == ARCV_COLORSPACE_GRAY_ALPHA
-                                             || mat.getColorspace() == ARCV_COLORSPACE_RGBA ? 1 : 0);
+  const uint8_t stride = static_cast<uint8_t>(mat.getChannels() - (mat.getColorspace() == ARCV_COLORSPACE_GRAY_ALPHA
+                                                                   || mat.getColorspace() == ARCV_COLORSPACE_RGBA ? 1 : 0));
 
-  for (auto it = mat.getData().begin(); it != mat.getData().end(); it += channels, ++index)
-    mat.getData()[index] = static_cast<uint8_t>(std::accumulate(it, it + channels - alpha, 0) / (channels - alpha));
+  for (auto it = mat.getData().begin(); it != mat.getData().end(); it += mat.getChannels(), ++index)
+    mat.getData()[index] = std::accumulate(it, it + stride, 0) / (stride);
 
-  mat.getData().resize(mat.getData().size() / channels);
+  mat.getData().resize(mat.getData().size() / mat.getChannels());
 }
 
-void convertToHSV(Mat& mat) {
+void convertToHSV(Matrix<>& mat) {
   uint8_t red, green, blue, minVal, maxVal;
   float hue = 0.f;
 
@@ -64,7 +64,7 @@ void convertToHSV(Mat& mat) {
   }
 }
 
-void applyGaussianBlur(Matrix<uint8_t>& mat) {
+void applyGaussianBlur(Matrix<>& mat) {
   Matrix<float> kernel = {{ 1.f, 1.f, 1.f, 1.f, 1.f },
                           { 1.f, 1.f, 1.f, 1.f, 1.f },
                           { 1.f, 1.f, 1.f, 1.f, 1.f },
@@ -77,26 +77,24 @@ void applyGaussianBlur(Matrix<uint8_t>& mat) {
 } // namespace
 
 template <Colorspace C>
-void Image::changeColorspace(Mat& mat) {
+void Image::changeColorspace(Matrix<>& mat) {
   if (C != mat.getColorspace()) {
-    const uint8_t channels = getChannelCount(mat);
-
     switch (C) {
       case ARCV_COLORSPACE_GRAY:
         if (mat.getColorspace() == ARCV_COLORSPACE_GRAY_ALPHA)
-          removeAlphaChannel(mat, channels);
+          removeAlphaChannel(mat);
         else
-          convertToGrayscale(mat, channels);
+          convertToGrayscale(mat);
         break;
 
       case ARCV_COLORSPACE_GRAY_ALPHA:
         if (mat.getColorspace() == ARCV_COLORSPACE_GRAY)
-          addAlphaChannel(mat, channels);
+          addAlphaChannel(mat);
         break;
 
       case ARCV_COLORSPACE_RGB:
         if (mat.getColorspace() == ARCV_COLORSPACE_RGBA)
-          removeAlphaChannel(mat, channels);
+          removeAlphaChannel(mat);
         break;
 
       case ARCV_COLORSPACE_HSV:
@@ -104,14 +102,14 @@ void Image::changeColorspace(Mat& mat) {
                 mat.getColorspace() == ARCV_COLORSPACE_RGB || mat.getColorspace() == ARCV_COLORSPACE_RGBA));
 
         if (mat.getColorspace() == ARCV_COLORSPACE_RGBA)
-          removeAlphaChannel(mat, channels);
+          removeAlphaChannel(mat);
 
         convertToHSV(mat);
         break;
 
       case ARCV_COLORSPACE_RGBA:
         if (mat.getColorspace() == ARCV_COLORSPACE_RGB)
-          addAlphaChannel(mat, channels);
+          addAlphaChannel(mat);
         break;
     }
 
@@ -120,7 +118,7 @@ void Image::changeColorspace(Mat& mat) {
 }
 
 template <FilterType F>
-void Image::applyFilter(Matrix<uint8_t>& mat) {
+void Image::applyFilter(Matrix<>& mat) {
   switch (F) {
     case ARCV_FILTER_TYPE_GAUSSIAN_BLUR:
       applyGaussianBlur(mat);

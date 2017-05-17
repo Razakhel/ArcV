@@ -18,11 +18,10 @@ const unsigned int PNG_HEADER_SIZE = 8;
 
 class Image {
 public:
-  static Mat read(const std::string& fileName);
-  static void write(const Mat& mat, const std::string& fileName);
-  static const uint8_t getChannelCount(const Mat& mat);
-  template <Colorspace C> static void changeColorspace(Mat& mat);
-  template <FilterType F> static void applyFilter(Mat& mat);
+  static Matrix<> read(const std::string& fileName);
+  static void write(const Matrix<>& mat, const std::string& fileName);
+  template <Colorspace C> static void changeColorspace(Matrix<>& mat);
+  template <FilterType F> static void applyFilter(Matrix<>& mat);
 };
 
 } // namespace Arcv
