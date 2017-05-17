@@ -31,8 +31,7 @@ void convertToGrayscale(Matrix<>& mat) {
 }
 
 void convertToHSV(Matrix<>& mat) {
-  uint8_t red, green, blue, minVal, maxVal;
-  float hue = 0.f;
+  float red, green, blue, minVal, maxVal, hue = 0.f;
 
   for (unsigned int i = 0; i < mat.getData().size(); i += 3) {
     red = mat.getData()[i];
@@ -47,17 +46,17 @@ void convertToHSV(Matrix<>& mat) {
       mat.getData()[i] = 0;
     } else {
       if (maxVal == red)
-        hue = (60 * ((green - blue) / (maxVal - minVal)) + 360) % 360;
+        hue = std::fmod(60 * ((green - blue) / (maxVal - minVal)) + 360, 360.f);
       else if (maxVal == green)
         hue = 60 * ((blue - red) / (maxVal - minVal)) + 120;
       else if (maxVal == blue)
         hue = 60 * ((red - green) / (maxVal - minVal)) + 240;
 
-      mat.getData()[i] = static_cast<uint8_t>(hue / 2);
+      mat.getData()[i] = hue / 2;
     }
 
     // Saturation
-    mat.getData()[i + 1] = static_cast<uint8_t>(maxVal == 0 ? 0 : 1 - (minVal / maxVal));
+    mat.getData()[i + 1] = maxVal == 0 ? 0 : 1 - (minVal / maxVal);
 
     // Value
     mat.getData()[i + 2] = maxVal;

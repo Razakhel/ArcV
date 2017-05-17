@@ -32,7 +32,7 @@ void writePng(png_structp pngWritePtr, png_bytep data, png_size_t length) {
 
 } // namespace
 
-Mat Image::read(const std::string& fileName) {
+Matrix<> Image::read(const std::string& fileName) {
   std::ifstream file(fileName, std::ios_base::in | std::ios_base::binary);
   assert(("Error: Not a valid PNG", file.good() && validatePng(file)));
 
@@ -52,8 +52,8 @@ Mat Image::read(const std::string& fileName) {
   uint32_t width = static_cast<uint32_t>(png_get_image_width(pngReadStruct, pngInfoStruct));
   uint32_t height = static_cast<uint32_t>(png_get_image_height(pngReadStruct, pngInfoStruct));
   uint32_t bitDepth = png_get_bit_depth(pngReadStruct, pngInfoStruct);
-  uint32_t channels = png_get_channels(pngReadStruct, pngInfoStruct);
-  uint32_t colorType = png_get_color_type(pngReadStruct, pngInfoStruct);
+  uint8_t channels = png_get_channels(pngReadStruct, pngInfoStruct);
+  uint8_t colorType = png_get_color_type(pngReadStruct, pngInfoStruct);
   Colorspace colorspace;
 
   switch (colorType) {
@@ -94,7 +94,7 @@ Mat Image::read(const std::string& fileName) {
 
   png_read_update_info(pngReadStruct, pngInfoStruct);
 
-  Mat mat(width, height, channels, static_cast<uint8_t>(bitDepth), colorspace);
+  Matrix<uint8_t> mat(width, height, channels, static_cast<uint8_t>(bitDepth), colorspace);
 
   std::vector<png_bytep> rowPtrs(height);
 
@@ -108,13 +108,14 @@ Mat Image::read(const std::string& fileName) {
 
   png_read_image(pngReadStruct, rowPtrs.data());
   png_read_end(pngReadStruct, pngInfoStruct);
-  png_destroy_read_struct(&pngReadStruct, static_cast<const png_infopp>(0), static_cast<const png_infopp>(0));
+  png_destroy_read_struct(&pngReadStruct, 0, static_cast<const png_infopp>(0));
 
-  return mat;
+  return Matrix<>(mat);
 }
 
-void Image::write(const Mat& mat, const std::string& fileName) {
+void Image::write(const Matrix<>& mat, const std::string& fileName) {
   std::ofstream file(fileName);
+  const Matrix<uint8_t> matToWrite(mat);
 
   png_structp pngWriteStruct = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
   assert(("Error: Couldn't initialize PNG write struct", pngWriteStruct));
@@ -124,7 +125,7 @@ void Image::write(const Mat& mat, const std::string& fileName) {
 
   uint32_t colorType;
   unsigned short channels = 0;
-  switch (mat.getColorspace()) {
+  switch (matToWrite.getColorspace()) {
     case ARCV_COLORSPACE_GRAY:
       colorType = PNG_COLOR_TYPE_GRAY;
       channels = 1;
@@ -150,7 +151,7 @@ void Image::write(const Mat& mat, const std::string& fileName) {
 
   png_set_compression_level(pngWriteStruct, 6);
 
-  if (channels * mat.getImgBitDepth() >= 16) {
+  if (channels * matToWrite.getImgBitDepth() >= 16) {
     png_set_compression_strategy(pngWriteStruct, Z_FILTERED);
     png_set_filter(pngWriteStruct, 0, PNG_FILTER_NONE | PNG_FILTER_SUB | PNG_FILTER_PAETH);
   } else {
@@ -159,10 +160,10 @@ void Image::write(const Mat& mat, const std::string& fileName) {
 
   png_set_IHDR(pngWriteStruct,
                pngInfoStruct,
-               mat.getWidth(),
-               mat.getHeight(),
-               static_cast<uint32_t>(mat.getImgBitDepth()),
-               static_cast<uint32_t>(colorType),
+               matToWrite.getWidth(),
+               matToWrite.getHeight(),
+               matToWrite.getImgBitDepth(),
+               colorType,
                PNG_INTERLACE_NONE,
                PNG_COMPRESSION_TYPE_BASE,
                PNG_FILTER_TYPE_BASE);
@@ -170,32 +171,13 @@ void Image::write(const Mat& mat, const std::string& fileName) {
   png_set_write_fn(pngWriteStruct, &file, writePng, nullptr);
   png_write_info(pngWriteStruct, pngInfoStruct);
 
-  for (uint32_t i = 0; i < mat.getHeight(); ++i) {
-    png_write_row(pngWriteStruct, &mat.getData()[mat.getWidth() * channels * i]);
+  for (uint32_t i = 0; i < matToWrite.getHeight(); ++i) {
+    png_write_row(pngWriteStruct,
+                  &matToWrite.getData()[matToWrite.getWidth() * channels * i]);
   }
 
   png_write_end(pngWriteStruct, pngInfoStruct);
   png_destroy_write_struct(&pngWriteStruct, &pngInfoStruct);
-}
-
-const uint8_t Image::getChannelCount(const Mat& mat) {
-  switch (mat.getColorspace()) {
-    case ARCV_COLORSPACE_GRAY:
-      return 1;
-
-    case ARCV_COLORSPACE_GRAY_ALPHA:
-      return 2;
-
-    case ARCV_COLORSPACE_RGB:
-    case ARCV_COLORSPACE_HSV:
-      return 3;
-
-    case ARCV_COLORSPACE_RGBA:
-      return 4;
-
-    default:
-      return 0;
-  }
 }
 
 } // namespace Arcv
