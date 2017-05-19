@@ -26,9 +26,15 @@ template <typename T>
 Matrix<T>::Matrix(const std::initializer_list<std::initializer_list<T>>& list)
   : height{ static_cast<unsigned int>(list.size()) },
     width{ static_cast<unsigned int>(list.begin()->size()) } {
-  for (auto subList = list.begin(); subList != list.end(); ++subList)
-    for (auto element = subList->begin(); element != subList->end(); ++element)
-      data.emplace_back(*element);
+  data.resize(list.size() * list.begin()->size());
+
+  auto row = list.begin();
+  for (unsigned int heightIndex = 0; heightIndex < list.size(); ++heightIndex, ++row) {
+    auto element = row->begin();
+
+    for (unsigned int widthIndex = 0; widthIndex < list.begin()->size(); ++widthIndex, ++element)
+      data[heightIndex * list.begin()->size() + widthIndex] = *element;
+  }
 }
 
 template <typename T>

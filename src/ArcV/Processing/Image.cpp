@@ -1,7 +1,6 @@
 #include <array>
 #include <vector>
 #include <fstream>
-#include <iostream>
 
 #include "png/png.h"
 #include "png/zlib.h"
