@@ -29,7 +29,7 @@ public:
          Colorspace colorspace)
     : width{ width },
       height{ height },
-      channels{ channels },
+      channelCount{ channels },
       imgBitDepth{ bitDepth },
       colorspace{ colorspace },
       data(width * height * channels) {}
@@ -41,11 +41,12 @@ public:
   const unsigned int getWidth() const { return width; }
   const unsigned int getHeight() const { return height; }
   const uint8_t getImgBitDepth() const { return imgBitDepth; }
-  const uint8_t getChannels() const { return channels; }
+  const uint8_t getChannelCount() const { return channelCount; }
   const Colorspace getColorspace() const { return colorspace; }
   const std::vector<T>& getData() const { return data; }
   std::vector<T>& getData() { return data; }
 
+  void setChannelCount(uint8_t channelCount) { this->channelCount = channelCount; }
   void setColorspace(Colorspace colorspace) { this->colorspace = colorspace; }
 
   void convolve(const Matrix<float>& convMat);
@@ -73,7 +74,7 @@ public:
 
 private:
   unsigned int width, height;
-  uint8_t channels, imgBitDepth;    // TODO: channels, depth & colorspace have nothing to do with general matrices
+  uint8_t channelCount, imgBitDepth;    // TODO: channels, depth & colorspace have nothing to do with general matrices
   Colorspace colorspace;
   std::vector<T> data;
 };

@@ -13,7 +13,7 @@ void Matrix<>::convolve(const Matrix<float>& convMat) {
 
   for (unsigned int matHeightIndex = 0; matHeightIndex < tempMat.getHeight(); ++matHeightIndex) {
     for (unsigned int matWidthIndex = 0; matWidthIndex < tempMat.getWidth(); ++matWidthIndex) {
-      for (uint8_t chan = 0; chan < tempMat.getChannels(); ++chan) {
+      for (uint8_t chan = 0; chan < tempMat.getChannelCount(); ++chan) {
         float value = 0.f;
 
         for (int convHeightIndex = minConvIndex; convHeightIndex <= maxConvIndex; ++convHeightIndex) {
@@ -26,12 +26,12 @@ void Matrix<>::convolve(const Matrix<float>& convMat) {
               value += 0.f;
             } else {
               value += convMat[(convHeightIndex + maxConvIndex) * convMat.getWidth() + convWidthIndex + maxConvIndex]
-                * tempMat[(correspHeightIndex * tempMat.getWidth() + correspWidthIndex) * channels + chan];
+                * tempMat[(correspHeightIndex * tempMat.getWidth() + correspWidthIndex) * channelCount + chan];
             }
           }
         }
 
-        data[(matHeightIndex * tempMat.getWidth() + matWidthIndex) * channels + chan] = value;
+        data[(matHeightIndex * tempMat.getWidth() + matWidthIndex) * channelCount + chan] = value;
       }
     }
   }
