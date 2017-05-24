@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "ArcV/Math/Matrix.hpp"
 #include "ArcV/Processing/Image.hpp"
 
@@ -10,33 +8,30 @@ void Matrix<>::convolve(const Matrix<float>& convMat) {
   assert(("Error: Convolution matrix must be a square one", convMat.getWidth() == convMat.getHeight()));
   assert(("Error: Convolution matrix's size must be odd", convMat.getData().size() % 2 == 1));
 
-  // TODO: make this work for any number of channels
-  const Mat tempMat = *this;
+  const Matrix<> tempMat = *this;
+  const int minConvIndex = -((convMat.getWidth() - 1) / 2), maxConvIndex = (convMat.getWidth() - 1) / 2;
 
   for (unsigned int matHeightIndex = 0; matHeightIndex < tempMat.getHeight(); ++matHeightIndex) {
-    for (unsigned int matWidthIndex = 0; matWidthIndex < tempMat.getWidth() * channels; matWidthIndex += channels) {
-      const unsigned int matIndex = (matHeightIndex * tempMat.getWidth()) * channels + matWidthIndex;
+    for (unsigned int matWidthIndex = 0; matWidthIndex < tempMat.getWidth(); ++matWidthIndex) {
+      for (uint8_t chan = 0; chan < tempMat.getChannels(); ++chan) {
+        float value = 0.f;
 
-      for (int convHeightIndex = -((convMat.getHeight() - 1) / 2); convHeightIndex < (convMat.getHeight() - 1) / 2; ++convHeightIndex) {
-        for (int convWidthIndex = -((convMat.getWidth() - 1) / 2); convWidthIndex < (convMat.getWidth() - 1) / 2; ++convWidthIndex) {
-          const unsigned int correspHeight = matHeightIndex + convHeightIndex;
-          const unsigned int correspWidth = matWidthIndex + convWidthIndex;
+        for (int convHeightIndex = minConvIndex; convHeightIndex <= maxConvIndex; ++convHeightIndex) {
+          for (int convWidthIndex = minConvIndex; convWidthIndex <= maxConvIndex; ++convWidthIndex) {
+            const unsigned int correspHeightIndex = matHeightIndex + convHeightIndex;
+            const unsigned int correspWidthIndex = matWidthIndex + convWidthIndex;
 
-          for (uint8_t chan = 0; chan < channels; ++chan) {
-            float value = 0.f;
-
-            //if (correspHeight > matHeightIndex || correspWidth > matWidthIndex) {
-            if (correspHeight > tempMat.getHeight() || correspWidth > tempMat.getWidth() * channels) {
-              // TODO: accumulate the nearest correct value
-              value = 0;
+            if (correspHeightIndex < 0 || correspHeightIndex > tempMat.getHeight()
+                || correspWidthIndex < 0 || correspWidthIndex > tempMat.getWidth()) {
+              value += 0.f;
             } else {
-              value += convMat[convHeightIndex * convMat.getWidth() + convWidthIndex]
-                * tempMat[(correspHeight * tempMat.getWidth()) * channels + correspWidth + chan];
+              value += convMat[(convHeightIndex + maxConvIndex) * convMat.getWidth() + convWidthIndex + maxConvIndex]
+                * tempMat[(correspHeightIndex * tempMat.getWidth() + correspWidthIndex) * channels + chan];
             }
-
-            data[matIndex + chan] = value;
           }
         }
+
+        data[(matHeightIndex * tempMat.getWidth() + matWidthIndex) * channels + chan] = value;
       }
     }
   }
