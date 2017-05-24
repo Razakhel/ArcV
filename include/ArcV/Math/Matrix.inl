@@ -9,10 +9,10 @@ template <typename TI>
 Matrix<T>::Matrix(const Matrix<TI>& mat)
   : width{ mat.getWidth() },
     height{ mat.getHeight() },
-    channels{ mat.getChannels() },
+    channelCount{ mat.getChannelCount() },
     imgBitDepth{ mat.getImgBitDepth() },
     colorspace{ mat.getColorspace() },
-    data(mat.getWidth() * mat.getHeight() * mat.getChannels()) {
+    data(mat.getWidth() * mat.getHeight() * mat.getChannelCount()) {
   if (std::numeric_limits<TI>::max() > std::numeric_limits<T>::max()) {
     for (unsigned int eltIndex = 0; eltIndex < mat.getData().size(); ++eltIndex) {
       data[eltIndex] = std::min(std::numeric_limits<TI>::max(), std::max(static_cast<TI>(0), mat.getData()[eltIndex]));

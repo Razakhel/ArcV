@@ -10,7 +10,10 @@
 enum ImageType { ARCV_IMAGE_TYPE_JPEG = 0,
                  ARCV_IMAGE_TYPE_PNG };
 
-enum FilterType { ARCV_FILTER_TYPE_GAUSSIAN_BLUR = 0 };
+enum FilterType { ARCV_FILTER_TYPE_GAUSSIAN_BLUR = 0,
+                  ARCV_FILTER_TYPE_SHARPEN,
+                  ARCV_FILTER_TYPE_EDGE_DETECTION,
+                  ARCV_FILTER_TYPE_EMBOSS };
 
 namespace Arcv {
 

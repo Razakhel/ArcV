@@ -10,24 +10,26 @@ void addAlphaChannel(Matrix<>& mat) {
 }
 
 void removeAlphaChannel(Matrix<>& mat) {
-  for (unsigned int i = mat.getChannels(), delta = 1; i < mat.getData().size(); i += mat.getChannels(), ++delta) {
-    for (unsigned int chan = i; chan < i + mat.getChannels() - 1; ++chan)
+  for (unsigned int i = mat.getChannelCount(), delta = 1; i < mat.getData().size(); i += mat.getChannelCount(), ++delta) {
+    for (unsigned int chan = i; chan < i + mat.getChannelCount() - 1; ++chan)
       mat.getData()[chan - delta] = mat.getData()[chan];
   }
 
-  mat.getData().resize(mat.getData().size() * (mat.getChannels() - 1) / mat.getChannels());
+  mat.getData().resize(mat.getData().size() * (mat.getChannelCount() - 1) / mat.getChannelCount());
+  mat.setChannelCount(mat.getChannelCount() - 1);
 }
 
 void convertToGrayscale(Matrix<>& mat) {
   unsigned int index = 0;
   // Avoiding alpha channel, not including it into the operation
-  const uint8_t stride = static_cast<uint8_t>(mat.getChannels() - (mat.getColorspace() == ARCV_COLORSPACE_GRAY_ALPHA
+  const uint8_t stride = static_cast<uint8_t>(mat.getChannelCount() - (mat.getColorspace() == ARCV_COLORSPACE_GRAY_ALPHA
                                                                    || mat.getColorspace() == ARCV_COLORSPACE_RGBA ? 1 : 0));
 
-  for (auto it = mat.getData().begin(); it != mat.getData().end(); it += mat.getChannels(), ++index)
+  for (auto it = mat.getData().begin(); it != mat.getData().end(); it += mat.getChannelCount(), ++index)
     mat.getData()[index] = std::accumulate(it, it + stride, 0) / (stride);
 
-  mat.getData().resize(mat.getData().size() / mat.getChannels());
+  mat.getData().resize(mat.getData().size() / mat.getChannelCount());
+  mat.setChannelCount(1);
 }
 
 void convertToHSV(Matrix<>& mat) {
@@ -61,6 +63,8 @@ void convertToHSV(Matrix<>& mat) {
     // Value
     mat.getData()[i + 2] = maxVal;
   }
+
+  mat.setChannelCount(3);
 }
 
 void applyGaussianBlur(Matrix<>& mat) {
@@ -71,6 +75,30 @@ void applyGaussianBlur(Matrix<>& mat) {
                           { 1.f, 1.f, 1.f, 1.f, 1.f }};
 
   mat.convolve(kernel / kernel.getData().size());
+}
+
+void applySharpen(Matrix<>& mat) {
+  Matrix<float> kernel = {{ 0.f,  -1.f,  0.f },
+                          { -1.f,  5.f, -1.f },
+                          { 0.f,  -1.f,  0.f }};
+
+  mat.convolve(kernel);
+}
+
+void applyEdgeDetection(Matrix<>& mat) {
+  Matrix<float> kernel = {{ 0.f,   1.f,  0.f },
+                          { 1.f,  -4.f,  1.f },
+                          { 0.f,   1.f,  0.f }};
+
+  mat.convolve(kernel);
+}
+
+void applyEmboss(Matrix<>& mat) {
+  Matrix<float> kernel = {{ -2.f, -1.f, 0.f },
+                          { -1.f,  1.f, 1.f },
+                          {  0.f,  1.f, 2.f }};
+
+  mat.convolve(kernel);
 }
 
 } // namespace
@@ -121,6 +149,18 @@ void Image::applyFilter(Matrix<>& mat) {
   switch (F) {
     case ARCV_FILTER_TYPE_GAUSSIAN_BLUR:
       applyGaussianBlur(mat);
+      break;
+
+    case ARCV_FILTER_TYPE_SHARPEN:
+      applySharpen(mat);
+      break;
+
+    case ARCV_FILTER_TYPE_EDGE_DETECTION:
+      applyEdgeDetection(mat);
+      break;
+
+    case ARCV_FILTER_TYPE_EMBOSS:
+      applyEmboss(mat);
       break;
 
     default:
