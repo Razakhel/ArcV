@@ -18,15 +18,16 @@ This library is made for Linux, though it is planned to make it fully compatible
 
 | Objectives | Implemented |
 | :--------: | :---------: |
-| Creating windowing class (Windows, Linux/X) | _On standby_ |
 | Implementing Matrix/Vector classes | **Yes** |
 | Loading (reading) an image (JPEG/PNG/...) | **Yes** (PNG) |
 | Saving (writing) an image | **Yes** (PNG) |
-| Getting stream from webcam | No |
-| Operations on image matrices (change color model, apply convolution, etc) | _In progress_ |
+| Changing colorspace | **Yes** |
+| Convolution filtering | **Yes** |
 | Operations on colors (thresholding...) | No |
 | Detecting basic features (lines, circles...) | No |
 | Detecting advanced features (objects recognition, ORB algorithm) | No |
+| Creating windowing class (Windows, Linux/X) | _On standby_ |
+| Getting stream from webcam | No |
 
 May be decided to be added:
 - Facial recognition
@@ -53,4 +54,5 @@ To be continued!
 
 Links to Wikipedia:
 - [Computer Vision](https://en.wikipedia.org/wiki/Computer_vision)
+- [Convolution](https://en.wikipedia.org/wiki/Kernel_(image_processing))
 - [Augmented Reality](https://en.wikipedia.org/wiki/Augmented_reality)
