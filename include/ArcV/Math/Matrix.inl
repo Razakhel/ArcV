@@ -25,10 +25,10 @@ Matrix<T>::Matrix(const Matrix<TI>& mat)
 template <typename T>
 Matrix<T>::Matrix(const std::initializer_list<std::initializer_list<T>>& list)
   : height{ static_cast<unsigned int>(list.size()) },
-    width{ static_cast<unsigned int>(list.begin()->size()) } {
-  data.resize(list.size() * list.begin()->size());
-
+    width{ static_cast<unsigned int>(list.begin()->size()) },
+    data(list.size() * list.begin()->size()) {
   auto row = list.begin();
+
   for (unsigned int heightIndex = 0; heightIndex < list.size(); ++heightIndex, ++row) {
     auto element = row->begin();
 
