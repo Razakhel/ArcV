@@ -74,7 +74,7 @@ void applyGaussianBlur(Matrix<>& mat) {
                           { 4.f, 16.f, 24.f, 16.f, 4.f },
                           { 1.f,  4.f,  6.f,  4.f, 1.f }};
 
-  mat.convolve(kernel / 256);
+  mat = mat.convolve(kernel / 256);
 }
 
 void applySharpen(Matrix<>& mat) {
@@ -82,7 +82,7 @@ void applySharpen(Matrix<>& mat) {
                           { -1.f,  5.f, -1.f },
                           { 0.f,  -1.f,  0.f }};
 
-  mat.convolve(kernel);
+  mat = mat.convolve(kernel);
 }
 
 void applyEdgeDetection(Matrix<>& mat) {
@@ -90,7 +90,7 @@ void applyEdgeDetection(Matrix<>& mat) {
                           { 1.f,  -4.f,  1.f },
                           { 0.f,   1.f,  0.f }};
 
-  mat.convolve(kernel);
+  mat = mat.convolve(kernel);
 }
 
 void applyEmboss(Matrix<>& mat) {
@@ -98,7 +98,26 @@ void applyEmboss(Matrix<>& mat) {
                           { -1.f,  1.f, 1.f },
                           {  0.f,  1.f, 2.f }};
 
-  mat.convolve(kernel);
+  mat = mat.convolve(kernel);
+}
+
+void applySobel(Matrix<>& mat) {
+  Matrix<float> kernel1 = {{ 1.f, 0.f, -1.f },
+                           { 2.f, 0.f, -2.f },
+                           { 1.f, 0.f, -1.f }};
+  Matrix<float> kernel2 = {{  1.f,  2.f,  1.f },
+                           {  0.f,  0.f,  0.f },
+                           { -1.f, -2.f, -1.f }};
+
+  Matrix<float> res = mat.convolve(kernel1);
+  res *= res;
+
+  Matrix<float> res2 = mat.convolve(kernel2);
+  res2 *= res2;
+
+  (res += res2).sqrt();
+  Image::changeColorspace<ARCV_COLORSPACE_GRAY>(res);
+  mat = res;
 }
 
 } // namespace
@@ -161,6 +180,10 @@ void Image::applyFilter(Matrix<>& mat) {
 
     case ARCV_FILTER_TYPE_EMBOSS:
       applyEmboss(mat);
+      break;
+
+    case ARCV_FILTER_TYPE_SOBEL:
+      applySobel(mat);
       break;
 
     default:

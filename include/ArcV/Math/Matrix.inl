@@ -1,6 +1,5 @@
 #include <limits>
 #include <cassert>
-#include <algorithm>
 
 namespace Arcv {
 
@@ -35,6 +34,12 @@ Matrix<T>::Matrix(const std::initializer_list<std::initializer_list<T>>& list)
     for (unsigned int widthIndex = 0; widthIndex < list.begin()->size(); ++widthIndex, ++element)
       data[heightIndex * list.begin()->size() + widthIndex] = *element;
   }
+}
+
+template <typename T>
+void Matrix<T>::sqrt() {
+  for (auto element = data.begin(); element != data.end(); ++element)
+    *element = std::sqrt(*element);
 }
 
 template <typename T>

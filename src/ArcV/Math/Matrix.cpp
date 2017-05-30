@@ -21,8 +21,7 @@ Matrix<> Matrix<>::convolve(const Matrix<float>& convMat) {
             const unsigned int correspHeightIndex = matHeightIndex + convHeightIndex;
             const unsigned int correspWidthIndex = matWidthIndex + convWidthIndex;
 
-            if (correspHeightIndex < 0 || correspHeightIndex > height
-                || correspWidthIndex < 0 || correspWidthIndex > width) {
+            if (correspHeightIndex < 0 || correspHeightIndex > height || correspWidthIndex < 0 || correspWidthIndex > width) {
               value += 0.f;
             } else {
               value += convMat[(convHeightIndex + maxConvIndex) * convMat.getWidth() + convWidthIndex + maxConvIndex]
