@@ -4,16 +4,16 @@
 namespace Arcv {
 
 template <>
-void Matrix<>::convolve(const Matrix<float>& convMat) {
+Matrix<> Matrix<>::convolve(const Matrix<float>& convMat) {
   assert(("Error: Convolution matrix must be a square one", convMat.getWidth() == convMat.getHeight()));
   assert(("Error: Convolution matrix's size must be odd", convMat.getData().size() % 2 == 1));
 
-  const Matrix<> tempMat = *this;
+  Matrix<> tempMat = *this;
   const int minConvIndex = -((convMat.getWidth() - 1) / 2), maxConvIndex = (convMat.getWidth() - 1) / 2;
 
-  for (unsigned int matHeightIndex = 0; matHeightIndex < tempMat.getHeight(); ++matHeightIndex) {
-    for (unsigned int matWidthIndex = 0; matWidthIndex < tempMat.getWidth(); ++matWidthIndex) {
-      for (uint8_t chan = 0; chan < tempMat.getChannelCount(); ++chan) {
+  for (unsigned int matHeightIndex = 0; matHeightIndex < height; ++matHeightIndex) {
+    for (unsigned int matWidthIndex = 0; matWidthIndex < width; ++matWidthIndex) {
+      for (uint8_t chan = 0; chan < channelCount; ++chan) {
         float value = 0.f;
 
         for (int convHeightIndex = minConvIndex; convHeightIndex <= maxConvIndex; ++convHeightIndex) {
@@ -21,20 +21,22 @@ void Matrix<>::convolve(const Matrix<float>& convMat) {
             const unsigned int correspHeightIndex = matHeightIndex + convHeightIndex;
             const unsigned int correspWidthIndex = matWidthIndex + convWidthIndex;
 
-            if (correspHeightIndex < 0 || correspHeightIndex > tempMat.getHeight()
-                || correspWidthIndex < 0 || correspWidthIndex > tempMat.getWidth()) {
+            if (correspHeightIndex < 0 || correspHeightIndex > height
+                || correspWidthIndex < 0 || correspWidthIndex > width) {
               value += 0.f;
             } else {
               value += convMat[(convHeightIndex + maxConvIndex) * convMat.getWidth() + convWidthIndex + maxConvIndex]
-                * tempMat[(correspHeightIndex * tempMat.getWidth() + correspWidthIndex) * channelCount + chan];
+                * data[(correspHeightIndex * width + correspWidthIndex) * channelCount + chan];
             }
           }
         }
 
-        data[(matHeightIndex * tempMat.getWidth() + matWidthIndex) * channelCount + chan] = value;
+        tempMat.getData()[(matHeightIndex * width + matWidthIndex) * channelCount + chan] = value;
       }
     }
   }
+
+  return tempMat;
 }
 
 } // namespace Arcv

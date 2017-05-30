@@ -49,7 +49,7 @@ public:
   void setChannelCount(uint8_t channelCount) { this->channelCount = channelCount; }
   void setColorspace(Colorspace colorspace) { this->colorspace = colorspace; }
 
-  void convolve(const Matrix<float>& convMat);
+  Matrix convolve(const Matrix<float>& convMat);
 
   Matrix& operator+(const Matrix& mat) { return *this += mat; }
   Matrix& operator+(float val) { return *this += val; }
@@ -79,7 +79,7 @@ private:
   std::vector<T> data;
 };
 
-template <> void Matrix<>::convolve(const Matrix<float>& convMat);
+template <> Matrix<> Matrix<>::convolve(const Matrix<float>& convMat);
 
 using Mat = Matrix<>;
 
