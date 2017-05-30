@@ -37,12 +37,6 @@ Matrix<T>::Matrix(const std::initializer_list<std::initializer_list<T>>& list)
 }
 
 template <typename T>
-void Matrix<T>::sqrt() {
-  for (auto element = data.begin(); element != data.end(); ++element)
-    *element = std::sqrt(*element);
-}
-
-template <typename T>
 Matrix<T>& Matrix<T>::operator+=(const Matrix& mat) {
   assert(("Error: Matrices aren't the same size", data.size() == mat.getData().size()));
 

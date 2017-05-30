@@ -110,14 +110,11 @@ void applySobel(Matrix<>& mat) {
                            { -1.f, -2.f, -1.f }};
 
   Matrix<float> res = mat.convolve(kernel1);
-  res *= res;
-
   Matrix<float> res2 = mat.convolve(kernel2);
-  res2 *= res2;
 
-  (res += res2).sqrt();
-  Image::changeColorspace<ARCV_COLORSPACE_GRAY>(res);
-  mat = res;
+  for (unsigned int elementIndex = 0; elementIndex < mat.getData().size(); ++elementIndex)
+    mat.getData()[elementIndex] = std::sqrt(res.getData()[elementIndex] * res.getData()[elementIndex]
+                                            + res2.getData()[elementIndex] * res2.getData()[elementIndex]);
 }
 
 } // namespace

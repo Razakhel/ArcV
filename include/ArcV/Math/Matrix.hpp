@@ -50,7 +50,6 @@ public:
   void setColorspace(Colorspace colorspace) { this->colorspace = colorspace; }
 
   Matrix convolve(const Matrix<float>& convMat);
-  void sqrt();
 
   Matrix& operator+(const Matrix& mat) { return *this += mat; }
   Matrix& operator+(float val) { return *this += val; }
