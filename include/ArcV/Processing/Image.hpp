@@ -16,6 +16,8 @@ enum FilterType { ARCV_FILTER_TYPE_GAUSSIAN_BLUR = 0,
                   ARCV_FILTER_TYPE_EMBOSS,
                   ARCV_FILTER_TYPE_SOBEL };
 
+enum DetectorType { ARCV_DETECTOR_TYPE_HARRIS = 0 };
+
 namespace Arcv {
 
 const unsigned int PNG_HEADER_SIZE = 8;
@@ -26,6 +28,7 @@ public:
   static void write(const Matrix<>& mat, const std::string& fileName);
   template <Colorspace C> static void changeColorspace(Matrix<>& mat);
   template <FilterType F> static void applyFilter(Matrix<>& mat);
+  template <DetectorType D> static void applyDetector(Matrix<>& mat);
 };
 
 } // namespace Arcv

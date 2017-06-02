@@ -101,20 +101,44 @@ void applyEmboss(Matrix<>& mat) {
   mat = mat.convolve(kernel);
 }
 
-void applySobel(Matrix<>& mat) {
-  Matrix<float> kernel1 = {{ 1.f, 0.f, -1.f },
-                           { 2.f, 0.f, -2.f },
-                           { 1.f, 0.f, -1.f }};
-  Matrix<float> kernel2 = {{  1.f,  2.f,  1.f },
-                           {  0.f,  0.f,  0.f },
-                           { -1.f, -2.f, -1.f }};
+Matrix<> computeHorizontalSobelOperator(Matrix<> mat) {
+  Matrix<float> horizKernel = {{  1.f,  2.f,  1.f },
+                               {  0.f,  0.f,  0.f },
+                               { -1.f, -2.f, -1.f }};
 
-  Matrix<float> res = mat.convolve(kernel1);
-  Matrix<float> res2 = mat.convolve(kernel2);
+  return mat.convolve(horizKernel);
+}
+
+Matrix<> computeVerticalSobelOperator(Matrix<> mat) {
+  Matrix<float> vertKernel = {{ 1.f, 0.f, -1.f },
+                              { 2.f, 0.f, -2.f },
+                              { 1.f, 0.f, -1.f }};
+
+  return mat.convolve(vertKernel);
+}
+
+void applySobel(Matrix<>& mat) {
+  Matrix<float> horizRes = computeHorizontalSobelOperator(mat);
+  Matrix<float> vertRes = computeVerticalSobelOperator(mat);
 
   for (unsigned int elementIndex = 0; elementIndex < mat.getData().size(); ++elementIndex)
-    mat.getData()[elementIndex] = std::sqrt(res.getData()[elementIndex] * res.getData()[elementIndex]
-                                            + res2.getData()[elementIndex] * res2.getData()[elementIndex]);
+    mat.getData()[elementIndex] = std::sqrt(vertRes.getData()[elementIndex] * vertRes.getData()[elementIndex]
+                                            + horizRes.getData()[elementIndex] * horizRes.getData()[elementIndex]);
+}
+
+void applyHarris(Matrix<>& mat) {
+  Image::changeColorspace<ARCV_COLORSPACE_GRAY>(mat);
+
+  Matrix<float> horizRes = computeHorizontalSobelOperator(mat);
+  Matrix<float> vertRes = computeVerticalSobelOperator(mat);
+
+  Matrix<float> res = horizRes * vertRes;
+  horizRes *= horizRes;
+  vertRes *= vertRes;
+
+  for (unsigned int i = 0; i < mat.getData(). size(); ++i)
+    mat.getData()[i] = (horizRes.getData()[i] * vertRes.getData()[i] - res.getData()[i] * res.getData()[i])
+                       - 0.04f * std::pow(horizRes.getData()[i] + vertRes.getData()[i], 2.f);
 }
 
 } // namespace
@@ -181,6 +205,18 @@ void Image::applyFilter(Matrix<>& mat) {
 
     case ARCV_FILTER_TYPE_SOBEL:
       applySobel(mat);
+      break;
+
+    default:
+      break;
+  }
+}
+
+template <DetectorType D>
+void Image::applyDetector(Matrix<>& mat) {
+  switch (D) {
+    case ARCV_DETECTOR_TYPE_HARRIS:
+      applyHarris(mat);
       break;
 
     default:
