@@ -123,34 +123,29 @@ void Image::write(const Matrix<>& mat, const std::string& fileName) {
   assert(("Error: Couldn't initialize PNG info struct", pngInfoStruct));
 
   uint32_t colorType;
-  unsigned short channels = 0;
   switch (matToWrite.getColorspace()) {
     case ARCV_COLORSPACE_GRAY:
       colorType = PNG_COLOR_TYPE_GRAY;
-      channels = 1;
       break;
 
     case ARCV_COLORSPACE_GRAY_ALPHA:
       colorType = PNG_COLOR_TYPE_GRAY_ALPHA;
-      channels = 2;
       break;
 
     case ARCV_COLORSPACE_RGB:
     case ARCV_COLORSPACE_HSV:
     default:
       colorType = PNG_COLOR_TYPE_RGB;
-      channels = 3;
       break;
 
     case ARCV_COLORSPACE_RGBA:
       colorType = PNG_COLOR_TYPE_RGBA;
-      channels = 4;
       break;
   }
 
   png_set_compression_level(pngWriteStruct, 6);
 
-  if (channels * matToWrite.getImgBitDepth() >= 16) {
+  if (matToWrite.getChannelCount() * matToWrite.getImgBitDepth() >= 16) {
     png_set_compression_strategy(pngWriteStruct, Z_FILTERED);
     png_set_filter(pngWriteStruct, 0, PNG_FILTER_NONE | PNG_FILTER_SUB | PNG_FILTER_PAETH);
   } else {
@@ -171,8 +166,7 @@ void Image::write(const Matrix<>& mat, const std::string& fileName) {
   png_write_info(pngWriteStruct, pngInfoStruct);
 
   for (uint32_t i = 0; i < matToWrite.getHeight(); ++i) {
-    png_write_row(pngWriteStruct,
-                  &matToWrite.getData()[matToWrite.getWidth() * channels * i]);
+    png_write_row(pngWriteStruct, &matToWrite.getData()[matToWrite.getWidth() * matToWrite.getChannelCount() * i]);
   }
 
   png_write_end(pngWriteStruct, pngInfoStruct);
