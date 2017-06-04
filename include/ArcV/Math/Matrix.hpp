@@ -8,10 +8,10 @@
 #include <cstdint>
 
 enum Colorspace { ARCV_COLORSPACE_GRAY = 0,
-                  ARCV_COLORSPACE_GRAY_ALPHA,
                   ARCV_COLORSPACE_RGB,
-                  ARCV_COLORSPACE_RGBA,
-                  ARCV_COLORSPACE_HSV };
+                  ARCV_COLORSPACE_HSV,
+                  ARCV_COLORSPACE_GRAY_ALPHA,
+                  ARCV_COLORSPACE_RGBA };
 
 namespace Arcv {
 

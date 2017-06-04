@@ -16,20 +16,20 @@ void removeAlphaChannel(Matrix<>& mat) {
   }
 
   mat.getData().resize(mat.getData().size() * (mat.getChannelCount() - 1) / mat.getChannelCount());
-  mat.setChannelCount(mat.getChannelCount() - 1);
+  mat.setChannelCount(static_cast<uint8_t>(mat.getChannelCount() - 1));
 }
 
 void convertToGrayscale(Matrix<>& mat) {
   unsigned int index = 0;
   // Avoiding alpha channel, not including it into the operation
-  const uint8_t stride = static_cast<uint8_t>(mat.getChannelCount() - (mat.getColorspace() == ARCV_COLORSPACE_GRAY_ALPHA
-                                                                   || mat.getColorspace() == ARCV_COLORSPACE_RGBA ? 1 : 0));
+  const uint8_t alpha = static_cast<uint8_t>(mat.getColorspace() >= ARCV_COLORSPACE_GRAY_ALPHA ? 1 : 0);
+  const uint8_t stride = static_cast<uint8_t>(mat.getChannelCount() - alpha);
 
-  for (auto it = mat.getData().begin(); it != mat.getData().end(); it += mat.getChannelCount(), ++index)
-    mat.getData()[index] = std::accumulate(it, it + stride, 0) / (stride);
+  for (auto element = mat.getData().begin(); element != mat.getData().end(); element += mat.getChannelCount(), ++index)
+    mat.getData()[index] = std::accumulate(element, element + stride, 0) / stride;
 
   mat.getData().resize(mat.getData().size() / mat.getChannelCount());
-  mat.setChannelCount(1);
+  mat.setChannelCount(static_cast<uint8_t>(1 + alpha));
 }
 
 void convertToHSV(Matrix<>& mat) {
@@ -138,7 +138,7 @@ void applyHarris(Matrix<>& mat) {
 
   for (unsigned int i = 0; i < mat.getData(). size(); ++i)
     mat.getData()[i] = (horizRes.getData()[i] * vertRes.getData()[i] - res.getData()[i] * res.getData()[i])
-                       - 0.04f * std::pow(horizRes.getData()[i] + vertRes.getData()[i], 2.f);
+                        - 0.04f * std::pow(horizRes.getData()[i] + vertRes.getData()[i], 2.f);
 }
 
 } // namespace
@@ -146,39 +146,37 @@ void applyHarris(Matrix<>& mat) {
 template <Colorspace C>
 void Image::changeColorspace(Matrix<>& mat) {
   if (C != mat.getColorspace()) {
+    if (C < ARCV_COLORSPACE_GRAY_ALPHA && mat.getColorspace() >= ARCV_COLORSPACE_GRAY_ALPHA)
+      removeAlphaChannel(mat);
+
     switch (C) {
       case ARCV_COLORSPACE_GRAY:
-        if (mat.getColorspace() == ARCV_COLORSPACE_GRAY_ALPHA)
-          removeAlphaChannel(mat);
-        else
+        if (mat.getColorspace() != ARCV_COLORSPACE_GRAY_ALPHA)
           convertToGrayscale(mat);
         break;
 
-      case ARCV_COLORSPACE_GRAY_ALPHA:
-        if (mat.getColorspace() == ARCV_COLORSPACE_GRAY)
-          addAlphaChannel(mat);
-        break;
-
       case ARCV_COLORSPACE_RGB:
-        if (mat.getColorspace() == ARCV_COLORSPACE_RGBA)
-          removeAlphaChannel(mat);
+        assert(("Warning: Function not handled yet", mat.getColorspace() == ARCV_COLORSPACE_RGBA));
         break;
 
       case ARCV_COLORSPACE_HSV:
         assert(("Error: Input matrix's colorspace should be RGB(A)",
                 mat.getColorspace() == ARCV_COLORSPACE_RGB || mat.getColorspace() == ARCV_COLORSPACE_RGBA));
-
-        if (mat.getColorspace() == ARCV_COLORSPACE_RGBA)
-          removeAlphaChannel(mat);
-
         convertToHSV(mat);
         break;
 
+      case ARCV_COLORSPACE_GRAY_ALPHA:
+        if (mat.getColorspace() != ARCV_COLORSPACE_GRAY)
+          convertToGrayscale(mat);
+        break;
+
       case ARCV_COLORSPACE_RGBA:
-        if (mat.getColorspace() == ARCV_COLORSPACE_RGB)
-          addAlphaChannel(mat);
+        assert(("Warning: Function not handled yet", mat.getColorspace() == ARCV_COLORSPACE_RGB));
         break;
     }
+
+    if (C >= ARCV_COLORSPACE_GRAY_ALPHA && mat.getColorspace() < ARCV_COLORSPACE_GRAY_ALPHA)
+      addAlphaChannel(mat);
 
     mat.setColorspace(C);
   }
