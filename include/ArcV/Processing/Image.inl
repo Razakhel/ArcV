@@ -23,12 +23,16 @@ void convertToGrayscale(Matrix<>& mat) {
   unsigned int index = 0;
   // Avoiding alpha channel, not including it into the operation
   const uint8_t alpha = static_cast<uint8_t>(mat.getColorspace() >= ARCV_COLORSPACE_GRAY_ALPHA ? 1 : 0);
-  const uint8_t stride = static_cast<uint8_t>(mat.getChannelCount() - alpha);
+  const uint8_t stride = mat.getChannelCount() - alpha;
 
-  for (auto element = mat.getData().begin(); element != mat.getData().end(); element += mat.getChannelCount(), ++index)
+  for (auto element = mat.getData().begin(); element != mat.getData().end(); element += mat.getChannelCount(), index += 1 + alpha) {
     mat.getData()[index] = std::accumulate(element, element + stride, 0) / stride;
 
-  mat.getData().resize(mat.getData().size() / mat.getChannelCount());
+    if (alpha)
+      mat.getData()[index + 1] = *(element + stride);
+  }
+
+  mat.getData().resize(mat.getWidth() * mat.getHeight() * (alpha ? 2 : 1));
   mat.setChannelCount(static_cast<uint8_t>(1 + alpha));
 }
 
@@ -78,48 +82,48 @@ void applyGaussianBlur(Matrix<>& mat) {
 }
 
 void applySharpen(Matrix<>& mat) {
-  Matrix<float> kernel = {{ 0.f,  -1.f,  0.f },
-                          { -1.f,  5.f, -1.f },
-                          { 0.f,  -1.f,  0.f }};
+  const Matrix<float> kernel = {{ 0.f,  -1.f,  0.f },
+                                { -1.f,  5.f, -1.f },
+                                { 0.f,  -1.f,  0.f }};
 
   mat = mat.convolve(kernel);
 }
 
 void applyEdgeDetection(Matrix<>& mat) {
-  Matrix<float> kernel = {{ 0.f,   1.f,  0.f },
-                          { 1.f,  -4.f,  1.f },
-                          { 0.f,   1.f,  0.f }};
+  const Matrix<float> kernel = {{ 0.f,   1.f,  0.f },
+                                { 1.f,  -4.f,  1.f },
+                                { 0.f,   1.f,  0.f }};
 
   mat = mat.convolve(kernel);
 }
 
 void applyEmboss(Matrix<>& mat) {
-  Matrix<float> kernel = {{ -2.f, -1.f, 0.f },
-                          { -1.f,  1.f, 1.f },
-                          {  0.f,  1.f, 2.f }};
+  const Matrix<float> kernel = {{ -2.f, -1.f, 0.f },
+                                { -1.f,  1.f, 1.f },
+                                {  0.f,  1.f, 2.f }};
 
   mat = mat.convolve(kernel);
 }
 
-Matrix<> computeHorizontalSobelOperator(Matrix<> mat) {
-  Matrix<float> horizKernel = {{  1.f,  2.f,  1.f },
-                               {  0.f,  0.f,  0.f },
-                               { -1.f, -2.f, -1.f }};
+Matrix<> computeHorizontalSobelOperator(Matrix<>& mat) {
+  const Matrix<float> horizKernel = {{  1.f,  2.f,  1.f },
+                                     {  0.f,  0.f,  0.f },
+                                     { -1.f, -2.f, -1.f }};
 
   return mat.convolve(horizKernel);
 }
 
-Matrix<> computeVerticalSobelOperator(Matrix<> mat) {
-  Matrix<float> vertKernel = {{ 1.f, 0.f, -1.f },
-                              { 2.f, 0.f, -2.f },
-                              { 1.f, 0.f, -1.f }};
+Matrix<> computeVerticalSobelOperator(Matrix<>& mat) {
+  const Matrix<float> vertKernel = {{ 1.f, 0.f, -1.f },
+                                    { 2.f, 0.f, -2.f },
+                                    { 1.f, 0.f, -1.f }};
 
   return mat.convolve(vertKernel);
 }
 
 void applySobel(Matrix<>& mat) {
-  Matrix<float> horizRes = computeHorizontalSobelOperator(mat);
-  Matrix<float> vertRes = computeVerticalSobelOperator(mat);
+  const Matrix<float> horizRes = computeHorizontalSobelOperator(mat);
+  const Matrix<float> vertRes = computeVerticalSobelOperator(mat);
 
   for (unsigned int elementIndex = 0; elementIndex < mat.getData().size(); ++elementIndex)
     mat.getData()[elementIndex] = std::sqrt(vertRes.getData()[elementIndex] * vertRes.getData()[elementIndex]
@@ -146,9 +150,6 @@ void applyHarris(Matrix<>& mat) {
 template <Colorspace C>
 void Image::changeColorspace(Matrix<>& mat) {
   if (C != mat.getColorspace()) {
-    if (C < ARCV_COLORSPACE_GRAY_ALPHA && mat.getColorspace() >= ARCV_COLORSPACE_GRAY_ALPHA)
-      removeAlphaChannel(mat);
-
     switch (C) {
       case ARCV_COLORSPACE_GRAY:
         if (mat.getColorspace() != ARCV_COLORSPACE_GRAY_ALPHA)
@@ -175,7 +176,9 @@ void Image::changeColorspace(Matrix<>& mat) {
         break;
     }
 
-    if (C >= ARCV_COLORSPACE_GRAY_ALPHA && mat.getColorspace() < ARCV_COLORSPACE_GRAY_ALPHA)
+    if (C < ARCV_COLORSPACE_GRAY_ALPHA && mat.getColorspace() >= ARCV_COLORSPACE_GRAY_ALPHA)
+      removeAlphaChannel(mat);
+    else if (C >= ARCV_COLORSPACE_GRAY_ALPHA && mat.getColorspace() < ARCV_COLORSPACE_GRAY_ALPHA)
       addAlphaChannel(mat);
 
     mat.setColorspace(C);
