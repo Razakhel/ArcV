@@ -39,7 +39,7 @@ void convertToGrayscale(Matrix<>& mat) {
 void convertToHSV(Matrix<>& mat) {
   float red, green, blue, minVal, maxVal, hue = 0.f;
 
-  for (unsigned int i = 0; i < mat.getData().size(); i += 3) {
+  for (unsigned int i = 0; i < mat.getData().size(); i += mat.getChannelCount()) {
     red = mat.getData()[i];
     green = mat.getData()[i + 1];
     blue = mat.getData()[i + 2];
@@ -68,7 +68,7 @@ void convertToHSV(Matrix<>& mat) {
     mat.getData()[i + 2] = maxVal;
   }
 
-  mat.setChannelCount(3);
+  mat.setChannelCount(static_cast<uint8_t>(3 + (mat.getColorspace() == ARCV_COLORSPACE_RGBA ? 1 : 0)));
 }
 
 void applyGaussianBlur(Matrix<>& mat) {
