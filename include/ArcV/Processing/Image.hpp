@@ -26,9 +26,9 @@ class Image {
 public:
   static Matrix<> read(const std::string& fileName);
   static void write(const Matrix<>& mat, const std::string& fileName);
-  template <Colorspace C> static void changeColorspace(Matrix<>& mat);
-  template <FilterType F> static void applyFilter(Matrix<>& mat);
-  template <DetectorType D> static void applyDetector(Matrix<>& mat);
+  template <Colorspace C> static Matrix<> changeColorspace(Matrix<> mat);
+  template <FilterType F> static Matrix<> applyFilter(Matrix<> mat);
+  template <DetectorType D> static Matrix<> applyDetector(Matrix<> mat);
 };
 
 } // namespace Arcv

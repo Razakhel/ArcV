@@ -160,7 +160,7 @@ void applyHarris(Matrix<>& mat) {
 } // namespace
 
 template <Colorspace C>
-void Image::changeColorspace(Matrix<>& mat) {
+Matrix<> Image::changeColorspace(Matrix<> mat) {
   if (C != mat.getColorspace()) {
     switch (C) {
       case ARCV_COLORSPACE_GRAY:
@@ -195,10 +195,12 @@ void Image::changeColorspace(Matrix<>& mat) {
 
     mat.setColorspace(C);
   }
+
+  return mat;
 }
 
 template <FilterType F>
-void Image::applyFilter(Matrix<>& mat) {
+Matrix<> Image::applyFilter(Matrix<> mat) {
   switch (F) {
     case ARCV_FILTER_TYPE_GAUSSIAN_BLUR:
       applyGaussianBlur(mat);
@@ -223,10 +225,12 @@ void Image::applyFilter(Matrix<>& mat) {
     default:
       break;
   }
+
+  return mat;
 }
 
 template <DetectorType D>
-void Image::applyDetector(Matrix<>& mat) {
+Matrix<> Image::applyDetector(Matrix<> mat) {
   switch (D) {
     case ARCV_DETECTOR_TYPE_HARRIS:
       applyHarris(mat);
@@ -235,6 +239,8 @@ void Image::applyDetector(Matrix<>& mat) {
     default:
       break;
   }
+
+  return mat;
 }
 
 } // namespace Arcv
