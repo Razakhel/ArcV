@@ -14,7 +14,7 @@ Matrix<T>::Matrix(const Matrix<TI>& mat)
     colorspace{ mat.getColorspace() },
     data(mat.getWidth() * mat.getHeight() * mat.getChannelCount()) {
   if (std::numeric_limits<TI>::max() > std::numeric_limits<T>::max()) {
-    for (unsigned int eltIndex = 0; eltIndex < mat.getData().size(); ++eltIndex) {
+    for (std::size_t eltIndex = 0; eltIndex < mat.getData().size(); ++eltIndex) {
       data[eltIndex] = std::min(std::numeric_limits<TI>::max(), std::max(static_cast<TI>(0), mat.getData()[eltIndex]));
     }
   } else {
@@ -29,10 +29,10 @@ Matrix<T>::Matrix(const std::initializer_list<const std::initializer_list<T>>& l
     data(list.size() * list.begin()->size()) {
   auto row = list.begin();
 
-  for (unsigned int heightIndex = 0; heightIndex < list.size(); ++heightIndex, ++row) {
+  for (std::size_t heightIndex = 0; heightIndex < list.size(); ++heightIndex, ++row) {
     auto element = row->begin();
 
-    for (unsigned int widthIndex = 0; widthIndex < list.begin()->size(); ++widthIndex, ++element)
+    for (std::size_t widthIndex = 0; widthIndex < list.begin()->size(); ++widthIndex, ++element)
       data[heightIndex * list.begin()->size() + widthIndex] = *element;
   }
 }
@@ -41,14 +41,14 @@ template <typename T>
 Matrix<T>& Matrix<T>::operator+=(const Matrix& mat) {
   assert(("Error: Matrices aren't the same size", data.size() == mat.getData().size()));
 
-  for (unsigned int i = 0; i < data.size(); ++i)
+  for (std::size_t i = 0; i < data.size(); ++i)
     data[i] += mat.getData()[i];
   return *this;
 }
 
 template <typename T>
 Matrix<T>& Matrix<T>::operator+=(float val) {
-  for (unsigned int i = 0; i < data.size(); ++i)
+  for (std::size_t i = 0; i < data.size(); ++i)
     data[i] += val;
   return *this;
 }
@@ -57,14 +57,14 @@ template <typename T>
 Matrix<T>& Matrix<T>::operator-=(const Matrix& mat) {
   assert(("Error: Matrices aren't the same size", data.size() == mat.getData().size()));
 
-  for (unsigned int i = 0; i < data.size(); ++i)
+  for (std::size_t i = 0; i < data.size(); ++i)
     data[i] -= mat.getData()[i];
   return *this;
 }
 
 template <typename T>
 Matrix<T>& Matrix<T>::operator-=(float val) {
-  for (unsigned int i = 0; i < data.size(); ++i)
+  for (std::size_t i = 0; i < data.size(); ++i)
     data[i] -= val;
   return *this;
 }
@@ -73,14 +73,14 @@ template <typename T>
 Matrix<T>& Matrix<T>::operator*=(const Matrix& mat) {
   assert(("Error: Matrices aren't the same size", data.size() == mat.getData().size()));
 
-  for (unsigned int i = 0; i < data.size(); ++i)
+  for (std::size_t i = 0; i < data.size(); ++i)
     data[i] *= mat.getData()[i];
   return *this;
 }
 
 template <typename T>
 Matrix<T>& Matrix<T>::operator*=(float val) {
-  for (unsigned int i = 0; i < data.size(); ++i)
+  for (std::size_t i = 0; i < data.size(); ++i)
     data[i] *= val;
   return *this;
 }
@@ -89,14 +89,14 @@ template <typename T>
 Matrix<T>& Matrix<T>::operator/=(const Matrix& mat) {
   assert(("Error: Matrices aren't the same size", data.size() == mat.getData().size()));
 
-  for (unsigned int i = 0; i < data.size(); ++i)
+  for (std::size_t i = 0; i < data.size(); ++i)
     data[i] /= mat.getData()[i];
   return *this;
 }
 
 template <typename T>
 Matrix<T>& Matrix<T>::operator/=(float val) {
-  for (unsigned int i = 0; i < data.size(); ++i)
+  for (std::size_t i = 0; i < data.size(); ++i)
     data[i] /= val;
   return *this;
 }

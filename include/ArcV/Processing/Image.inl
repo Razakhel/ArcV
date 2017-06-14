@@ -11,8 +11,8 @@ void addAlphaChannel(Matrix<>& mat) {
   mat.setChannelCount(static_cast<uint8_t>(mat.getChannelCount() + 1));
   mat.getData().resize(mat.getWidth() * mat.getHeight() * mat.getChannelCount());
 
-  for (unsigned int i = 0, delta = 0; i < tempMat.getData().size(); i += tempMat.getChannelCount(), ++delta) {
-    for (unsigned int chan = i; chan < i + tempMat.getChannelCount(); ++chan)
+  for (std::size_t i = 0, delta = 0; i < tempMat.getData().size(); i += tempMat.getChannelCount(), ++delta) {
+    for (std::size_t chan = i; chan < i + tempMat.getChannelCount(); ++chan)
       mat.getData()[chan + delta] = tempMat.getData()[chan];
 
     // Filling the alpha value with full opacity by default
@@ -22,8 +22,8 @@ void addAlphaChannel(Matrix<>& mat) {
 
 void removeAlphaChannel(Matrix<>& mat) {
   // No need to start at the very beginning since the first channel pack will not be moved
-  for (unsigned int i = mat.getChannelCount(), delta = 1; i < mat.getData().size(); i += mat.getChannelCount(), ++delta) {
-    for (unsigned int chan = i; chan < i + mat.getChannelCount() - 1; ++chan)
+  for (std::size_t i = mat.getChannelCount(), delta = 1; i < mat.getData().size(); i += mat.getChannelCount(), ++delta) {
+    for (std::size_t chan = i; chan < i + mat.getChannelCount() - 1; ++chan)
       mat.getData()[chan - delta] = mat.getData()[chan];
   }
 
@@ -51,7 +51,7 @@ void convertToGrayscale(Matrix<>& mat) {
 void convertToHSV(Matrix<>& mat) {
   float red, green, blue, minVal, maxVal, hue = 0.f;
 
-  for (unsigned int i = 0; i < mat.getData().size(); i += mat.getChannelCount()) {
+  for (std::size_t i = 0; i < mat.getData().size(); i += mat.getChannelCount()) {
     red = mat.getData()[i];
     green = mat.getData()[i + 1];
     blue = mat.getData()[i + 2];
@@ -137,9 +137,9 @@ void applySobel(Matrix<>& mat) {
   const Matrix<float> horizRes = computeHorizontalSobelOperator(mat);
   const Matrix<float> vertRes = computeVerticalSobelOperator(mat);
 
-  for (unsigned int elementIndex = 0; elementIndex < mat.getData().size(); ++elementIndex)
-    mat.getData()[elementIndex] = std::sqrt(vertRes.getData()[elementIndex] * vertRes.getData()[elementIndex]
-                                            + horizRes.getData()[elementIndex] * horizRes.getData()[elementIndex]);
+  for (std::size_t i = 0; i < mat.getData().size(); ++i)
+    mat.getData()[i] = std::sqrt(vertRes.getData()[i] * vertRes.getData()[i]
+                                 + horizRes.getData()[i] * horizRes.getData()[i]);
 }
 
 void applyHarris(Matrix<>& mat) {
@@ -152,7 +152,7 @@ void applyHarris(Matrix<>& mat) {
   horizRes *= horizRes;
   vertRes *= vertRes;
 
-  for (unsigned int i = 0; i < mat.getData(). size(); ++i)
+  for (std::size_t i = 0; i < mat.getData(). size(); ++i)
     mat.getData()[i] = (horizRes.getData()[i] * vertRes.getData()[i] - res.getData()[i] * res.getData()[i])
                         - 0.04f * std::pow(horizRes.getData()[i] + vertRes.getData()[i], 2.f);
 }

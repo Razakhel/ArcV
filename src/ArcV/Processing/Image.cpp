@@ -88,7 +88,7 @@ Matrix<> Image::read(const std::string& fileName) {
   // Adding full alpha channel to the image if it possesses transparency
   if (png_get_valid(pngReadStruct, pngInfoStruct, PNG_INFO_tRNS)) {
     png_set_tRNS_to_alpha(pngReadStruct);
-    channels += 1;
+    ++channels;
   }
 
   png_read_update_info(pngReadStruct, pngInfoStruct);
@@ -97,13 +97,9 @@ Matrix<> Image::read(const std::string& fileName) {
 
   std::vector<png_bytep> rowPtrs(height);
 
-  // Defining an array to contain image's pixels
-  mat.getData().resize(width * height * channels);
-
   // Mapping row's elements to data's
-  for (uint32_t i = 0; i < height; ++i) {
+  for (unsigned int i = 0; i < height; ++i)
     rowPtrs[i] = &mat.getData()[width * channels * i];
-  }
 
   png_read_image(pngReadStruct, rowPtrs.data());
   png_read_end(pngReadStruct, pngInfoStruct);
@@ -165,9 +161,8 @@ void Image::write(const Matrix<>& mat, const std::string& fileName) {
   png_set_write_fn(pngWriteStruct, &file, writePng, nullptr);
   png_write_info(pngWriteStruct, pngInfoStruct);
 
-  for (uint32_t i = 0; i < matToWrite.getHeight(); ++i) {
+  for (unsigned int i = 0; i < matToWrite.getHeight(); ++i)
     png_write_row(pngWriteStruct, &matToWrite.getData()[matToWrite.getWidth() * matToWrite.getChannelCount() * i]);
-  }
 
   png_write_end(pngWriteStruct, pngInfoStruct);
   png_destroy_write_struct(&pngWriteStruct, &pngInfoStruct);
