@@ -36,7 +36,7 @@ public:
 
   template <typename TI> Matrix(const Matrix<TI>& mat);
 
-  Matrix(const std::initializer_list<std::initializer_list<T>>& list);
+  Matrix(const std::initializer_list<const std::initializer_list<T>>& list);
 
   const unsigned int getWidth() const { return width; }
   const unsigned int getHeight() const { return height; }

@@ -23,9 +23,9 @@ Matrix<T>::Matrix(const Matrix<TI>& mat)
 }
 
 template <typename T>
-Matrix<T>::Matrix(const std::initializer_list<std::initializer_list<T>>& list)
-  : height{ static_cast<unsigned int>(list.size()) },
-    width{ static_cast<unsigned int>(list.begin()->size()) },
+Matrix<T>::Matrix(const std::initializer_list<const std::initializer_list<T>>& list)
+  : width{ static_cast<unsigned int>(list.begin()->size()) },
+    height{ static_cast<unsigned int>(list.size()) },
     data(list.size() * list.begin()->size()) {
   auto row = list.begin();
 

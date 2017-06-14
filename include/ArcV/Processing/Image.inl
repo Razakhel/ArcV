@@ -6,17 +6,29 @@ namespace Arcv {
 namespace {
 
 void addAlphaChannel(Matrix<>& mat) {
-  // TODO: implement function
+  const Matrix<float> tempMat = mat;
+
+  mat.setChannelCount(static_cast<uint8_t>(mat.getChannelCount() + 1));
+  mat.getData().resize(mat.getWidth() * mat.getHeight() * mat.getChannelCount());
+
+  for (unsigned int i = 0, delta = 0; i < tempMat.getData().size(); i += tempMat.getChannelCount(), ++delta) {
+    for (unsigned int chan = i; chan < i + tempMat.getChannelCount(); ++chan)
+      mat.getData()[chan + delta] = tempMat.getData()[chan];
+
+    // Filling the alpha value with full opacity by default
+    mat.getData()[i + tempMat.getChannelCount() + delta] = 255;
+  }
 }
 
 void removeAlphaChannel(Matrix<>& mat) {
+  // No need to start at the very beginning since the first channel pack will not be moved
   for (unsigned int i = mat.getChannelCount(), delta = 1; i < mat.getData().size(); i += mat.getChannelCount(), ++delta) {
     for (unsigned int chan = i; chan < i + mat.getChannelCount() - 1; ++chan)
       mat.getData()[chan - delta] = mat.getData()[chan];
   }
 
-  mat.getData().resize(mat.getData().size() * (mat.getChannelCount() - 1) / mat.getChannelCount());
   mat.setChannelCount(static_cast<uint8_t>(mat.getChannelCount() - 1));
+  mat.getData().resize(mat.getWidth() * mat.getHeight() * mat.getChannelCount());
 }
 
 void convertToGrayscale(Matrix<>& mat) {
@@ -32,8 +44,8 @@ void convertToGrayscale(Matrix<>& mat) {
       mat.getData()[index + 1] = *(element + stride);
   }
 
-  mat.getData().resize(mat.getWidth() * mat.getHeight() * (alpha ? 2 : 1));
   mat.setChannelCount(static_cast<uint8_t>(1 + alpha));
+  mat.getData().resize(mat.getWidth() * mat.getHeight() * mat.getChannelCount());
 }
 
 void convertToHSV(Matrix<>& mat) {
