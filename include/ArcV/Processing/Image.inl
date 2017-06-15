@@ -143,7 +143,7 @@ void applySobel(Matrix<>& mat) {
 }
 
 void applyHarris(Matrix<>& mat) {
-  Image::changeColorspace<ARCV_COLORSPACE_GRAY>(mat);
+  mat = Image::changeColorspace<ARCV_COLORSPACE_GRAY>(mat);
 
   Matrix<float> horizRes = computeHorizontalSobelOperator(mat);
   Matrix<float> vertRes = computeVerticalSobelOperator(mat);
@@ -152,9 +152,11 @@ void applyHarris(Matrix<>& mat) {
   horizRes *= horizRes;
   vertRes *= vertRes;
 
-  for (std::size_t i = 0; i < mat.getData(). size(); ++i)
-    mat.getData()[i] = (horizRes.getData()[i] * vertRes.getData()[i] - res.getData()[i] * res.getData()[i])
-                        - 0.04f * std::pow(horizRes.getData()[i] + vertRes.getData()[i], 2.f);
+  for (std::size_t i = 0; i < mat.getData(). size(); ++i) {
+    if ((horizRes.getData()[i] * vertRes.getData()[i] - res.getData()[i] * res.getData()[i])
+        - 0.04f * std::pow(horizRes.getData()[i] + vertRes.getData()[i], 2.f) > 255)
+      mat.getData()[i] = 255;
+  }
 }
 
 } // namespace
