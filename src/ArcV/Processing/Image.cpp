@@ -86,7 +86,7 @@ Matrix<> Image::read(const std::string& fileName) {
   png_set_scale_16(pngReadStruct);
 
   // Adding full alpha channel to the image if it possesses transparency
-  if (png_get_valid(pngReadStruct, pngInfoStruct, PNG_INFO_tRNS)) {
+  if (png_get_valid(pngReadStruct, pngInfoStruct, static_cast<png_uint_32>(PNG_INFO_tRNS))) {
     png_set_tRNS_to_alpha(pngReadStruct);
     ++channels;
   }
@@ -109,7 +109,7 @@ Matrix<> Image::read(const std::string& fileName) {
 }
 
 void Image::write(const Matrix<>& mat, const std::string& fileName) {
-  std::ofstream file(fileName);
+  std::ofstream file(fileName, std::ios_base::out | std::ios_base::binary);
   const Matrix<uint8_t> matToWrite(mat);
 
   png_structp pngWriteStruct = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
@@ -150,8 +150,8 @@ void Image::write(const Matrix<>& mat, const std::string& fileName) {
 
   png_set_IHDR(pngWriteStruct,
                pngInfoStruct,
-               matToWrite.getWidth(),
-               matToWrite.getHeight(),
+               static_cast<png_uint_32>(matToWrite.getWidth()),
+               static_cast<png_uint_32>(matToWrite.getHeight()),
                matToWrite.getImgBitDepth(),
                colorType,
                PNG_INTERLACE_NONE,
