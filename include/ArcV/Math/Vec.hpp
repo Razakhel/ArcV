@@ -18,14 +18,14 @@ public:
 
   const T dot(const Vec& vec) const;
 
-  Vec& operator+(const Vec& vec) { return *this += vec; }
-  Vec& operator+(float val) { return *this += val; }
-  Vec& operator-(const Vec& vec) { return *this -= vec; }
-  Vec& operator-(float val) { return *this -= val; }
-  Vec& operator*(const Vec& vec) { return *this *= vec; }
-  Vec& operator*(float val) { return *this *= val; }
-  Vec& operator/(const Vec& vec) { return *this /= vec; }
-  Vec& operator/(float val) { return *this /= val; }
+  Vec operator+(Vec vec);
+  Vec operator+(float val);
+  Vec operator-(Vec vec);
+  Vec operator-(float val);
+  Vec operator*(Vec vec);
+  Vec operator*(float val);
+  Vec operator/(Vec vec);
+  Vec operator/(float val);
   Vec& operator+=(const Vec& vec);
   Vec& operator+=(float val);
   Vec& operator-=(const Vec& vec);
