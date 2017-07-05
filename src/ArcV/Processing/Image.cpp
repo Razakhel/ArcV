@@ -33,7 +33,8 @@ void writePng(png_structp pngWritePtr, png_bytep data, png_size_t length) {
 
 Matrix<> Image::read(const std::string& fileName) {
   std::ifstream file(fileName, std::ios_base::in | std::ios_base::binary);
-  assert(("Error: Not a valid PNG", file.good() && validatePng(file)));
+  const bool valid = file.good() && validatePng(file);
+  assert(("Error: Not a valid PNG", valid));
 
   png_structp pngReadStruct = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
   assert(("Error: Couldn't initialize PNG read struct", pngReadStruct));
