@@ -23,8 +23,6 @@ const T Vec<T>::dot(const Vec& vec) const {
 
 template <typename T>
 Vec<T> Vec<T>::operator+(Vec vec) {
-  assert(("Error: Vectors aren't the same size", data.size() == vec.getData().size()));
-
   vec += *this;
   return vec;
 }
@@ -38,8 +36,6 @@ Vec<T> Vec<T>::operator+(float val) {
 
 template <typename T>
 Vec<T> Vec<T>::operator-(Vec vec) {
-  assert(("Error: Vectors aren't the same size", data.size() == vec.getData().size()));
-
   vec -= *this;
   return vec;
 }
@@ -53,8 +49,6 @@ Vec<T> Vec<T>::operator-(float val) {
 
 template <typename T>
 Vec<T> Vec<T>::operator*(Vec vec) {
-  assert(("Error: Vectors aren't the same size", data.size() == vec.getData().size()));
-
   vec *= *this;
   return vec;
 }
@@ -92,8 +86,8 @@ Vec<T>& Vec<T>::operator+=(const Vec& vec) {
 
 template <typename T>
 Vec<T>& Vec<T>::operator+=(float val) {
-  for (std::size_t i = 0; i < data.size(); ++i)
-    data[i] += val;
+  for (T& it : data)
+    it += val;
   return *this;
 }
 
@@ -108,8 +102,8 @@ Vec<T>& Vec<T>::operator-=(const Vec& vec) {
 
 template <typename T>
 Vec<T>& Vec<T>::operator-=(float val) {
-  for (std::size_t i = 0; i < data.size(); ++i)
-    data[i] -= val;
+  for (T& it : data)
+    it -= val;
   return *this;
 }
 
@@ -124,8 +118,8 @@ Vec<T>& Vec<T>::operator*=(const Vec& vec) {
 
 template <typename T>
 Vec<T>& Vec<T>::operator*=(float val) {
-  for (std::size_t i = 0; i < data.size(); ++i)
-    data[i] *= val;
+  for (T& it : data)
+    it *= val;
   return *this;
 }
 
@@ -140,8 +134,8 @@ Vec<T>& Vec<T>::operator/=(const Vec& vec) {
 
 template <typename T>
 Vec<T>& Vec<T>::operator/=(float val) {
-  for (std::size_t i = 0; i < data.size(); ++i)
-    data[i] /= val;
+  for (T& it : data)
+    it /= val;
   return *this;
 }
 
