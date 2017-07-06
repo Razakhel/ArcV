@@ -15,7 +15,7 @@ Matrix<T>::Matrix(const Matrix<TI>& mat)
     data(mat.getWidth() * mat.getHeight() * mat.getChannelCount()) {
   if (std::numeric_limits<TI>::max() > std::numeric_limits<T>::max()) {
     for (std::size_t eltIndex = 0; eltIndex < mat.getData().size(); ++eltIndex) {
-      data[eltIndex] = std::min(std::numeric_limits<TI>::max(), std::max(static_cast<TI>(0), mat.getData()[eltIndex]));
+      data[eltIndex] = std::min(static_cast<TI>(std::abs(mat.getData()[eltIndex])), std::numeric_limits<TI>::max());
     }
   } else {
     std::copy(mat.getData().begin(), mat.getData().end(), data.begin());
@@ -38,6 +38,58 @@ Matrix<T>::Matrix(const std::initializer_list<const std::initializer_list<T>>& l
 }
 
 template <typename T>
+Matrix<T> Matrix<T>::operator+(Matrix mat) {
+  mat += *this;
+  return mat;
+}
+
+template <typename T>
+Matrix<T> Matrix<T>::operator+(float val) {
+  Matrix<T> res = *this;
+  res += val;
+  return res;
+}
+
+template <typename T>
+Matrix<T> Matrix<T>::operator-(Matrix mat) {
+  mat -= *this;
+  return mat;
+}
+
+template <typename T>
+Matrix<T> Matrix<T>::operator-(float val) {
+  Matrix<T> res = *this;
+  res -= val;
+  return res;
+}
+
+template <typename T>
+Matrix<T> Matrix<T>::operator*(Matrix mat) {
+  mat *= *this;
+  return mat;
+}
+
+template <typename T>
+Matrix<T> Matrix<T>::operator*(float val) {
+  Matrix<T> res = *this;
+  res *= val;
+  return res;
+}
+
+template <typename T>
+Matrix<T> Matrix<T>::operator/(Matrix mat) {
+  mat /= *this;
+  return mat;
+}
+
+template <typename T>
+Matrix<T> Matrix<T>::operator/(float val) {
+  Matrix<T> res = *this;
+  res /= val;
+  return res;
+}
+
+template <typename T>
 Matrix<T>& Matrix<T>::operator+=(const Matrix& mat) {
   assert(("Error: Matrices aren't the same size", data.size() == mat.getData().size()));
 
@@ -48,8 +100,8 @@ Matrix<T>& Matrix<T>::operator+=(const Matrix& mat) {
 
 template <typename T>
 Matrix<T>& Matrix<T>::operator+=(float val) {
-  for (std::size_t i = 0; i < data.size(); ++i)
-    data[i] += val;
+  for (T& it : data)
+    it += val;
   return *this;
 }
 
@@ -64,8 +116,8 @@ Matrix<T>& Matrix<T>::operator-=(const Matrix& mat) {
 
 template <typename T>
 Matrix<T>& Matrix<T>::operator-=(float val) {
-  for (std::size_t i = 0; i < data.size(); ++i)
-    data[i] -= val;
+  for (T& it : data)
+    it -= val;
   return *this;
 }
 
@@ -80,8 +132,8 @@ Matrix<T>& Matrix<T>::operator*=(const Matrix& mat) {
 
 template <typename T>
 Matrix<T>& Matrix<T>::operator*=(float val) {
-  for (std::size_t i = 0; i < data.size(); ++i)
-    data[i] *= val;
+  for (T& it : data)
+    it *= val;
   return *this;
 }
 
@@ -96,8 +148,8 @@ Matrix<T>& Matrix<T>::operator/=(const Matrix& mat) {
 
 template <typename T>
 Matrix<T>& Matrix<T>::operator/=(float val) {
-  for (std::size_t i = 0; i < data.size(); ++i)
-    data[i] /= val;
+  for (T& it : data)
+    it /= val;
   return *this;
 }
 

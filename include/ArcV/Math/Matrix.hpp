@@ -51,14 +51,14 @@ public:
 
   Matrix convolve(const Matrix<float>& convMat);
 
-  Matrix& operator+(const Matrix& mat) { return *this += mat; }
-  Matrix& operator+(float val) { return *this += val; }
-  Matrix& operator-(const Matrix& mat) { return *this -= mat; }
-  Matrix& operator-(float val) { return *this -= val; }
-  Matrix& operator*(const Matrix& mat) { return *this *= mat; }
-  Matrix& operator*(float val) { return *this *= val; }
-  Matrix& operator/(const Matrix& mat) { return *this /= mat; }
-  Matrix& operator/(float val) { return *this /= val; }
+  Matrix operator+(Matrix mat);
+  Matrix operator+(float val);
+  Matrix operator-(Matrix mat);
+  Matrix operator-(float val);
+  Matrix operator*(Matrix mat);
+  Matrix operator*(float val);
+  Matrix operator/(Matrix mat);
+  Matrix operator/(float val);
   Matrix& operator+=(const Matrix& mat);
   Matrix& operator+=(float val);
   Matrix& operator-=(const Matrix& mat);
