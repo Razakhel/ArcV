@@ -7,12 +7,11 @@ namespace Arcv {
 template <typename T>
 template <typename TI>
 Matrix<T>::Matrix(const Matrix<TI>& mat)
-  : width{ mat.getWidth() },
-    height{ mat.getHeight() },
-    channelCount{ mat.getChannelCount() },
-    imgBitDepth{ mat.getImgBitDepth() },
-    colorspace{ mat.getColorspace() },
-    data(mat.getWidth() * mat.getHeight() * mat.getChannelCount()) {
+  : Matrix(mat.getWidth(),
+           mat.getHeight(),
+           mat.getChannelCount(),
+           mat.getImgBitDepth(),
+           mat.getColorspace()) {
   if (std::numeric_limits<TI>::max() > std::numeric_limits<T>::max()) {
     for (std::size_t eltIndex = 0; eltIndex < mat.getData().size(); ++eltIndex) {
       data[eltIndex] = std::min(static_cast<TI>(std::abs(mat.getData()[eltIndex])), std::numeric_limits<TI>::max());
@@ -24,9 +23,8 @@ Matrix<T>::Matrix(const Matrix<TI>& mat)
 
 template <typename T>
 Matrix<T>::Matrix(const std::initializer_list<const std::initializer_list<T>>& list)
-  : width{ static_cast<unsigned int>(list.begin()->size()) },
-    height{ static_cast<unsigned int>(list.size()) },
-    data(list.size() * list.begin()->size()) {
+  : Matrix(static_cast<unsigned int>(list.begin()->size()),
+           static_cast<unsigned int>(list.size())) {
   auto row = list.begin();
 
   for (std::size_t heightIndex = 0; heightIndex < list.size(); ++heightIndex, ++row) {
