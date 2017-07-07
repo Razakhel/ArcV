@@ -16,6 +16,7 @@ set(
     extern/png/*.c
     extern/glfw/*.c
     extern/imgui/*.cpp
+
     src/ArcV/Math/*.cpp
     src/ArcV/Processing/*.cpp
     src/ArcV/Utils/*.cpp
@@ -31,8 +32,14 @@ set(
 
 # Defining preprocessor macros and selecting files to be removed
 if (UNIX)
-    add_definitions(-D_GLFW_X11)
-    add_definitions(-D_GLFW_HAS_XF86VM)
+    add_definitions(
+        -D_GLFW_X11
+        -D_GLFW_HAS_XF86VM
+
+        #-fsanitize=undefined
+        #-fsanitize=address
+        #-fsanitize=leak
+    )
 
     file(
         GLOB_RECURSE
@@ -43,6 +50,12 @@ if (UNIX)
         extern/glfw/src/wl*
         extern/glfw/src/wgl*
         extern/glfw/src/mir*
+    )
+
+    set(
+        LIBS
+
+        asan
     )
 
     set(
@@ -72,10 +85,12 @@ elseif (WIN32)
         extern/glfw/src/posix*
     )
 elseif (APPLE)
-    add_definitions(-D_GLFW_COCOA)
-    add_definitions(-D_GLFW_USE_CHDIR)
-    add_definitions(-D_GLFW_USE_MENUBAR)
-    add_definitions(-D_GLFW_USE_RETINA)
+    add_definitions(
+        -D_GLFW_COCOA
+        -D_GLFW_USE_CHDIR
+        -D_GLFW_USE_MENUBAR
+        -D_GLFW_USE_RETINA
+    )
 
     file(
         GLOB_RECURSE
