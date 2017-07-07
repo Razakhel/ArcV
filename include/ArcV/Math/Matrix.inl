@@ -14,7 +14,7 @@ Matrix<T>::Matrix(const Matrix<TI>& mat)
            mat.getColorspace()) {
   if (std::numeric_limits<TI>::max() > std::numeric_limits<T>::max()) {
     for (std::size_t eltIndex = 0; eltIndex < mat.getData().size(); ++eltIndex) {
-      data[eltIndex] = std::min(static_cast<TI>(std::abs(mat.getData()[eltIndex])), std::numeric_limits<TI>::max());
+      data[eltIndex] = std::max(static_cast<TI>(0), std::min(std::numeric_limits<TI>::max(), static_cast<TI>(mat.getData()[eltIndex])));
     }
   } else {
     std::copy(mat.getData().begin(), mat.getData().end(), data.begin());
