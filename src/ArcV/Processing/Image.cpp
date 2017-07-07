@@ -104,7 +104,7 @@ Matrix<> Image::read(const std::string& fileName) {
 
   png_read_image(pngReadStruct, rowPtrs.data());
   png_read_end(pngReadStruct, pngInfoStruct);
-  png_destroy_read_struct(&pngReadStruct, 0, static_cast<const png_infopp>(0));
+  png_destroy_read_struct(&pngReadStruct, 0, &pngInfoStruct);
 
   return Matrix<>(mat);
 }
