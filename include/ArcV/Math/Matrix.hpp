@@ -38,11 +38,11 @@ public:
 
   Matrix(const std::initializer_list<const std::initializer_list<T>>& list);
 
-  const unsigned int getWidth() const { return width; }
-  const unsigned int getHeight() const { return height; }
-  const uint8_t getImgBitDepth() const { return imgBitDepth; }
-  const uint8_t getChannelCount() const { return channelCount; }
-  const Colorspace getColorspace() const { return colorspace; }
+  unsigned int getWidth() const { return width; }
+  unsigned int getHeight() const { return height; }
+  uint8_t getImgBitDepth() const { return imgBitDepth; }
+  uint8_t getChannelCount() const { return channelCount; }
+  Colorspace getColorspace() const { return colorspace; }
   const std::vector<T>& getData() const { return data; }
   std::vector<T>& getData() { return data; }
 

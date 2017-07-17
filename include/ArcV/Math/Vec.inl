@@ -12,7 +12,7 @@ Vec<T>::Vec(const std::initializer_list<T>& list)
 }
 
 template <typename T>
-const T Vec<T>::dot(const Vec& vec) const {
+T Vec<T>::dot(const Vec& vec) const {
   assert(("Error: Vectors aren't the same size", data.size() == vec.getData().size()));
 
   float res = 0.f;

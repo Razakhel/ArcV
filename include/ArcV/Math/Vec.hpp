@@ -16,7 +16,7 @@ public:
   const std::vector<T>& getData() const { return data; }
   std::vector<T>& getData() { return data; }
 
-  const T dot(const Vec& vec) const;
+  T dot(const Vec& vec) const;
 
   Vec operator+(Vec vec);
   Vec operator+(float val);

@@ -3,7 +3,7 @@
 
 #include "ArcV/ArcV.hpp"
 
-int main(int argc, char* argv[]) {
+int main() {
   auto startTime = std::chrono::system_clock::now();
 
   Arcv::Matrix<float> mat = Arcv::Image::read("lena.png");
