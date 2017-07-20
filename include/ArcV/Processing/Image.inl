@@ -32,7 +32,7 @@ void removeAlphaChannel(Matrix<>& mat) {
 }
 
 void convertToGrayscale(Matrix<>& mat) {
-  unsigned int index = 0;
+  std::size_t index = 0;
   // Avoiding alpha channel, not including it into the operation
   const uint8_t alpha = static_cast<uint8_t>(mat.getColorspace() >= ARCV_COLORSPACE_GRAY_ALPHA ? 1 : 0);
   const uint8_t stride = mat.getChannelCount() - alpha;
@@ -49,38 +49,41 @@ void convertToGrayscale(Matrix<>& mat) {
 }
 
 void convertToHSV(Matrix<>& mat) {
-  float red, green, blue, minVal, maxVal, hue = 0.f;
+  for (auto elt = mat.getData().begin(); elt != mat.getData().end(); elt += mat.getChannelCount()) {
+    const float red = *elt / 255;
+    const float green = *(elt + 1) / 255;
+    const float blue = *(elt + 2) / 255;
 
-  for (std::size_t i = 0; i < mat.getData().size(); i += mat.getChannelCount()) {
-    red = mat.getData()[i];
-    green = mat.getData()[i + 1];
-    blue = mat.getData()[i + 2];
-
-    minVal = std::min(std::min(red, green), blue);
-    maxVal = std::max(std::max(red, green), blue);
+    const float minVal = std::min(std::min(red, green), blue);
+    const float maxVal = std::max(std::max(red, green), blue);
+    const float delta = maxVal - minVal;
 
     // Hue
-    if (maxVal == minVal) {
-      mat.getData()[i] = 0;
-    } else {
-      if (maxVal == red)
-        hue = std::fmod(60 * ((green - blue) / (maxVal - minVal)) + 360, 360.f);
-      else if (maxVal == green)
-        hue = 60 * ((blue - red) / (maxVal - minVal)) + 120;
-      else if (maxVal == blue)
-        hue = 60 * ((red - green) / (maxVal - minVal)) + 240;
+    float hue = 0.f;
 
-      mat.getData()[i] = hue / 2;
+    if (delta == 0) {
+      *elt = 0;
+    } else {
+      if (maxVal == red) {
+        hue = 60 * (green - blue) / delta;
+
+        if (hue < 0.f)
+          hue += 360;
+      } else if (maxVal == green) {
+        hue = 120 + 60 * (blue - red) / delta;
+      } else if (maxVal == blue) {
+        hue = 240 + 60 * (red - green) / delta;
+      }
+
+      *elt = hue / 2;
     }
 
     // Saturation
-    mat.getData()[i + 1] = maxVal == 0 ? 0 : 1 - (minVal / maxVal);
+    *(elt + 1) = (maxVal == 0 ? 0 : delta / maxVal * 255);
 
     // Value
-    mat.getData()[i + 2] = maxVal;
+    *(elt + 2) = maxVal * 255;
   }
-
-  mat.setChannelCount(static_cast<uint8_t>(3 + (mat.getColorspace() == ARCV_COLORSPACE_RGBA ? 1 : 0)));
 }
 
 void applyGaussianBlur(Matrix<>& mat) {
@@ -152,7 +155,7 @@ void applyHarris(Matrix<>& mat) {
   horizRes *= horizRes;
   vertRes *= vertRes;
 
-  for (std::size_t i = 0; i < mat.getData(). size(); ++i) {
+  for (std::size_t i = 0; i < mat.getData().size(); ++i) {
     if ((horizRes.getData()[i] * vertRes.getData()[i] - res.getData()[i] * res.getData()[i])
         - 0.04f * std::pow(horizRes.getData()[i] + vertRes.getData()[i], 2.f) > 255)
       mat.getData()[i] = 255;
