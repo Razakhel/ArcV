@@ -34,6 +34,9 @@ int main() {
 
   Arcv::Image::write(harrisMat, "outputHarris.png");
 
+  Arcv::Matrix<float> threshMat = Arcv::Image::threshold(hsvMat, 0.f, 15.f, 50.f, 150.f, 50.f, 150.f);
+  Arcv::Image::write(threshMat, "outputThresh.png");
+
   std::cout << "Computing duration: "
     << std::chrono::duration_cast<std::chrono::duration<float>>(std::chrono::system_clock::now() - startTime).count()
     << " seconds." << std::endl;

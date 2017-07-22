@@ -23,7 +23,7 @@ This library is made for Linux, though it is planned to make it fully compatible
 | Saving (writing) an image | **Yes** (PNG) |
 | Changing colorspace | **Yes** |
 | Convolution filtering | **Yes** |
-| Operations on colors (thresholding...) | No |
+| Operations on colors (thresholding...) | _In progress_ |
 | Detecting basic features (lines, circles...) | No |
 | Detecting advanced features (objects recognition, ORB algorithm) | No |
 | Creating windowing class (Windows, Linux/X) | _On standby_ |

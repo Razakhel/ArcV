@@ -9,7 +9,8 @@ Matrix<> Matrix<>::convolve(const Matrix<float>& convMat) {
   assert(("Error: Convolution matrix's size must be odd", convMat.getData().size() % 2 == 1));
 
   Matrix<> tempMat = *this;
-  const int minConvIndex = -((convMat.getWidth() - 1) / 2), maxConvIndex = (convMat.getWidth() - 1) / 2;
+  const int minConvIndex = -((convMat.getWidth() - 1) / 2);
+  const int maxConvIndex = (convMat.getWidth() - 1) / 2;
 
   for (unsigned int matHeightIndex = 0; matHeightIndex < height; ++matHeightIndex) {
     for (unsigned int matWidthIndex = 0; matWidthIndex < width; ++matWidthIndex) {

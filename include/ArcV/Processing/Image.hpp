@@ -29,6 +29,9 @@ public:
   template <Colorspace C> static Matrix<> changeColorspace(Matrix<> mat);
   template <FilterType F> static Matrix<> applyFilter(Matrix<> mat);
   template <DetectorType D> static Matrix<> applyDetector(Matrix<> mat);
+  template <typename T> static Matrix<T> threshold(Matrix<T> mat, T firstLowerBound, T firstUpperBound,
+                                                                  T secondLowerBound, T secondUpperBound,
+                                                                  T thirdLowerBound, T thirdUpperBound);
 };
 
 } // namespace Arcv
