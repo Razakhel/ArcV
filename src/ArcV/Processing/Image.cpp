@@ -336,7 +336,7 @@ Matrix<> Image::applyFilter<ARCV_FILTER_TYPE_SHARPEN>(Matrix<> mat) {
 }
 
 template <>
-Matrix<> Image::applyFilter<ARCV_FILTER_TYPE_EDGE_DETECTION>(Matrix<> mat) {
+Matrix<> Image::applyFilter<ARCV_FILTER_TYPE_EDGE_ENHANCEMENT>(Matrix<> mat) {
   const Matrix<float> kernel = {{ 0.f,   1.f,  0.f },
                                 { 1.f,  -4.f,  1.f },
                                 { 0.f,   1.f,  0.f }};
@@ -360,14 +360,14 @@ Matrix<> Image::applyFilter<ARCV_FILTER_TYPE_SOBEL>(Matrix<> mat) {
 
   for (std::size_t i = 0; i < mat.getData().size(); ++i)
     mat.getData()[i] = std::sqrt(vertRes.getData()[i] * vertRes.getData()[i]
-                                     + horizRes.getData()[i] * horizRes.getData()[i]);
+                                 + horizRes.getData()[i] * horizRes.getData()[i]);
 
   return mat;
 }
 
 template <>
 Matrix<> Image::applyDetector<ARCV_DETECTOR_TYPE_HARRIS>(Matrix<> mat) {
-  mat = Image::changeColorspace<ARCV_COLORSPACE_GRAY>(mat);
+  mat = changeColorspace<ARCV_COLORSPACE_GRAY>(mat);
 
   Matrix<float> horizRes = computeHorizontalSobelOperator(mat);
   Matrix<float> vertRes = computeVerticalSobelOperator(mat);

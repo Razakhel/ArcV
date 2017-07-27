@@ -14,7 +14,7 @@ int main() {
 
   Arcv::Matrix<float> blurMat = Arcv::Image::applyFilter<ARCV_FILTER_TYPE_GAUSSIAN_BLUR>(mat);
   Arcv::Matrix<float> sharpenMat = Arcv::Image::applyFilter<ARCV_FILTER_TYPE_SHARPEN>(mat);
-  Arcv::Matrix<float> edgeMat = Arcv::Image::applyFilter<ARCV_FILTER_TYPE_EDGE_DETECTION>(mat);
+  Arcv::Matrix<float> edgeMat = Arcv::Image::applyFilter<ARCV_FILTER_TYPE_EDGE_ENHANCEMENT>(mat);
   Arcv::Matrix<float> embossMat = Arcv::Image::applyFilter<ARCV_FILTER_TYPE_EMBOSS>(mat);
   Arcv::Matrix<float> sobelMat = Arcv::Image::applyFilter<ARCV_FILTER_TYPE_SOBEL>(mat);
 

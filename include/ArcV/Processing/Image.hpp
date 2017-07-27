@@ -12,11 +12,12 @@ enum ImageType { ARCV_IMAGE_TYPE_JPEG = 0,
 
 enum FilterType { ARCV_FILTER_TYPE_GAUSSIAN_BLUR = 0,
                   ARCV_FILTER_TYPE_SHARPEN,
-                  ARCV_FILTER_TYPE_EDGE_DETECTION,
+                  ARCV_FILTER_TYPE_EDGE_ENHANCEMENT,
                   ARCV_FILTER_TYPE_EMBOSS,
                   ARCV_FILTER_TYPE_SOBEL };
 
-enum DetectorType { ARCV_DETECTOR_TYPE_HARRIS = 0 };
+enum DetectorType { ARCV_DETECTOR_TYPE_CANNY = 0,
+                    ARCV_DETECTOR_TYPE_HARRIS };
 
 namespace Arcv {
 
