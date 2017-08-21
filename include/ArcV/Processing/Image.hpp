@@ -33,6 +33,8 @@ public:
   template <typename T> static Matrix<T> threshold(Matrix<T> mat, T firstLowerBound, T firstUpperBound,
                                                                   T secondLowerBound, T secondUpperBound,
                                                                   T thirdLowerBound, T thirdUpperBound);
+  template <typename T> static Matrix<T> region(const Matrix<T>& mat, std::size_t widthBegin, std::size_t widthEnd,
+                                                                      std::size_t heightBegin, std::size_t heightEnd);
 };
 
 } // namespace Arcv

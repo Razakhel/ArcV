@@ -20,4 +20,24 @@ Matrix<T> Image::threshold(Matrix<T> mat, T firstLowerBound, T firstUpperBound,
   return res;
 }
 
+template <typename T>
+Matrix<T> Image::region(const Matrix<T>& mat, std::size_t widthBegin, std::size_t widthEnd,
+                                              std::size_t heightBegin, std::size_t heightEnd) {
+  assert(("Error: Beginning boundaries must be lower than ending ones", widthBegin < widthEnd && heightBegin < heightEnd));
+
+  Matrix<T> res(widthEnd - widthBegin, heightEnd - heightBegin, mat.getChannelCount(), mat.getImgBitDepth(), mat.getColorspace());
+
+  for (std::size_t hIndex = heightBegin, resHIndex = 0; hIndex < heightEnd, resHIndex < res.getHeight(); ++hIndex, ++resHIndex) {
+    for (std::size_t wIndex = widthBegin, resWIndex = 0; wIndex < heightEnd, resWIndex < res.getWidth(); ++wIndex, ++resWIndex) {
+      const std::size_t matIndex = (hIndex * mat.getWidth() + wIndex) * mat.getChannelCount();
+      const std::size_t resIndex = (resHIndex * res.getWidth() + resWIndex) * mat.getChannelCount();
+
+      for (uint8_t chan = 0; chan < mat.getChannelCount(); ++chan)
+        res[resIndex + chan] = mat[matIndex + chan];
+    }
+  }
+
+  return res;
+}
+
 } // namespace Arcv
