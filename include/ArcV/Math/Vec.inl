@@ -3,8 +3,7 @@
 namespace Arcv {
 
 template <typename T>
-Vec<T>::Vec(const std::initializer_list<T>& list)
-  : data(list.size()) {
+Vec<T>::Vec(const std::initializer_list<T>& list) : data(list.size()) {
   auto element = list.begin();
 
   for (std::size_t i = 0; i < list.size(); ++i, ++element)

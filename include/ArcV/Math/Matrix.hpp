@@ -18,12 +18,12 @@ namespace Arcv {
 template <typename T = float>
 class Matrix {
 public:
-  Matrix(unsigned int width,
-         unsigned int height)
+  Matrix(std::size_t width,
+         std::size_t height)
     : width{ width }, height{ height }, data(width * height) {}
 
-  Matrix(unsigned int width,
-         unsigned int height,
+  Matrix(std::size_t width,
+         std::size_t height,
          uint8_t channels,
          uint8_t bitDepth,
          Colorspace colorspace)
@@ -38,8 +38,8 @@ public:
 
   Matrix(const std::initializer_list<const std::initializer_list<T>>& list);
 
-  unsigned int getWidth() const { return width; }
-  unsigned int getHeight() const { return height; }
+  std::size_t getWidth() const { return width; }
+  std::size_t getHeight() const { return height; }
   uint8_t getImgBitDepth() const { return imgBitDepth; }
   uint8_t getChannelCount() const { return channelCount; }
   Colorspace getColorspace() const { return colorspace; }
@@ -73,7 +73,7 @@ public:
   T& operator[](unsigned int index) { return data[index]; } // Implement Pixel class to return an instance?
 
 private:
-  unsigned int width, height;
+  std::size_t width, height;
   uint8_t channelCount, imgBitDepth;    // TODO: channels, depth & colorspace have nothing to do with general matrices
   Colorspace colorspace;
   std::vector<T> data;

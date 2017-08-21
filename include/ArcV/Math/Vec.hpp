@@ -10,7 +10,7 @@ namespace Arcv {
 template <typename T>
 class Vec {
 public:
-  Vec(unsigned int size) : data(size) {}
+  Vec(std::size_t size) : data(size) {}
   Vec(const std::initializer_list<T>& list);
 
   const std::vector<T>& getData() const { return data; }
