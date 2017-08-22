@@ -37,7 +37,12 @@ int main() {
   Arcv::Matrix<float> threshMat = Arcv::Image::threshold(hsvMat, 0.f, 15.f, 50.f, 150.f, 50.f, 150.f);
   Arcv::Image::write(threshMat, "outputThresh.png");
 
-  Arcv::Matrix<float> regionMat = Arcv::Image::region(mat, mat.getWidth() / 4, mat.getWidth() / 2, mat.getHeight() / 4, mat.getHeight() / 2);
+  Arcv::Matrix<float> leftRotMat = Arcv::Image::rotateLeft(mat);
+  Arcv::Matrix<float> rightRotMat = Arcv::Image::rotateRight(mat);
+  Arcv::Image::write(leftRotMat, "outputLeftRot.png");
+  Arcv::Image::write(rightRotMat, "outputRightRot.png");
+
+  Arcv::Matrix<float> regionMat = Arcv::Image::region(mat, 0, mat.getWidth() / 2, 0, mat.getHeight() / 2);
   Arcv::Image::write(regionMat, "outputRegion.png");
 
   std::cout << "Computing duration: "
