@@ -236,7 +236,8 @@ Matrix<> Image::changeColorspace<ARCV_COLORSPACE_GRAY>(Matrix<> mat) {
 
 template <>
 Matrix<> Image::changeColorspace<ARCV_COLORSPACE_RGB>(Matrix<> mat) {
-  assert(("Warning: Function not handled yet", mat.getColorspace() == ARCV_COLORSPACE_RGBA));
+  assert(("Warning: Function not handled yet",
+          mat.getColorspace() == ARCV_COLORSPACE_RGBA || mat.getColorspace() == ARCV_COLORSPACE_RGB));
 
   if (mat.getColorspace() >= ARCV_COLORSPACE_GRAY_ALPHA)
     removeAlphaChannel(mat);
@@ -248,7 +249,7 @@ Matrix<> Image::changeColorspace<ARCV_COLORSPACE_RGB>(Matrix<> mat) {
 template <>
 Matrix<> Image::changeColorspace<ARCV_COLORSPACE_HSV>(Matrix<> mat) {
   assert(("Error: Input matrix's colorspace should be RGB(A)",
-      mat.getColorspace() == ARCV_COLORSPACE_RGB || mat.getColorspace() == ARCV_COLORSPACE_RGBA));
+          mat.getColorspace() == ARCV_COLORSPACE_RGB || mat.getColorspace() == ARCV_COLORSPACE_RGBA));
 
   for (auto elt = mat.getData().begin(); elt != mat.getData().end(); elt += mat.getChannelCount()) {
     const float red = *elt / 255;
@@ -306,7 +307,8 @@ Matrix<> Image::changeColorspace<ARCV_COLORSPACE_GRAY_ALPHA>(Matrix<> mat) {
 
 template <>
 Matrix<> Image::changeColorspace<ARCV_COLORSPACE_RGBA>(Matrix<> mat) {
-  assert(("Warning: Function not handled yet", mat.getColorspace() == ARCV_COLORSPACE_RGB));
+  assert(("Warning: Function not handled yet",
+          mat.getColorspace() == ARCV_COLORSPACE_RGB || mat.getColorspace() == ARCV_COLORSPACE_RGBA));
 
   if (mat.getColorspace() < ARCV_COLORSPACE_GRAY_ALPHA)
     addAlphaChannel(mat);
@@ -328,9 +330,9 @@ Matrix<> Image::applyFilter<ARCV_FILTER_TYPE_GAUSSIAN_BLUR>(Matrix<> mat) {
 
 template <>
 Matrix<> Image::applyFilter<ARCV_FILTER_TYPE_SHARPEN>(Matrix<> mat) {
-  const Matrix<float> kernel = {{ 0.f,  -1.f,  0.f },
-                                { -1.f,  5.f, -1.f },
-                                { 0.f,  -1.f,  0.f }};
+  const Matrix<float> kernel = {{  0.f,  -1.f,  0.f },
+                                { -1.f,   5.f, -1.f },
+                                {  0.f,  -1.f,  0.f }};
 
   return mat.convolve(kernel);
 }
