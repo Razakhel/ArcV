@@ -39,8 +39,10 @@ int main() {
 
   Arcv::Matrix<float> leftRotMat = Arcv::Image::rotateLeft(mat);
   Arcv::Matrix<float> rightRotMat = Arcv::Image::rotateRight(mat);
+  Arcv::Matrix<float> reverseMat = Arcv::Image::reverse(mat);
   Arcv::Image::write(leftRotMat, "outputLeftRot.png");
   Arcv::Image::write(rightRotMat, "outputRightRot.png");
+  Arcv::Image::write(reverseMat, "outputReverse.png");
 
   Arcv::Matrix<float> regionMat = Arcv::Image::region(mat, 0, mat.getWidth() / 2, 0, mat.getHeight() / 2);
   Arcv::Image::write(regionMat, "outputRegion.png");
