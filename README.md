@@ -1,5 +1,10 @@
-# ArcV
-Computer Vision &amp; Augmented Reality library.
+<h1 align="center">
+    ArcV
+</h1>
+
+<h4 align="center">Computer Vision &amp; Augmented Reality library.</h4>
+
+---
 
 ## Summary
 
@@ -7,8 +12,9 @@ Computer Vision &amp; Augmented Reality library.
 
 Written in C++, it is primarily developed for learning purposes. It is intended to be optimized and to run relatively fast, even on low-end/old computers and smartphones.
 
-This library is made for Linux, though it is planned to make it fully compatible Windows. It is also especially aimed to be running on Android.
+This library is available for Linux and Windows. It is also especially aimed to be running on Android.
 
+If you want to get started, [head to the wiki](https://github.com/Razakhel/ArcV/wiki)!
 
 # ArcV is...
 
@@ -23,10 +29,10 @@ This library is made for Linux, though it is planned to make it fully compatible
 | Saving (writing) an image | **Yes** (PNG) |
 | Changing colorspace | **Yes** |
 | Convolution filtering | **Yes** |
-| Operations on colors (thresholding...) | _In progress_ |
-| Detecting basic features (lines, circles...) | No |
-| Detecting advanced features (objects recognition, ORB algorithm) | No |
-| Creating windowing class (Windows, Linux/X) | _On standby_ |
+| Operations on images (rotation, flip, thresholding) | **Yes** |
+| Detecting basic features (corners, lines, circles...) | _In progress_ |
+| Detecting advanced features (object recognition, ORB algorithm) | No |
+| Handle windowing (Windows, Linux/X) | No |
 | Getting stream from webcam | No |
 
 May be decided to be added:
@@ -46,7 +52,7 @@ This part will not be begun before a while: though being the most interesting, i
 | :---------: | :---------: |
 | Fiducial markers recognition | No |
 | Pose estimation | No |
-| Integration of 3D models into the scene (OpenGL/Vulkan) | No |
+| 3D models integration (OpenGL/Vulkan) | No |
 
 To be continued!
 
@@ -55,4 +61,10 @@ To be continued!
 Links to Wikipedia:
 - [Computer Vision](https://en.wikipedia.org/wiki/Computer_vision)
 - [Convolution](https://en.wikipedia.org/wiki/Kernel_(image_processing))
+- [Edge detection](https://en.wikipedia.org/wiki/Edge_detection)
+  - [Canny detector](https://en.wikipedia.org/wiki/Canny_edge_detector)
+  - [Sobel operator](https://en.wikipedia.org/wiki/Sobel_operator)
+- [Corner detection](https://en.wikipedia.org/wiki/Corner_detection)
+  - [Harris operator](https://en.wikipedia.org/wiki/Corner_detection#The_Harris_.26_Stephens_.2F_Plessey_.2F_Shi.E2.80.93Tomasi_corner_detection_algorithms)
 - [Augmented Reality](https://en.wikipedia.org/wiki/Augmented_reality)
+  - [Fiducial marker](https://en.wikipedia.org/wiki/Fiducial_marker)
