@@ -44,6 +44,11 @@ int main() {
   Arcv::Image::write(rightRotMat, "outputRightRot.png");
   Arcv::Image::write(reverseMat, "outputReverse.png");
 
+  Arcv::Matrix<float> horizFlipMat = Arcv::Image::horizontalFlip(mat);
+  Arcv::Matrix<float> vertFlipMat = Arcv::Image::verticalFlip(mat);
+  Arcv::Image::write(horizFlipMat, "outputHorizFlip.png");
+  Arcv::Image::write(vertFlipMat, "outputVertFlip.png");
+
   Arcv::Matrix<float> regionMat = Arcv::Image::region(mat, 0, mat.getWidth() / 2, 0, mat.getHeight() / 2);
   Arcv::Image::write(regionMat, "outputRegion.png");
 
