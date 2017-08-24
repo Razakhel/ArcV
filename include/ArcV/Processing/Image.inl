@@ -41,7 +41,7 @@ template <typename T>
 Matrix <T> Image::rotateRight(const Matrix <T>& mat) {
   Matrix<T> res(mat.getHeight(), mat.getWidth(), mat.getChannelCount(), mat.getImgBitDepth(), mat.getColorspace());
 
-  for (std::size_t hIndex = 0, resWIndex = res.getWidth(); hIndex < mat.getHeight(), resWIndex > 0; ++hIndex, --resWIndex) {
+  for (std::size_t hIndex = 0, resWIndex = res.getWidth() - 1; hIndex < mat.getHeight(), resWIndex > 0; ++hIndex, --resWIndex) {
     for (std::size_t wIndex = 0, resHIndex = 0; wIndex < mat.getWidth(), resHIndex < res.getHeight(); ++wIndex, ++resHIndex) {
       const std::size_t matIndex = (hIndex * mat.getWidth() + wIndex) * mat.getChannelCount();
       const std::size_t resIndex = (resHIndex * res.getWidth() + resWIndex) * res.getChannelCount();
@@ -59,7 +59,7 @@ Matrix <T> Image::reverse(const Matrix <T>& mat) {
   Matrix<T> res(mat.getWidth(), mat.getHeight(), mat.getChannelCount(), mat.getImgBitDepth(), mat.getColorspace());
 
   for (std::size_t hIndex = 0, resHIndex = res.getHeight() - 1; hIndex < mat.getHeight(), resHIndex > 0; ++hIndex, --resHIndex) {
-    for (std::size_t wIndex = 0, resWIndex = res.getWidth(); wIndex < mat.getWidth(), resWIndex > 0; ++wIndex, --resWIndex) {
+    for (std::size_t wIndex = 0, resWIndex = res.getWidth() - 1; wIndex < mat.getWidth(), resWIndex > 0; ++wIndex, --resWIndex) {
       const std::size_t matIndex = (hIndex * mat.getWidth() + wIndex) * mat.getChannelCount();
       const std::size_t resIndex = (resHIndex * res.getWidth() + resWIndex) * res.getChannelCount();
 
