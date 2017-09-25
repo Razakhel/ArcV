@@ -11,17 +11,21 @@ endif ()
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/extern
-    ${CMAKE_CURRENT_SOURCE_DIR}/extern/glfw/deps
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/glew/include
     ${CMAKE_CURRENT_SOURCE_DIR}/extern/glfw/include
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
+AUX_SOURCE_DIRECTORY(extern/png PNG_SRC)
+AUX_SOURCE_DIRECTORY(extern/glew/src GLEW_SRC)
+AUX_SOURCE_DIRECTORY(extern/glfw/src GLFW_SRC)
+
 set(
     SRC
 
-    extern/png/*.c
-    extern/glfw/*.c
-    extern/imgui/*.cpp
+    ${PNG_SRC}
+    ${GLEW_SRC}
+    ${GLFW_SRC}
 
     src/ArcV/Math/*.cpp
     src/ArcV/Processing/*.cpp
@@ -42,13 +46,13 @@ if (UNIX)
         -D_GLFW_X11
         -D_GLFW_HAS_XF86VM
 
-        #-fsanitize=undefined
-        #-fsanitize=address
-        #-fsanitize=leak
+        -fsanitize=undefined
+        -fsanitize=address
+        -fsanitize=leak
     )
 
     file(
-        GLOB_RECURSE
+        GLOB
         DISPOSABLE
 
         extern/glfw/src/cocoa*
@@ -56,18 +60,21 @@ if (UNIX)
         extern/glfw/src/wl*
         extern/glfw/src/wgl*
         extern/glfw/src/mir*
+        extern/glfw/src/*.m
     )
 
     set(
         LIBS
 
         asan
+        ubsan
     )
 
     set(
         DEPS
 
         X11
+        GL
         Xrandr
         Xcursor
         Xinerama
@@ -79,7 +86,7 @@ elseif (WIN32)
     add_definitions(-D_GLFW_WIN32)
 
     file(
-        GLOB_RECURSE
+        GLOB
         DISPOSABLE
 
         extern/glfw/src/cocoa*
@@ -89,6 +96,7 @@ elseif (WIN32)
         extern/glfw/src/glx*
         extern/glfw/src/linux*
         extern/glfw/src/posix*
+        extern/glfw/src/*.m
     )
 elseif (APPLE)
     add_definitions(
@@ -99,7 +107,7 @@ elseif (APPLE)
     )
 
     file(
-        GLOB_RECURSE
+        GLOB
         DISPOSABLE
 
         extern/glfw/src/win32*
@@ -113,7 +121,7 @@ endif ()
 
 # Adding recursively every file we want to compile
 file(
-    GLOB_RECURSE
+    GLOB
     SOURCE_FILES
     ${SRC}
 )
