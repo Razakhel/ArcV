@@ -11,7 +11,7 @@ template <typename T>
 class Vec {
 public:
   Vec(std::size_t size) : data(size) {}
-  Vec(const std::initializer_list<T>& list);
+  Vec(std::initializer_list<T> list);
 
   const std::vector<T>& getData() const { return data; }
   std::vector<T>& getData() { return data; }
@@ -34,8 +34,8 @@ public:
   Vec& operator*=(float val);
   Vec& operator/=(const Vec& vec);
   Vec& operator/=(float val);
-  const T& operator[](const unsigned int index) const { return data[index]; }
-  T& operator[](const unsigned int index) { return data[index]; }
+  const T& operator[](std::size_t index) const { return data[index]; }
+  T& operator[](std::size_t index) { return data[index]; }
 
 private:
   std::vector<T> data;

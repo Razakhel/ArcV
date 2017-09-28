@@ -3,7 +3,7 @@
 namespace Arcv {
 
 template <typename T>
-Vec<T>::Vec(const std::initializer_list<T>& list) : data(list.size()) {
+Vec<T>::Vec(std::initializer_list<T> list) : data(list.size()) {
   auto element = list.begin();
 
   for (std::size_t i = 0; i < list.size(); ++i, ++element)
@@ -22,6 +22,8 @@ T Vec<T>::dot(const Vec& vec) const {
 
 template <typename T>
 Vec<T> Vec<T>::operator+(Vec vec) {
+  assert(("Error: Vectors aren't the same size", data.size() == vec.getData().size()));
+
   vec += *this;
   return vec;
 }
@@ -35,6 +37,8 @@ Vec<T> Vec<T>::operator+(float val) {
 
 template <typename T>
 Vec<T> Vec<T>::operator-(Vec vec) {
+  assert(("Error: Vectors aren't the same size", data.size() == vec.getData().size()));
+
   vec -= *this;
   return vec;
 }
@@ -48,6 +52,8 @@ Vec<T> Vec<T>::operator-(float val) {
 
 template <typename T>
 Vec<T> Vec<T>::operator*(Vec vec) {
+  assert(("Error: Vectors aren't the same size", data.size() == vec.getData().size()));
+
   vec *= *this;
   return vec;
 }

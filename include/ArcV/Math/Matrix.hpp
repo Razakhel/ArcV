@@ -36,7 +36,7 @@ public:
 
   template <typename TI> Matrix(const Matrix<TI>& mat);
 
-  Matrix(const std::initializer_list<const std::initializer_list<T>>& list);
+  Matrix(std::initializer_list<std::initializer_list<T>> list);
 
   std::size_t getWidth() const { return width; }
   std::size_t getHeight() const { return height; }
@@ -68,9 +68,9 @@ public:
   Matrix& operator/=(const Matrix& mat);
   Matrix& operator/=(float val);
   template <typename TI> Matrix operator=(const Matrix<TI>& mat) { return Matrix<T>(mat); }
-  T& operator()(unsigned int widthIndex, unsigned int heightIndex) { return data[heightIndex * width + widthIndex]; }
-  const T& operator[](unsigned int index) const { return data[index]; }
-  T& operator[](unsigned int index) { return data[index]; } // Implement Pixel class to return an instance?
+  T& operator()(std::size_t widthIndex, std::size_t heightIndex) { return data[heightIndex * width + widthIndex]; }
+  const T& operator[](std::size_t index) const { return data[index]; }
+  T& operator[](std::size_t index) { return data[index]; } // Implement Pixel class to return an instance?
 
 private:
   std::size_t width, height;
