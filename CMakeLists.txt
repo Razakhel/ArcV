@@ -98,6 +98,12 @@ elseif (WIN32)
         extern/glfw/src/posix*
         extern/glfw/src/*.m
     )
+
+    set(
+        DEPS
+
+        opengl32
+    )
 elseif (APPLE)
     add_definitions(
         -D_GLFW_COCOA

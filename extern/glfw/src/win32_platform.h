@@ -67,9 +67,10 @@
 #include <wctype.h>
 #include <windows.h>
 #include <mmsystem.h>
-#include <mingw/dinput.h>
-#include <mingw/xinput.h>
 #include <dbt.h>
+
+#include "glfw/deps/mingw/dinput.h"
+#include "glfw/deps/mingw/xinput.h"
 
 #if defined(_MSC_VER)
  #include <malloc.h>

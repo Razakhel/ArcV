@@ -2,7 +2,7 @@
     ArcV
 </h1>
 
-<h4 align="center">Computer Vision &amp; Augmented Reality library.</h4>
+<h4 align="center">Computer Vision &amp; Augmented Reality library</h4>
 
 ---
 
@@ -32,7 +32,7 @@ If you want to get started, [head to the wiki](https://github.com/Razakhel/ArcV/
 | Operations on images (rotation, flip, thresholding) | **Yes** |
 | Detecting basic features (corners, lines, circles...) | _In progress_ |
 | Detecting advanced features (object recognition, ORB algorithm) | No |
-| Handle windowing (Windows, Linux/X) | No |
+| Handle windowing | **Yes** |
 | Getting stream from webcam | No |
 
 May be decided to be added:

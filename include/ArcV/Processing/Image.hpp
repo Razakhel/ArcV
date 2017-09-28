@@ -39,7 +39,7 @@ public:
   template <typename T> static Matrix<T> horizontalFlip(const Matrix<T>& mat);
   template <typename T> static Matrix<T> verticalFlip(const Matrix<T>& mat);
   template <typename T> static Matrix<T> region(const Matrix<T>& mat, std::size_t widthBegin, std::size_t widthEnd,
-                                                                      std::size_t heightBegin, std::size_t heightEnd);
+                                                    std::size_t heightBegin, std::size_t heightEnd);
 };
 
 } // namespace Arcv
