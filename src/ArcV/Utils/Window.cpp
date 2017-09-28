@@ -145,14 +145,25 @@ void Window::mapImage(const Matrix<>& mat) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
   GLenum imgFormat;
-
   switch (img.getColorspace()) {
+    case ARCV_COLORSPACE_GRAY: {
+      const std::array<GLint, 4> swizzle = { GL_RED, GL_RED, GL_RED, GL_ALPHA };
+      glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzle.data());
+
+      imgFormat = GL_RED;
+      break;
+    }
+
+    case ARCV_COLORSPACE_GRAY_ALPHA: {
+      const std::array<GLint, 4> swizzle = { GL_RED, GL_RED, GL_RED, GL_GREEN };
+      glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzle.data());
+
+      imgFormat = GL_RG;
+      break;
+    }
+
     case ARCV_COLORSPACE_RGBA:
       imgFormat = GL_RGBA;
-      break;
-
-    case ARCV_COLORSPACE_GRAY:
-      imgFormat = GL_RED;
       break;
 
     default:

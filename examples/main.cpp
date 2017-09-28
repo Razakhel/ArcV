@@ -58,7 +58,8 @@ int main() {
     << std::chrono::duration_cast<std::chrono::duration<float>>(endTime - startTime).count()
     << " seconds." << std::endl;
 
-  Arcv::Window window(mat.getWidth(), mat.getHeight(), "Lena RGB");
+  Arcv::Window window(mat.getWidth(), mat.getHeight(), "Lena Gray-alpha");
+  mat = Arcv::Image::changeColorspace<ARCV_COLORSPACE_GRAY_ALPHA>(mat);
   window.mapImage(mat);
   window.show();
 
