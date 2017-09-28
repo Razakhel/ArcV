@@ -83,7 +83,11 @@ if (UNIX)
         dl
     )
 elseif (WIN32)
-    add_definitions(-D_GLFW_WIN32)
+    add_definitions(
+        -D_GLFW_WIN32
+        -DGLEW_BUILD
+        #-DGLEW_NO_GLU
+    )
 
     file(
         GLOB
