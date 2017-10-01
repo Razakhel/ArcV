@@ -16,29 +16,32 @@ const std::array<float, 20> vertices = { -1.f, -1.f, 0.f,   0.f, 1.f,
 const std::array<unsigned int, 6> indices = { 0, 1, 3,
                                               1, 2, 3 };
 
-void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode) {
-  if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-    glfwSetWindowShouldClose(window, GL_TRUE);
-}
-
 GLuint initShaders() {
-  const std::string vertexShaderStr =
-    "#version 330 core\n"
-    "layout (location = 0) in vec3 vertPosition;\n"
-    "layout (location = 1) in vec2 vertTexcoords;\n"
-    "out vec2 fragTexcoords;\n"
-    "void main() {\n"
-    "    gl_Position = vec4(vertPosition, 1.0);\n"
-    "    fragTexcoords = vertTexcoords;\n"
-    "}\n";
+  const std::string vertexShaderStr = R"(
+    #version 330 core
 
-  const std::string fragmentShaderStr =
-    "#version 330 core\n"
-    "uniform sampler2D uniTexture;\n"
-    "in vec2 fragTexcoords;\n"
-    "void main() {\n"
-    "    gl_FragColor = texture(uniTexture, fragTexcoords);\n"
-    "}\n";
+    layout (location = 0) in vec3 vertPosition;
+    layout (location = 1) in vec2 vertTexcoords;
+
+    out vec2 fragTexcoords;
+
+    void main() {
+        gl_Position = vec4(vertPosition, 1.0);
+        fragTexcoords = vertTexcoords;
+    }
+  )";
+
+  const std::string fragmentShaderStr = R"(
+    #version 330 core
+
+    uniform sampler2D uniTexture;
+
+    in vec2 fragTexcoords;
+
+    void main() {
+        gl_FragColor = texture(uniTexture, fragTexcoords);
+    }
+  )";
 
   GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vertexShader, 1, reinterpret_cast<const GLchar* const*>(&vertexShaderStr), nullptr);
@@ -100,7 +103,10 @@ Window::Window(unsigned int width, unsigned int height, const std::string& name)
   }
 
   glfwMakeContextCurrent(window);
-  glfwSetKeyCallback(window, keyCallback);
+  glfwSetKeyCallback(window, [] (GLFWwindow* window, int key, int scancode, int action, int mode) {
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+      glfwSetWindowShouldClose(window, GL_TRUE);
+  });
 
   glViewport(0, 0, width, height);
 
@@ -138,16 +144,13 @@ void Window::mapImage(const Matrix<>& mat) {
   glGenTextures(1, &textureIndex);
   glBindTexture(GL_TEXTURE_2D, textureIndex);
 
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
   GLenum imgFormat;
   switch (img.getColorspace()) {
     case ARCV_COLORSPACE_GRAY: {
-      const std::array<GLint, 4> swizzle = { GL_RED, GL_RED, GL_RED, GL_ALPHA };
+      const std::array<GLint, 4> swizzle = { GL_RED, GL_RED, GL_RED, GL_ONE };
       glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzle.data());
 
       imgFormat = GL_RED;
@@ -192,6 +195,7 @@ void Window::show() {
 void Window::close() {
   glDeleteVertexArrays(1, &vaoIndex);
   glDeleteBuffers(1, &vboIndex);
+  glDeleteBuffers(1, &eboIndex);
 
   glfwTerminate();
 }

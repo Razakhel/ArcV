@@ -13,7 +13,6 @@ public:
   Window(unsigned int width, unsigned int height, const std::string& name = "");
 
   void mapImage(const Matrix<>& mat);
-
   void show();
   void close();
 
