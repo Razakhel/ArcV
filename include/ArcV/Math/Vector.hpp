@@ -17,7 +17,7 @@ public:
   std::vector<T>& getData() { return data; }
 
   T dot(const Vector& vec) const;
-  Vector Vector::normalize() const;
+  Vector normalize() const;
 
   Vector operator+(Vector vec);
   Vector operator+(float val);

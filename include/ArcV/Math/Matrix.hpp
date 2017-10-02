@@ -68,6 +68,7 @@ public:
   Matrix& operator/=(const Matrix& mat);
   Matrix& operator/=(float val);
   template <typename TI> Matrix operator=(const Matrix<TI>& mat) { return Matrix<T>(mat); }
+  const T& operator()(std::size_t widthIndex, std::size_t heightIndex) const { return data[heightIndex * width + widthIndex]; }
   T& operator()(std::size_t widthIndex, std::size_t heightIndex) { return data[heightIndex * width + widthIndex]; }
   const T& operator[](std::size_t index) const { return data[index]; }
   T& operator[](std::size_t index) { return data[index]; } // Implement Pixel class to return an instance?
@@ -75,7 +76,7 @@ public:
 private:
   std::size_t width, height;
   uint8_t channelCount, imgBitDepth;    // TODO: channels, depth & colorspace have nothing to do with general matrices
-  Colorspace colorspace;
+  Colorspace colorspace = ARCV_COLORSPACE_GRAY;
   std::vector<T> data;
 };
 
