@@ -19,6 +19,8 @@ enum FilterType { ARCV_FILTER_TYPE_GAUSSIAN_BLUR = 0,
 enum DetectorType { ARCV_DETECTOR_TYPE_CANNY = 0,
                     ARCV_DETECTOR_TYPE_HARRIS };
 
+enum ThreshType { ARCV_THRESH_TYPE_BINARY = 0 };
+
 namespace Arcv {
 
 const unsigned int PNG_HEADER_SIZE = 8;
@@ -30,9 +32,8 @@ public:
   template <Colorspace C> static Matrix<> changeColorspace(Matrix<> mat);
   template <FilterType F> static Matrix<> applyFilter(Matrix<> mat);
   template <DetectorType D> static Matrix<> applyDetector(Matrix<> mat);
-  template <typename T> static Matrix<T> threshold(Matrix<T> mat, T firstLowerBound, T firstUpperBound,
-                                                                  T secondLowerBound, T secondUpperBound,
-                                                                  T thirdLowerBound, T thirdUpperBound);
+  template <ThreshType Thresh> static Matrix<> threshold(const Matrix<>& mat, std::initializer_list<float> lowerBounds,
+                                                                              std::initializer_list<float> upperBounds);
   template <typename T> static Matrix<T> rotateLeft(const Matrix<T>& mat);
   template <typename T> static Matrix<T> rotateRight(const Matrix<T>& mat);
   template <typename T> static Matrix<T> reverse(const Matrix<T>& mat);

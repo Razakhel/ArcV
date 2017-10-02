@@ -1,6 +1,7 @@
 #include <array>
 #include <vector>
 #include <fstream>
+#include <algorithm>
 
 #include "png/png.h"
 #include "png/zlib.h"
@@ -90,9 +91,9 @@ Matrix<> Image::read(const std::string& fileName) {
 
   png_read_info(pngReadStruct, pngInfoStruct);
 
-  uint32_t width = static_cast<uint32_t>(png_get_image_width(pngReadStruct, pngInfoStruct));
-  uint32_t height = static_cast<uint32_t>(png_get_image_height(pngReadStruct, pngInfoStruct));
-  uint32_t bitDepth = png_get_bit_depth(pngReadStruct, pngInfoStruct);
+  uint32_t width = png_get_image_width(pngReadStruct, pngInfoStruct);
+  uint32_t height = png_get_image_height(pngReadStruct, pngInfoStruct);
+  uint8_t bitDepth = png_get_bit_depth(pngReadStruct, pngInfoStruct);
   uint8_t channels = png_get_channels(pngReadStruct, pngInfoStruct);
   uint8_t colorType = png_get_color_type(pngReadStruct, pngInfoStruct);
   Colorspace colorspace;
@@ -135,7 +136,7 @@ Matrix<> Image::read(const std::string& fileName) {
 
   png_read_update_info(pngReadStruct, pngInfoStruct);
 
-  Matrix<uint8_t> mat(width, height, channels, static_cast<uint8_t>(bitDepth), colorspace);
+  Matrix<uint8_t> mat(width, height, channels, bitDepth, colorspace);
 
   std::vector<png_bytep> rowPtrs(height);
 
@@ -385,6 +386,32 @@ Matrix<> Image::applyDetector<ARCV_DETECTOR_TYPE_HARRIS>(Matrix<> mat) {
   }
 
   return mat;
+}
+
+template <>
+Matrix<> Image::threshold<ARCV_THRESH_TYPE_BINARY>(const Matrix<>& mat, std::initializer_list<float> lowerBounds,
+                                                                        std::initializer_list<float> upperBounds) {
+  assert(("Error: The number of lower & upper boundaries must match each other", lowerBounds.size() == upperBounds.size()));
+  assert(("Error: The number of boundaries must match channel count",
+          lowerBounds.size() + upperBounds.size() == mat.getChannelCount() * 2));
+
+  Matrix<> res(mat.getWidth(), mat.getHeight(), 1, mat.getImgBitDepth(), ARCV_COLORSPACE_GRAY);
+  std::size_t resIndex = 0;
+
+  for (auto elt = mat.getData().begin(); elt != mat.getData().end(); elt += mat.getChannelCount(), ++resIndex) {
+    bool inBounds = true;
+
+    for (uint8_t chan = 0; chan < mat.getChannelCount(); ++chan) {
+      const float val = *(elt + chan);
+
+      if (val < *(lowerBounds.begin() + chan) || val > *(upperBounds.begin() + chan))
+        inBounds = false;
+    }
+
+    res[resIndex] = (inBounds ? 255 : 0);
+  }
+
+  return res;
 }
 
 } // namespace Arcv

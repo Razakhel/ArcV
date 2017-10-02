@@ -46,9 +46,9 @@ if (UNIX)
         -D_GLFW_X11
         -D_GLFW_HAS_XF86VM
 
-        -fsanitize=undefined
-        -fsanitize=address
-        -fsanitize=leak
+        #-fsanitize=undefined
+        #-fsanitize=address
+        #-fsanitize=leak
     )
 
     file(
@@ -66,8 +66,8 @@ if (UNIX)
     set(
         LIBS
 
-        asan
-        ubsan
+        #asan
+        #ubsan
     )
 
     set(

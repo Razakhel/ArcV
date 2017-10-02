@@ -8,7 +8,7 @@ int main() {
 
   Arcv::Matrix<float> mat = Arcv::Image::read("lena.png");
 
-  /*Arcv::Matrix<float> grayMat = Arcv::Image::changeColorspace<ARCV_COLORSPACE_GRAY>(mat);
+  Arcv::Matrix<float> grayMat = Arcv::Image::changeColorspace<ARCV_COLORSPACE_GRAY>(mat);
   Arcv::Matrix<float> hsvMat = Arcv::Image::changeColorspace<ARCV_COLORSPACE_HSV>(mat);
   Arcv::Matrix<float> rgbaMat = Arcv::Image::changeColorspace<ARCV_COLORSPACE_RGBA>(mat);
 
@@ -16,7 +16,7 @@ int main() {
   Arcv::Matrix<float> sharpenMat = Arcv::Image::applyFilter<ARCV_FILTER_TYPE_SHARPEN>(mat);
   Arcv::Matrix<float> edgeMat = Arcv::Image::applyFilter<ARCV_FILTER_TYPE_EDGE_ENHANCEMENT>(mat);
   Arcv::Matrix<float> embossMat = Arcv::Image::applyFilter<ARCV_FILTER_TYPE_EMBOSS>(mat);
-  Arcv::Matrix<float> sobelMat = Arcv::Image::applyFilter<ARCV_FILTER_TYPE_SOBEL>(mat);*/
+  Arcv::Matrix<float> sobelMat = Arcv::Image::applyFilter<ARCV_FILTER_TYPE_SOBEL>(mat);
 
   Arcv::Matrix<float> harrisMat = Arcv::Image::applyDetector<ARCV_DETECTOR_TYPE_HARRIS>(mat);
 
@@ -30,14 +30,14 @@ int main() {
   Arcv::Image::write(sharpenMat, "outputSharpen.png");
   Arcv::Image::write(edgeMat, "outputEdge.png");
   Arcv::Image::write(embossMat, "outputEmboss.png");
-  Arcv::Image::write(sobelMat, "outputSobel.png");*/
+  Arcv::Image::write(sobelMat, "outputSobel.png");
 
-  Arcv::Image::write(harrisMat, "outputHarris.png");
+  Arcv::Image::write(harrisMat, "outputHarris.png");*/
 
-  /*Arcv::Matrix<float> threshMat = Arcv::Image::threshold(hsvMat, 0.f, 15.f, 50.f, 150.f, 50.f, 150.f);
+  Arcv::Matrix<float> threshMat = Arcv::Image::threshold<ARCV_THRESH_TYPE_BINARY>(hsvMat, { 0.f, 50.f, 50.f }, { 15.f, 150.f, 150.f });
   Arcv::Image::write(threshMat, "outputThresh.png");
 
-  Arcv::Matrix<float> leftRotMat = Arcv::Image::rotateLeft(mat);
+  /*Arcv::Matrix<float> leftRotMat = Arcv::Image::rotateLeft(mat);
   Arcv::Matrix<float> rightRotMat = Arcv::Image::rotateRight(mat);
   Arcv::Matrix<float> reverseMat = Arcv::Image::reverse(mat);
   Arcv::Image::write(leftRotMat, "outputLeftRot.png");
@@ -59,9 +59,7 @@ int main() {
     << " seconds." << std::endl;
 
   Arcv::Window window(mat.getWidth(), mat.getHeight(), "Example");
-  mat = Arcv::Image::changeColorspace<ARCV_COLORSPACE_GRAY_ALPHA>(mat);
-  mat = Arcv::Image::applyFilter<ARCV_FILTER_TYPE_SOBEL>(mat);
-  window.mapImage(mat);
+  window.mapImage(threshMat);
   window.show();
 
   return EXIT_SUCCESS;
