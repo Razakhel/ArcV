@@ -4,7 +4,7 @@
 #define ARCV_ARCV_HPP
 
 #include "ArcV/Math/Matrix.hpp"
-#include "ArcV/Math/Vec.hpp"
+#include "ArcV/Math/Vector.hpp"
 #include "ArcV/Processing/Image.hpp"
 #include "ArcV/Utils/Window.hpp"
 

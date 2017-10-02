@@ -3,15 +3,14 @@
 namespace Arcv {
 
 template <typename T>
-Vec<T>::Vec(std::initializer_list<T> list) : data(list.size()) {
+Vector<T>::Vector(std::initializer_list<T> list) : data(list.size()) {
   auto element = list.begin();
-
   for (std::size_t i = 0; i < list.size(); ++i, ++element)
     data[i] = *element;
 }
 
 template <typename T>
-T Vec<T>::dot(const Vec& vec) const {
+T Vector<T>::dot(const Vector& vec) const {
   assert(("Error: Vectors aren't the same size", data.size() == vec.getData().size()));
 
   float res = 0.f;
@@ -21,7 +20,15 @@ T Vec<T>::dot(const Vec& vec) const {
 }
 
 template <typename T>
-Vec<T> Vec<T>::operator+(Vec vec) {
+Vector<T> Vector<T>::normalize() const {
+  Vector<T> res = *this;
+
+  res /= std::sqrt(dot(*this));
+  return res;
+}
+
+template <typename T>
+Vector<T> Vector<T>::operator+(Vector vec) {
   assert(("Error: Vectors aren't the same size", data.size() == vec.getData().size()));
 
   vec += *this;
@@ -29,14 +36,14 @@ Vec<T> Vec<T>::operator+(Vec vec) {
 }
 
 template <typename T>
-Vec<T> Vec<T>::operator+(float val) {
-  Vec<T> res = *this;
+Vector<T> Vector<T>::operator+(float val) {
+  Vector<T> res = *this;
   res += val;
   return res;
 }
 
 template <typename T>
-Vec<T> Vec<T>::operator-(Vec vec) {
+Vector<T> Vector<T>::operator-(Vector vec) {
   assert(("Error: Vectors aren't the same size", data.size() == vec.getData().size()));
 
   vec -= *this;
@@ -44,14 +51,14 @@ Vec<T> Vec<T>::operator-(Vec vec) {
 }
 
 template <typename T>
-Vec<T> Vec<T>::operator-(float val) {
-  Vec<T> res = *this;
+Vector<T> Vector<T>::operator-(float val) {
+  Vector<T> res = *this;
   res -= val;
   return res;
 }
 
 template <typename T>
-Vec<T> Vec<T>::operator*(Vec vec) {
+Vector<T> Vector<T>::operator*(Vector vec) {
   assert(("Error: Vectors aren't the same size", data.size() == vec.getData().size()));
 
   vec *= *this;
@@ -59,14 +66,14 @@ Vec<T> Vec<T>::operator*(Vec vec) {
 }
 
 template <typename T>
-Vec<T> Vec<T>::operator*(float val) {
-  Vec<T> res = *this;
+Vector<T> Vector<T>::operator*(float val) {
+  Vector<T> res = *this;
   res *= val;
   return res;
 }
 
 template <typename T>
-Vec<T> Vec<T>::operator/(Vec vec) {
+Vector<T> Vector<T>::operator/(Vector vec) {
   assert(("Error: Vectors aren't the same size", data.size() == vec.getData().size()));
 
   vec /= *this;
@@ -74,14 +81,14 @@ Vec<T> Vec<T>::operator/(Vec vec) {
 }
 
 template <typename T>
-Vec<T> Vec<T>::operator/(float val) {
-  Vec<T> res = *this;
+Vector<T> Vector<T>::operator/(float val) {
+  Vector<T> res = *this;
   res /= val;
   return res;
 }
 
 template <typename T>
-Vec<T>& Vec<T>::operator+=(const Vec& vec) {
+Vector<T>& Vector<T>::operator+=(const Vector& vec) {
   assert(("Error: Vectors aren't the same size", data.size() == vec.getData().size()));
 
   for (std::size_t i = 0; i < data.size(); ++i)
@@ -90,14 +97,14 @@ Vec<T>& Vec<T>::operator+=(const Vec& vec) {
 }
 
 template <typename T>
-Vec<T>& Vec<T>::operator+=(float val) {
+Vector<T>& Vector<T>::operator+=(float val) {
   for (T& it : data)
     it += val;
   return *this;
 }
 
 template <typename T>
-Vec<T>& Vec<T>::operator-=(const Vec& vec) {
+Vector<T>& Vector<T>::operator-=(const Vector& vec) {
   assert(("Error: Vectors aren't the same size", data.size() == vec.getData().size()));
 
   for (std::size_t i = 0; i < data.size(); ++i)
@@ -106,14 +113,14 @@ Vec<T>& Vec<T>::operator-=(const Vec& vec) {
 }
 
 template <typename T>
-Vec<T>& Vec<T>::operator-=(float val) {
+Vector<T>& Vector<T>::operator-=(float val) {
   for (T& it : data)
     it -= val;
   return *this;
 }
 
 template <typename T>
-Vec<T>& Vec<T>::operator*=(const Vec& vec) {
+Vector<T>& Vector<T>::operator*=(const Vector& vec) {
   assert(("Error: Vectors aren't the same size", data.size() == vec.getData().size()));
 
   for (std::size_t i = 0; i < data.size(); ++i)
@@ -122,14 +129,14 @@ Vec<T>& Vec<T>::operator*=(const Vec& vec) {
 }
 
 template <typename T>
-Vec<T>& Vec<T>::operator*=(float val) {
+Vector<T>& Vector<T>::operator*=(float val) {
   for (T& it : data)
     it *= val;
   return *this;
 }
 
 template <typename T>
-Vec<T>& Vec<T>::operator/=(const Vec& vec) {
+Vector<T>& Vector<T>::operator/=(const Vector& vec) {
   assert(("Error: Vectors aren't the same size", data.size() == vec.getData().size()));
 
   for (std::size_t i = 0; i < data.size(); ++i)
@@ -138,7 +145,7 @@ Vec<T>& Vec<T>::operator/=(const Vec& vec) {
 }
 
 template <typename T>
-Vec<T>& Vec<T>::operator/=(float val) {
+Vector<T>& Vector<T>::operator/=(float val) {
   for (T& it : data)
     it /= val;
   return *this;

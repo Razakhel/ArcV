@@ -25,7 +25,7 @@ Matrix<> Matrix<>::convolve(const Matrix<float>& convMat) {
             // No need to check if negative since it is unsigned
             if (correspHeightIndex < height && correspWidthIndex < width) {
               value += convMat[(convHeightIndex + maxConvIndex) * convMat.getWidth() + convWidthIndex + maxConvIndex]
-                  * data[(correspHeightIndex * width + correspWidthIndex) * channelCount + chan];
+                * data[(correspHeightIndex * width + correspWidthIndex) * channelCount + chan];
             }
           }
         }
