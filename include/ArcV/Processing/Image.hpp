@@ -19,29 +19,29 @@ enum FilterType { ARCV_FILTER_TYPE_GAUSSIAN_BLUR = 0,
 enum DetectorType { ARCV_DETECTOR_TYPE_CANNY = 0,
                     ARCV_DETECTOR_TYPE_HARRIS };
 
-enum ThreshType { ARCV_THRESH_TYPE_BINARY = 0 };
+enum ThreshType { ARCV_THRESH_TYPE_BINARY = 0,
+                  ARCV_THRESH_TYPE_HYSTERESIS };
 
 namespace Arcv {
 
-const unsigned int PNG_HEADER_SIZE = 8;
+namespace Image {
 
-class Image {
-public:
-  static Matrix<> read(const std::string& fileName);
-  static void write(const Matrix<>& mat, const std::string& fileName);
-  template <Colorspace C> static Matrix<> changeColorspace(Matrix<> mat);
-  template <FilterType F> static Matrix<> applyFilter(Matrix<> mat);
-  template <DetectorType D> static Matrix<> applyDetector(Matrix<> mat);
-  template <ThreshType Thresh> static Matrix<> threshold(const Matrix<>& mat, std::initializer_list<float> lowerBounds,
-                                                                              std::initializer_list<float> upperBounds);
-  template <typename T> static Matrix<T> rotateLeft(const Matrix<T>& mat);
-  template <typename T> static Matrix<T> rotateRight(const Matrix<T>& mat);
-  template <typename T> static Matrix<T> reverse(const Matrix<T>& mat);
-  template <typename T> static Matrix<T> horizontalFlip(const Matrix<T>& mat);
-  template <typename T> static Matrix<T> verticalFlip(const Matrix<T>& mat);
-  template <typename T> static Matrix<T> region(const Matrix<T>& mat, std::size_t widthBegin, std::size_t widthEnd,
-                                                                      std::size_t heightBegin, std::size_t heightEnd);
-};
+Matrix<> read(const std::string& fileName);
+void write(const Matrix<>& mat, const std::string& fileName);
+template <Colorspace C> Matrix<> changeColorspace(Matrix<> mat);
+template <FilterType F> Matrix<> applyFilter(Matrix<> mat);
+template <DetectorType D> Matrix<> applyDetector(Matrix<> mat);
+template <ThreshType Thresh> Matrix<> threshold(const Matrix<>& mat, std::initializer_list<float> lowerBounds,
+                                                                     std::initializer_list<float> upperBounds);
+template <typename T> Matrix<T> rotateLeft(const Matrix<T>& mat);
+template <typename T> Matrix<T> rotateRight(const Matrix<T>& mat);
+template <typename T> Matrix<T> reverse(const Matrix<T>& mat);
+template <typename T> Matrix<T> horizontalFlip(const Matrix<T>& mat);
+template <typename T> Matrix<T> verticalFlip(const Matrix<T>& mat);
+template <typename T> Matrix<T> region(const Matrix<T>& mat, std::size_t widthBegin, std::size_t widthEnd,
+                                                             std::size_t heightBegin, std::size_t heightEnd);
+
+} // namespace Image
 
 } // namespace Arcv
 
