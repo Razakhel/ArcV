@@ -12,6 +12,8 @@ namespace Arcv {
 
 namespace {
 
+const unsigned int PNG_HEADER_SIZE = 8;
+
 bool validatePng(std::istream& file) {
   std::array<png_byte, PNG_HEADER_SIZE> header;
   file.read(reinterpret_cast<char*>(header.data()), PNG_HEADER_SIZE);
@@ -409,6 +411,47 @@ Matrix<> Image::threshold<ARCV_THRESH_TYPE_BINARY>(const Matrix<>& mat, std::ini
     }
 
     res[resIndex] = (inBounds ? 255 : 0);
+  }
+
+  return res;
+}
+
+template <>
+Matrix<> Image::threshold<ARCV_THRESH_TYPE_HYSTERESIS>(const Matrix<>& mat, std::initializer_list<float> lowerBounds,
+                                                                            std::initializer_list<float> upperBounds) {
+  assert(("Error: There should be only one lower & one upper boundaries", lowerBounds.size() == 1 && upperBounds.size() == 1));
+
+  Matrix<> res(mat.getWidth(), mat.getHeight(), 1, mat.getImgBitDepth(), ARCV_COLORSPACE_GRAY);
+
+  for (unsigned int heightIndex = 0; heightIndex < mat.getHeight(); ++heightIndex) {
+    for (unsigned int widthIndex = 0; widthIndex < mat.getWidth(); ++widthIndex) {
+      const std::size_t resIndex = heightIndex * mat.getWidth() + widthIndex;
+      float resVal = 0.f;
+
+      for (uint8_t chan = 0; chan < mat.getChannelCount(); ++chan) {
+        const std::size_t matIndex = (heightIndex * mat.getWidth() + widthIndex) * mat.getChannelCount() + chan;
+
+        if (mat[matIndex] >= *upperBounds.begin()) {
+          resVal = 255;
+        } else {
+          if (mat[matIndex] >= *lowerBounds.begin()) {
+            for (int8_t roundHeightIndex = -1; roundHeightIndex <= 1; ++roundHeightIndex) {
+              for (int8_t roundWidthIndex = -1; roundWidthIndex <= 1; ++roundWidthIndex) {
+                const std::size_t correspResIndex = (heightIndex + roundHeightIndex) * mat.getWidth() + widthIndex + roundWidthIndex;
+                const std::size_t correspMatIndex = correspResIndex * mat.getChannelCount() + chan;
+
+                if ((correspResIndex < res.getWidth()) && mat[correspMatIndex] >= *upperBounds.begin()) {
+                  resVal = 255;
+                  break;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      res[resIndex] = resVal;
+    }
   }
 
   return res;

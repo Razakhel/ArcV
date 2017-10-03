@@ -35,7 +35,10 @@ int main() {
   Arcv::Image::write(harrisMat, "outputHarris.png");*/
 
   Arcv::Matrix<float> threshMat = Arcv::Image::threshold<ARCV_THRESH_TYPE_BINARY>(hsvMat, { 0.f, 50.f, 50.f }, { 15.f, 150.f, 150.f });
+  Arcv::Matrix<float> hysterMat = Arcv::Image::threshold<ARCV_THRESH_TYPE_HYSTERESIS>(sobelMat, { 150.f }, { 200.f });
+
   Arcv::Image::write(threshMat, "outputThresh.png");
+  Arcv::Image::write(hysterMat, "outputHyster.png");
 
   /*Arcv::Matrix<float> leftRotMat = Arcv::Image::rotateLeft(mat);
   Arcv::Matrix<float> rightRotMat = Arcv::Image::rotateRight(mat);
@@ -59,7 +62,7 @@ int main() {
     << " seconds." << std::endl;
 
   Arcv::Window window(mat.getWidth(), mat.getHeight(), "Example");
-  window.mapImage(threshMat);
+  window.mapImage(hysterMat);
   window.show();
 
   return EXIT_SUCCESS;
