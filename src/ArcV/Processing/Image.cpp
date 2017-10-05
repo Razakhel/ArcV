@@ -1,6 +1,8 @@
 #include <array>
 #include <vector>
 #include <fstream>
+#include <sstream>
+#include <iostream>
 #include <algorithm>
 
 #include "png/png.h"
@@ -12,70 +14,31 @@ namespace Arcv {
 
 namespace {
 
-const unsigned int PNG_HEADER_SIZE = 8;
+const std::string extractFileExt(const std::string& fileName) {
+  std::stringstream ss;
+  ss.str(fileName);
+
+  std::string format;
+  while (std::getline(ss, format, '.'));
+
+  return format;
+}
 
 bool validatePng(std::istream& file) {
+  const unsigned int PNG_HEADER_SIZE = 8;
+
   std::array<png_byte, PNG_HEADER_SIZE> header;
   file.read(reinterpret_cast<char*>(header.data()), PNG_HEADER_SIZE);
 
   return (png_sig_cmp(header.data(), 0, PNG_HEADER_SIZE) == 0);
 }
 
-void readPng(png_structp pngReadPtr, png_bytep data, png_size_t length) {
-  png_voidp inPtr = png_get_io_ptr(pngReadPtr);
-  static_cast<std::istream*>(inPtr)->read(reinterpret_cast<char*>(data), length);
+Matrix<> readJpeg(const std::string& fileName) {
+  std::cerr << "Error: JPEG reading yet implemented" << std::endl;
+  exit(EXIT_FAILURE);
 }
 
-void writePng(png_structp pngWritePtr, png_bytep data, png_size_t length) {
-  png_voidp outPtr = png_get_io_ptr(pngWritePtr);
-  static_cast<std::ostream*>(outPtr)->write(reinterpret_cast<const char*>(data), length);
-}
-
-void addAlphaChannel(Matrix<>& mat) {
-  const Matrix<float> tempMat = mat;
-
-  mat.setChannelCount(static_cast<uint8_t>(mat.getChannelCount() + 1));
-  mat.getData().resize(mat.getWidth() * mat.getHeight() * mat.getChannelCount());
-
-  for (std::size_t i = 0, delta = 0; i < tempMat.getData().size(); i += tempMat.getChannelCount(), ++delta) {
-    for (std::size_t chan = i; chan < i + tempMat.getChannelCount(); ++chan)
-      mat.getData()[chan + delta] = tempMat.getData()[chan];
-
-    // Filling the alpha value with full opacity by default
-    mat.getData()[i + tempMat.getChannelCount() + delta] = 255;
-  }
-}
-
-void removeAlphaChannel(Matrix<>& mat) {
-  // No need to start at the very beginning since the first channel pack will not be moved
-  for (std::size_t i = mat.getChannelCount(), delta = 1; i < mat.getData().size(); i += mat.getChannelCount(), ++delta) {
-    for (std::size_t chan = i; chan < i + mat.getChannelCount() - 1; ++chan)
-      mat.getData()[chan - delta] = mat.getData()[chan];
-  }
-
-  mat.setChannelCount(static_cast<uint8_t>(mat.getChannelCount() - 1));
-  mat.getData().resize(mat.getWidth() * mat.getHeight() * mat.getChannelCount());
-}
-
-Matrix<> computeHorizontalSobelOperator(Matrix<>& mat) {
-  const Matrix<float> horizKernel = {{  1.f,  2.f,  1.f },
-                                     {  0.f,  0.f,  0.f },
-                                     { -1.f, -2.f, -1.f }};
-
-  return mat.convolve(horizKernel);
-}
-
-Matrix<> computeVerticalSobelOperator(Matrix<>& mat) {
-  const Matrix<float> vertKernel = {{ 1.f, 0.f, -1.f },
-                                    { 2.f, 0.f, -2.f },
-                                    { 1.f, 0.f, -1.f }};
-
-  return mat.convolve(vertKernel);
-}
-
-} // namespace
-
-Matrix<> Image::read(const std::string& fileName) {
+Matrix<> readPng(const std::string& fileName) {
   std::ifstream file(fileName, std::ios_base::in | std::ios_base::binary);
   const bool valid = file.good() && validatePng(file);
   assert(("Error: Not a valid PNG", valid));
@@ -86,10 +49,13 @@ Matrix<> Image::read(const std::string& fileName) {
   png_infop pngInfoStruct = png_create_info_struct(pngReadStruct);
   assert(("Error: Couldn't initialize PNG info struct", pngInfoStruct));
 
-  png_set_read_fn(pngReadStruct, &file, readPng);
+  png_set_read_fn(pngReadStruct, &file, [] (png_structp pngReadPtr, png_bytep data, png_size_t length) {
+    png_voidp inPtr = png_get_io_ptr(pngReadPtr);
+    static_cast<std::istream*>(inPtr)->read(reinterpret_cast<char*>(data), length);
+  });
 
   // Setting the amount signature bytes we've already read
-  png_set_sig_bytes(pngReadStruct, PNG_HEADER_SIZE);
+  png_set_sig_bytes(pngReadStruct, 8);
 
   png_read_info(pngReadStruct, pngInfoStruct);
 
@@ -104,6 +70,7 @@ Matrix<> Image::read(const std::string& fileName) {
     case PNG_COLOR_TYPE_GRAY:
       if (bitDepth < 8)
         png_set_expand_gray_1_2_4_to_8(pngReadStruct);
+
       colorspace = ARCV_COLORSPACE_GRAY;
       bitDepth = 8;
       break;
@@ -153,7 +120,27 @@ Matrix<> Image::read(const std::string& fileName) {
   return Matrix<>(mat);
 }
 
-void Image::write(const Matrix<>& mat, const std::string& fileName) {
+Matrix<> readTga(const std::string& fileName) {
+  std::cerr << "Error: TGA not yet implemented" << std::endl;
+  exit(EXIT_FAILURE);
+}
+
+Matrix<> readBmp(const std::string& fileName) {
+  std::cerr << "Error: BMP reading not yet implemented" << std::endl;
+  exit(EXIT_FAILURE);
+}
+
+Matrix<> readBpg(const std::string& fileName) {
+  std::cerr << "Error: BPG reading not yet implemented" << std::endl;
+  exit(EXIT_FAILURE);
+}
+
+void writeJpeg(const Matrix<>& mat, const std::string& fileName) {
+  std::cerr << "Error: JPEG output not yet implemented" << std::endl;
+  exit(EXIT_FAILURE);
+}
+
+void writePng(const Matrix<>& mat, const std::string& fileName) {
   std::ofstream file(fileName, std::ios_base::out | std::ios_base::binary);
   const Matrix<uint8_t> matToWrite(mat);
 
@@ -203,7 +190,10 @@ void Image::write(const Matrix<>& mat, const std::string& fileName) {
                PNG_COMPRESSION_TYPE_BASE,
                PNG_FILTER_TYPE_BASE);
 
-  png_set_write_fn(pngWriteStruct, &file, writePng, nullptr);
+  png_set_write_fn(pngWriteStruct, &file, [] (png_structp pngWritePtr, png_bytep data, png_size_t length) {
+    png_voidp outPtr = png_get_io_ptr(pngWritePtr);
+    static_cast<std::ostream*>(outPtr)->write(reinterpret_cast<const char*>(data), length);
+  }, nullptr);
   png_write_info(pngWriteStruct, pngInfoStruct);
 
   for (unsigned int i = 0; i < matToWrite.getHeight(); ++i)
@@ -211,6 +201,101 @@ void Image::write(const Matrix<>& mat, const std::string& fileName) {
 
   png_write_end(pngWriteStruct, pngInfoStruct);
   png_destroy_write_struct(&pngWriteStruct, &pngInfoStruct);
+}
+
+void writeTga(const Matrix<>& mat, const std::string& fileName) {
+  std::cerr << "Error: TGA output not yet implemented" << std::endl;
+  exit(EXIT_FAILURE);
+}
+
+void writeBmp(const Matrix<>& mat, const std::string& fileName) {
+  std::cerr << "Error: BMP output not yet implemented" << std::endl;
+  exit(EXIT_FAILURE);
+}
+
+void writeBpg(const Matrix<>& mat, const std::string& fileName) {
+  std::cerr << "Error: BPG output not yet implemented" << std::endl;
+  exit(EXIT_FAILURE);
+}
+
+void addAlphaChannel(Matrix<>& mat) {
+  const Matrix<float> tempMat = mat;
+
+  mat.setChannelCount(static_cast<uint8_t>(mat.getChannelCount() + 1));
+  mat.getData().resize(mat.getWidth() * mat.getHeight() * mat.getChannelCount());
+
+  for (std::size_t i = 0, delta = 0; i < tempMat.getData().size(); i += tempMat.getChannelCount(), ++delta) {
+    for (std::size_t chan = i; chan < i + tempMat.getChannelCount(); ++chan)
+      mat.getData()[chan + delta] = tempMat.getData()[chan];
+
+    // Filling the alpha value with full opacity by default
+    mat.getData()[i + tempMat.getChannelCount() + delta] = 255;
+  }
+}
+
+void removeAlphaChannel(Matrix<>& mat) {
+  // No need to start at the very beginning since the first channel pack will not be moved
+  for (std::size_t i = mat.getChannelCount(), delta = 1; i < mat.getData().size(); i += mat.getChannelCount(), ++delta) {
+    for (std::size_t chan = i; chan < i + mat.getChannelCount() - 1; ++chan)
+      mat.getData()[chan - delta] = mat.getData()[chan];
+  }
+
+  mat.setChannelCount(static_cast<uint8_t>(mat.getChannelCount() - 1));
+  mat.getData().resize(mat.getWidth() * mat.getHeight() * mat.getChannelCount());
+}
+
+Matrix<> computeHorizontalSobelOperator(Matrix<>& mat) {
+  const Matrix<float> horizKernel = {{  1.f,  2.f,  1.f },
+                                     {  0.f,  0.f,  0.f },
+                                     { -1.f, -2.f, -1.f }};
+
+  return mat.convolve(horizKernel);
+}
+
+Matrix<> computeVerticalSobelOperator(Matrix<>& mat) {
+  const Matrix<float> vertKernel = {{ 1.f, 0.f, -1.f },
+                                    { 2.f, 0.f, -2.f },
+                                    { 1.f, 0.f, -1.f }};
+
+  return mat.convolve(vertKernel);
+}
+
+} // namespace
+
+Matrix<> Image::read(const std::string& fileName) {
+  const std::string format = extractFileExt(fileName);
+
+  if (format == "jpg" || format == "jpeg" || format == "JPG" || format == "JPEG")
+    return readJpeg(fileName);
+  else if (format == "png" || format == "PNG")
+    return readPng(fileName);
+  else if (format == "tga" || format == "TGA")
+    return readTga(fileName);
+  else if (format == "bmp" || format == "BMP")
+    return readBmp(fileName);
+  else if (format == "bpg" || format == "BPG")
+    return readBpg(fileName);
+  else
+    std::cerr << "Error: File format is not supported" << std::endl;
+
+  exit(EXIT_FAILURE);
+}
+
+void Image::write(const Matrix<>& mat, const std::string& fileName) {
+  const std::string format = extractFileExt(fileName);
+
+  if (format == "jpg" || format == "jpeg" || format == "JPG" || format == "JPEG")
+    writeJpeg(mat, fileName);
+  else if (format == "png" || format == "PNG")
+    writePng(mat, fileName);
+  else if (format == "tga" || format == "TGA")
+    writeTga(mat, fileName);
+  else if (format == "bmp" || format == "BMP")
+    writeBmp(mat, fileName);
+  else if (format == "bpg" || format == "BPG")
+    writeBpg(mat, fileName);
+  else
+    std::cerr << "Error: File format is not supported" << std::endl;
 }
 
 template <>
