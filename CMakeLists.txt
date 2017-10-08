@@ -4,7 +4,7 @@ project(ArcV)
 set(CMAKE_CXX_STANDARD 14)
 
 if (CMAKE_COMPILER_IS_GNUCC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-unused-value -Wno-unused-parameter")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-unused-value -Wno-unused-parameter -Wno-unused-function")
 elseif (MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 endif ()
@@ -133,6 +133,7 @@ endif ()
 file(
     GLOB
     SOURCE_FILES
+
     ${SRC}
 )
 
@@ -140,6 +141,7 @@ file(
 list(
     REMOVE_ITEM
     SOURCE_FILES
+
     ${DISPOSABLE}
 )
 
