@@ -13,19 +13,13 @@ namespace Image {
 
 namespace {
 
+const uint8_t PNG_HEADER_SIZE = 8;
+
 const std::string extractFileExt(const std::string& fileName) {
-  std::stringstream ss;
-  ss.str(fileName);
-
-  std::string format;
-  while (std::getline(ss, format, '.'));
-
-  return format;
+  return (fileName.substr(fileName.find_last_of('.') + 1));
 }
 
 bool validatePng(std::istream& file) {
-  const unsigned int PNG_HEADER_SIZE = 8;
-
   std::array<png_byte, PNG_HEADER_SIZE> header;
   file.read(reinterpret_cast<char*>(header.data()), PNG_HEADER_SIZE);
 
@@ -54,7 +48,7 @@ Matrix<> readPng(const std::string& fileName) {
   });
 
   // Setting the amount signature bytes we've already read
-  png_set_sig_bytes(pngReadStruct, 8);
+  png_set_sig_bytes(pngReadStruct, PNG_HEADER_SIZE);
 
   png_read_info(pngReadStruct, pngInfoStruct);
 
