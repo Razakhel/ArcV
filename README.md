@@ -25,7 +25,7 @@ If you want to get started, [head to the wiki](https://github.com/Razakhel/ArcV/
 | Objectives | Implemented |
 | :--------: | :---------: |
 | Implementing Matrix/Vector classes | **Yes** |
-| Loading (reading) an image (JPEG/PNG/...) | **Yes** (PNG) |
+| Loading (reading) an image (JPEG/PNG/TGA/BMP/BPG) | **Yes** (PNG) |
 | Saving (writing) an image | **Yes** (PNG) |
 | Changing colorspace | **Yes** |
 | Convolution filtering | **Yes** |

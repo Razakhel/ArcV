@@ -48,8 +48,7 @@ Matrix<> applyFilter<ARCV_FILTER_TYPE_SOBEL>(Matrix<> mat) {
   const Matrix<float> vertRes = computeVerticalSobelOperator(mat);
 
   for (std::size_t i = 0; i < mat.getData().size(); ++i)
-    mat.getData()[i] = std::sqrt(vertRes.getData()[i] * vertRes.getData()[i]
-                                 + horizRes.getData()[i] * horizRes.getData()[i]);
+    mat.getData()[i] = std::sqrt(horizRes.getData()[i] * horizRes.getData()[i] + vertRes.getData()[i] * vertRes.getData()[i]);
 
   return mat;
 }

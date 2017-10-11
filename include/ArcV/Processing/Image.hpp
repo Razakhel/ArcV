@@ -29,17 +29,17 @@ namespace Image {
 namespace {
 
 Matrix<> computeHorizontalSobelOperator(Matrix<>& mat) {
-  const Matrix<float> horizKernel = {{  1.f,  2.f,  1.f },
-                                     {  0.f,  0.f,  0.f },
-                                     { -1.f, -2.f, -1.f }};
+  const Matrix<float> horizKernel = {{ 1.f, 0.f, -1.f },
+                                     { 2.f, 0.f, -2.f },
+                                     { 1.f, 0.f, -1.f }};
 
   return mat.convolve(horizKernel);
 }
 
 Matrix<> computeVerticalSobelOperator(Matrix<>& mat) {
-  const Matrix<float> vertKernel = {{ 1.f, 0.f, -1.f },
-                                    { 2.f, 0.f, -2.f },
-                                    { 1.f, 0.f, -1.f }};
+  const Matrix<float> vertKernel = {{  1.f,  2.f,  1.f },
+                                    {  0.f,  0.f,  0.f },
+                                    { -1.f, -2.f, -1.f }};
 
   return mat.convolve(vertKernel);
 }

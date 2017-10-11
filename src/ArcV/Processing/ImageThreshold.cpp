@@ -44,15 +44,16 @@ Matrix<> threshold<ARCV_THRESH_TYPE_HYSTERESIS>(const Matrix<>& mat, std::initia
       float resVal = 0.f;
 
       if (temp[tempIndex] >= *upperBounds.begin()) {
-        resVal = 127;
+        resVal = 255;
       } else {
         if (temp[tempIndex] >= *lowerBounds.begin()) {
           for (int8_t roundHeightIndex = -1; roundHeightIndex <= 1; ++roundHeightIndex) {
             for (int8_t roundWidthIndex = -1; roundWidthIndex <= 1; ++roundWidthIndex) {
-              const std::size_t correspMatIndex = (heightIndex + roundHeightIndex) * temp.getWidth() + widthIndex + roundWidthIndex;
+              const std::size_t correspHeightIndex = heightIndex + roundHeightIndex;
+              const std::size_t correspWidthIndex = widthIndex + roundWidthIndex;
 
-              if ((correspMatIndex < res.getWidth() && correspMatIndex < res.getHeight())
-                  && temp[correspMatIndex] >= *upperBounds.begin()) {
+              if ((correspHeightIndex < res.getHeight() && correspWidthIndex < res.getWidth())
+                  && temp[correspHeightIndex * temp.getWidth() + correspWidthIndex] >= *upperBounds.begin()) {
                 resVal = 255;
                 break;
               }
