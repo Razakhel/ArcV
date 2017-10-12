@@ -177,7 +177,7 @@ void Window::mapImage(const Matrix<>& mat) {
   glTexImage2D(GL_TEXTURE_2D, 0, imgFormat, img.getWidth(), img.getHeight(), 0, imgFormat, GL_UNSIGNED_BYTE, img.getData().data());
 }
 
-void Window::show() {
+void Window::show() const {
   while (!glfwWindowShouldClose(window)) {
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -192,7 +192,7 @@ void Window::show() {
   }
 }
 
-void Window::close() {
+void Window::close() const {
   glDeleteVertexArrays(1, &vaoIndex);
   glDeleteBuffers(1, &vboIndex);
   glDeleteBuffers(1, &eboIndex);

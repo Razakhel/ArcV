@@ -127,12 +127,12 @@ Matrix<> readBpg(std::ifstream& file) {
   exit(EXIT_FAILURE);
 }
 
-void writeJpeg(const Matrix<>& mat, std::ifstream& file) {
+void writeJpeg(const Matrix<>& mat, std::ofstream& file) {
   std::cerr << "Error: JPEG output not yet implemented" << std::endl;
   exit(EXIT_FAILURE);
 }
 
-void writePng(const Matrix<>& mat, std::ifstream& file) {
+void writePng(const Matrix<>& mat, std::ofstream& file) {
   const Matrix<uint8_t> matToWrite(mat);
 
   png_structp pngWriteStruct = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
@@ -194,17 +194,17 @@ void writePng(const Matrix<>& mat, std::ifstream& file) {
   png_destroy_write_struct(&pngWriteStruct, &pngInfoStruct);
 }
 
-void writeTga(const Matrix<>& mat, std::ifstream& file) {
+void writeTga(const Matrix<>& mat, std::ofstream& file) {
   std::cerr << "Error: TGA output not yet implemented" << std::endl;
   exit(EXIT_FAILURE);
 }
 
-void writeBmp(const Matrix<>& mat, std::ifstream& file) {
+void writeBmp(const Matrix<>& mat, std::ofstream& file) {
   std::cerr << "Error: BMP output not yet implemented" << std::endl;
   exit(EXIT_FAILURE);
 }
 
-void writeBpg(const Matrix<>& mat, std::ifstream& file) {
+void writeBpg(const Matrix<>& mat, std::ofstream& file) {
   std::cerr << "Error: BPG output not yet implemented" << std::endl;
   exit(EXIT_FAILURE);
 }
@@ -237,26 +237,21 @@ Matrix<> read(const std::string& fileName) {
 }
 
 void write(const Matrix<>& mat, const std::string& fileName) {
-  std::ifstream file(fileName, std::ios_base::in | std::ios_base::binary);
+  std::ofstream file(fileName, std::ios_base::out | std::ios_base::binary);
+  const std::string format = extractFileExt(fileName);
 
-  if (file) {
-    const std::string format = extractFileExt(fileName);
-
-    if (format == "jpg" || format == "jpeg" || format == "JPG" || format == "JPEG")
-      writeJpeg(mat, file);
-    else if (format == "png" || format == "PNG")
-      writePng(mat, file);
-    else if (format == "tga" || format == "TGA")
-      writeTga(mat, file);
-    else if (format == "bmp" || format == "BMP")
-      writeBmp(mat, file);
-    else if (format == "bpg" || format == "BPG")
-      writeBpg(mat, file);
-    else
-      std::cerr << "Error: '" << format << "' format is not supported" << std::endl;
-  } else {
-    std::cerr << "Error: Couldn't open the file '" << fileName << "'" << std::endl;
-  }
+  if (format == "jpg" || format == "jpeg" || format == "JPG" || format == "JPEG")
+    writeJpeg(mat, file);
+  else if (format == "png" || format == "PNG")
+    writePng(mat, file);
+  else if (format == "tga" || format == "TGA")
+    writeTga(mat, file);
+  else if (format == "bmp" || format == "BMP")
+    writeBmp(mat, file);
+  else if (format == "bpg" || format == "BPG")
+    writeBpg(mat, file);
+  else
+    std::cerr << "Error: '" << format << "' format is not supported" << std::endl;
 }
 
 } // namespace Image
