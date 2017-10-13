@@ -92,6 +92,7 @@ Matrix<> readPng(std::ifstream& file) {
   // Adding full alpha channel to the image if it possesses transparency
   if (png_get_valid(pngReadStruct, pngInfoStruct, static_cast<png_uint_32>(PNG_INFO_tRNS))) {
     png_set_tRNS_to_alpha(pngReadStruct);
+    colorspace = ARCV_COLORSPACE_RGBA;
     ++channels;
   }
 
