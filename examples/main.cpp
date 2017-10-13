@@ -6,7 +6,7 @@
 int main() {
   auto startTime = std::chrono::system_clock::now();
 
-  Arcv::Matrix<float> mat = Arcv::Image::read("lena.png");
+  Arcv::Matrix<float> mat = Arcv::Image::read("../assets/lena.png");
 
   Arcv::Matrix<float> grayMat = Arcv::Image::changeColorspace<ARCV_COLORSPACE_GRAY>(mat);
   Arcv::Matrix<float> hsvMat = Arcv::Image::changeColorspace<ARCV_COLORSPACE_HSV>(mat);
