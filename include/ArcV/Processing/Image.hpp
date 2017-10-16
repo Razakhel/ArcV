@@ -13,8 +13,7 @@ enum ImageType { ARCV_IMAGE_TYPE_JPEG = 0,
 enum FilterType { ARCV_FILTER_TYPE_GAUSSIAN_BLUR = 0,
                   ARCV_FILTER_TYPE_SHARPEN,
                   ARCV_FILTER_TYPE_EDGE_ENHANCEMENT,
-                  ARCV_FILTER_TYPE_EMBOSS,
-                  ARCV_FILTER_TYPE_SOBEL };
+                  ARCV_FILTER_TYPE_EMBOSS };
 
 enum DetectorType { ARCV_DETECTOR_TYPE_CANNY = 0,
                     ARCV_DETECTOR_TYPE_HARRIS };
@@ -25,26 +24,6 @@ enum ThreshType { ARCV_THRESH_TYPE_BINARY = 0,
 namespace Arcv {
 
 namespace Image {
-
-namespace {
-
-Matrix<> computeHorizontalSobelOperator(Matrix<>& mat) {
-  const Matrix<float> horizKernel = {{ 1.f, 0.f, -1.f },
-                                     { 2.f, 0.f, -2.f },
-                                     { 1.f, 0.f, -1.f }};
-
-  return mat.convolve(horizKernel);
-}
-
-Matrix<> computeVerticalSobelOperator(Matrix<>& mat) {
-  const Matrix<float> vertKernel = {{  1.f,  2.f,  1.f },
-                                    {  0.f,  0.f,  0.f },
-                                    { -1.f, -2.f, -1.f }};
-
-  return mat.convolve(vertKernel);
-}
-
-} // namespace
 
 Matrix<> read(const std::string& fileName);
 void write(const Matrix<>& mat, const std::string& fileName);

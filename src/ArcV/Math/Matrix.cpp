@@ -4,7 +4,7 @@
 namespace Arcv {
 
 template <>
-Matrix<> Matrix<>::convolve(const Matrix<float>& convMat) {
+Matrix<> Matrix<>::convolve(const Matrix<float>& convMat) const {
   assert(("Error: Convolution matrix must be a square one", convMat.getWidth() == convMat.getHeight()));
   assert(("Error: Convolution matrix's size must be odd", convMat.getData().size() % 2 == 1));
 

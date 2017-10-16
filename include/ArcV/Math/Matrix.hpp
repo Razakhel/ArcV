@@ -18,6 +18,8 @@ namespace Arcv {
 template <typename T = float>
 class Matrix {
 public:
+  Matrix() = default;
+
   Matrix(std::size_t width,
          std::size_t height)
     : width{ width }, height{ height }, data(width * height) {}
@@ -49,7 +51,7 @@ public:
   void setChannelCount(uint8_t channelCount) { this->channelCount = channelCount; }
   void setColorspace(Colorspace colorspace) { this->colorspace = colorspace; }
 
-  Matrix convolve(const Matrix<float>& convMat);
+  Matrix convolve(const Matrix<float>& convMat) const;
 
   Matrix operator+(Matrix mat);
   Matrix operator+(float val);
@@ -80,7 +82,7 @@ private:
   std::vector<T> data;
 };
 
-template <> Matrix<> Matrix<>::convolve(const Matrix<float>& convMat);
+template <> Matrix<> Matrix<>::convolve(const Matrix<float>& convMat) const;
 
 using Mat = Matrix<>;
 

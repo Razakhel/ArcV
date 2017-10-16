@@ -16,9 +16,10 @@ int main() {
   Arcv::Matrix<float> sharpenMat = Arcv::Image::applyFilter<ARCV_FILTER_TYPE_SHARPEN>(mat);
   Arcv::Matrix<float> edgeMat = Arcv::Image::applyFilter<ARCV_FILTER_TYPE_EDGE_ENHANCEMENT>(mat);
   Arcv::Matrix<float> embossMat = Arcv::Image::applyFilter<ARCV_FILTER_TYPE_EMBOSS>(mat);
-  Arcv::Matrix<float> sobelMat = Arcv::Image::applyFilter<ARCV_FILTER_TYPE_SOBEL>(mat);
 
   Arcv::Matrix<float> harrisMat = Arcv::Image::applyDetector<ARCV_DETECTOR_TYPE_HARRIS>(mat);
+
+  Arcv::Sobel sobelMat = Arcv::Sobel(mat);
 
   /*Arcv::Image::write(mat, "output.png");
 
@@ -34,10 +35,12 @@ int main() {
 
   Arcv::Image::write(harrisMat, "outputHarris.png");*/
 
-  Arcv::Matrix<float> threshMat = Arcv::Image::threshold<ARCV_THRESH_TYPE_BINARY>(hsvMat, { 0.f, 50.f, 50.f }, { 15.f, 150.f, 150.f });
-  Arcv::Matrix<float> hysterMat = Arcv::Image::threshold<ARCV_THRESH_TYPE_HYSTERESIS>(sobelMat, { 150.f }, { 200.f });
+  Arcv::Matrix<float> threshMat = Arcv::Image::threshold<ARCV_THRESH_TYPE_BINARY>(hsvMat, { 0.f, 50.f, 50.f }, { 15.f, 220.f, 220.f });
+  Arcv::Matrix<float> threshGrayMat = Arcv::Image::threshold<ARCV_THRESH_TYPE_BINARY>(grayMat, { 50.f }, { 150.f });
+  Arcv::Matrix<float> hysterMat = Arcv::Image::threshold<ARCV_THRESH_TYPE_HYSTERESIS>(sobelMat.getSobelMat(), { 150.f }, { 200.f });
 
   Arcv::Image::write(threshMat, "outputThresh.png");
+  Arcv::Image::write(threshGrayMat, "outputThreshGray.png");
   Arcv::Image::write(hysterMat, "outputHyster.png");
 
   /*Arcv::Matrix<float> leftRotMat = Arcv::Image::rotateLeft(mat);
@@ -62,7 +65,7 @@ int main() {
     << " seconds." << std::endl;
 
   Arcv::Window window(mat.getWidth(), mat.getHeight(), "Example");
-  window.mapImage(hysterMat);
+  window.mapImage(sobelMat.getSobelMat());
   window.show();
 
   return EXIT_SUCCESS;

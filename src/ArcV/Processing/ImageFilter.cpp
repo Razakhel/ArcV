@@ -42,17 +42,6 @@ Matrix<> applyFilter<ARCV_FILTER_TYPE_EMBOSS>(Matrix<> mat) {
   return mat.convolve(kernel);
 }
 
-template <>
-Matrix<> applyFilter<ARCV_FILTER_TYPE_SOBEL>(Matrix<> mat) {
-  const Matrix<float> horizRes = computeHorizontalSobelOperator(mat);
-  const Matrix<float> vertRes = computeVerticalSobelOperator(mat);
-
-  for (std::size_t i = 0; i < mat.getData().size(); ++i)
-    mat.getData()[i] = std::sqrt(horizRes.getData()[i] * horizRes.getData()[i] + vertRes.getData()[i] * vertRes.getData()[i]);
-
-  return mat;
-}
-
 } // namespace Image
 
 } // namespace Arcv

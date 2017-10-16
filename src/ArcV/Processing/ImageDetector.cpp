@@ -1,4 +1,5 @@
 #include "ArcV/Processing/Image.hpp"
+#include "ArcV/Processing/Sobel.hpp"
 
 namespace Arcv {
 
