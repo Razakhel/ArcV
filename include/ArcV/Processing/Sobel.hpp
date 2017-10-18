@@ -38,6 +38,8 @@ public:
   const Matrix<>& getVerticalGradient() const { return verticalGradient; }
   Matrix<>& getVerticalGradient() { return verticalGradient; }
 
+  Matrix<> computeGradientDirection() const;
+
 private:
   Matrix<> sobelMat;
   Matrix<> horizontalGradient;
