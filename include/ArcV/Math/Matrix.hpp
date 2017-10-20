@@ -52,6 +52,9 @@ public:
   void setColorspace(Colorspace colorspace) { this->colorspace = colorspace; }
 
   Matrix convolve(const Matrix<float>& convMat) const;
+  std::pair<T, T> determineBoundaries() const;
+  std::vector<T> computeAverageValues() const;
+  std::vector<T> computeStandardDeviations() const;
 
   Matrix operator+(Matrix mat);
   Matrix operator+(float val);
@@ -69,7 +72,6 @@ public:
   Matrix& operator*=(float val);
   Matrix& operator/=(const Matrix& mat);
   Matrix& operator/=(float val);
-  template <typename TI> Matrix operator=(const Matrix<TI>& mat) { return Matrix<T>(mat); }
   const T& operator()(std::size_t widthIndex, std::size_t heightIndex) const { return data[heightIndex * width + widthIndex]; }
   T& operator()(std::size_t widthIndex, std::size_t heightIndex) { return data[heightIndex * width + widthIndex]; }
   const T& operator[](std::size_t index) const { return data[index]; }

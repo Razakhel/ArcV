@@ -1,6 +1,8 @@
 #include <limits>
 #include <cassert>
+#include <numeric>
 #include <algorithm>
+#include <functional>
 
 namespace Arcv {
 
@@ -34,6 +36,65 @@ Matrix<T>::Matrix(std::initializer_list<std::initializer_list<T>> list)
     for (std::size_t widthIndex = 0; widthIndex < list.begin()->size(); ++widthIndex, ++element)
       data[heightIndex * list.begin()->size() + widthIndex] = *element;
   }
+}
+
+template <typename T>
+std::pair<T, T> Matrix<T>::determineBoundaries() const {
+  std::pair<T, T> bounds;
+
+  for (const auto& it : data) {
+    if (it < bounds.first)
+      bounds.first = it;
+    else if (it > bounds.second)
+      bounds.second = it;
+  }
+
+  return bounds;
+}
+
+template <typename T>
+std::vector<T> Matrix<T>::computeAverageValues() const {
+  std::vector<T> res(channelCount);
+  std::vector<long double> values(channelCount);
+
+  for (std::size_t heightIndex = 0; heightIndex < height; ++heightIndex) {
+    for (std::size_t widthIndex = 0; widthIndex < width; ++widthIndex) {
+      const std::size_t matIndex = (heightIndex * width + widthIndex) * channelCount;
+
+      for (uint8_t chan = 0; chan < channelCount; ++chan)
+        values[chan] += data[matIndex + chan];
+    }
+  }
+
+  const std::size_t nbPixels = width * height;
+  std::transform(values.cbegin(), values.cend(), res.begin(), std::bind2nd(std::divides<T>(), nbPixels));
+
+  return res;
+}
+
+template <typename T>
+std::vector<T> Matrix<T>::computeStandardDeviations() const {
+  const std::vector<T> avgValues = computeAverageValues();
+  std::vector<T> res(channelCount);
+  std::vector<long double> values(channelCount);
+
+  for (std::size_t heightIndex = 0; heightIndex < height; ++heightIndex) {
+    for (std::size_t widthIndex = 0; widthIndex < width; ++widthIndex) {
+      const std::size_t matIndex = (heightIndex * width + widthIndex) * channelCount;
+
+      for (uint8_t chan = 0; chan < channelCount; ++chan) {
+        const std::size_t value = data[matIndex + chan] - avgValues[chan];
+
+        values[chan] += value * value;
+      }
+    }
+  }
+
+  const std::size_t nbPixels = width * height;
+  for (std::size_t i = 0; i < res.size(); ++i)
+    res[i] = std::sqrt(values[i] / nbPixels);
+
+  return res;
 }
 
 template <typename T>
