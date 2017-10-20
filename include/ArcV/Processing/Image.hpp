@@ -19,7 +19,8 @@ enum DetectorType { ARCV_DETECTOR_TYPE_CANNY = 0,
                     ARCV_DETECTOR_TYPE_HARRIS };
 
 enum ThreshType { ARCV_THRESH_TYPE_BINARY = 0,
-                  ARCV_THRESH_TYPE_HYSTERESIS };
+                  ARCV_THRESH_TYPE_HYSTERESIS,
+                  ARCV_THRESH_TYPE_HYSTERESIS_AUTO };
 
 namespace Arcv {
 
@@ -30,8 +31,8 @@ void write(const Matrix<>& mat, const std::string& fileName);
 template <Colorspace C> Matrix<> changeColorspace(Matrix<> mat);
 template <FilterType F> Matrix<> applyFilter(Matrix<> mat);
 template <DetectorType D> Matrix<> applyDetector(Matrix<> mat);
-template <ThreshType Thresh> Matrix<> threshold(const Matrix<>& mat, std::initializer_list<float> lowerBounds,
-                                                                     std::initializer_list<float> upperBounds);
+template <ThreshType Thresh> Matrix<> threshold(const Matrix<>& mat, std::initializer_list<float> lowerBounds = {},
+                                                                     std::initializer_list<float> upperBounds = {});
 template <typename T> Matrix<T> rotateLeft(const Matrix<T>& mat);
 template <typename T> Matrix<T> rotateRight(const Matrix<T>& mat);
 template <typename T> Matrix<T> reverse(const Matrix<T>& mat);

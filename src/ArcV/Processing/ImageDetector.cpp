@@ -48,7 +48,7 @@ Matrix<> applyDetector<ARCV_DETECTOR_TYPE_CANNY>(Matrix<> mat) {
     }
   }
 
-  return threshold<ARCV_THRESH_TYPE_HYSTERESIS>(res, { 100.f }, { 150.f });
+  return threshold<ARCV_THRESH_TYPE_HYSTERESIS_AUTO>(res);
 }
 
 template <>
