@@ -30,7 +30,7 @@ Matrix<> read(const std::string& fileName);
 void write(const Matrix<>& mat, const std::string& fileName);
 template <Colorspace C> Matrix<> changeColorspace(Matrix<> mat);
 template <FilterType F> Matrix<> applyFilter(Matrix<> mat);
-template <DetectorType D> Matrix<> applyDetector(Matrix<> mat);
+template <DetectorType D> Matrix<> applyDetector(const Matrix<>& mat);
 template <ThreshType Thresh> Matrix<> threshold(const Matrix<>& mat, std::initializer_list<float> lowerBounds = {},
                                                                      std::initializer_list<float> upperBounds = {});
 template <typename T> Matrix<T> rotateLeft(const Matrix<T>& mat);

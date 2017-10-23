@@ -74,7 +74,7 @@ Matrix<> threshold<ARCV_THRESH_TYPE_HYSTERESIS_AUTO>(const Matrix<>& mat, std::i
                                                                           std::initializer_list<float> upperBounds) {
   const float deriv = mat.computeStandardDeviations()[0];
 
-  return threshold<ARCV_THRESH_TYPE_HYSTERESIS>(mat, { deriv }, { deriv + 50 });
+  return threshold<ARCV_THRESH_TYPE_HYSTERESIS>(mat, { deriv }, { deriv + 30 });
 }
 
 } // namespace Image
