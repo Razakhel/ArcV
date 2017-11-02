@@ -11,6 +11,7 @@ endif ()
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/extern
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/png
     ${CMAKE_CURRENT_SOURCE_DIR}/extern/glew/include
     ${CMAKE_CURRENT_SOURCE_DIR}/extern/glfw/include
     ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -81,6 +82,8 @@ if (UNIX)
         Xxf86vm
         pthread
         dl
+
+        v4l2
     )
 elseif (WIN32)
     add_definitions(

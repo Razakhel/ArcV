@@ -31,7 +31,7 @@ Matrix<> readJpeg(std::ifstream& file) {
 }
 
 Matrix<> readPng(std::ifstream& file) {
-  if (!file.good() || !validatePng(file))
+  if (!validatePng(file))
     throw std::runtime_error("Error: Not a valid PNG");
 
   png_structp readStruct = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
