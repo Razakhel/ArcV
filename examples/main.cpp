@@ -4,7 +4,7 @@
 #include "ArcV/ArcV.hpp"
 
 int main() {
-  auto startTime = std::chrono::system_clock::now();
+  const auto startTime = std::chrono::system_clock::now();
 
   const Arcv::Matrix<float> mat = Arcv::Image::read("../assets/lena.png");
 
@@ -17,7 +17,9 @@ int main() {
   Arcv::Image::write(sobelMat.computeGradientDirection(), "outputSobelDirection.png");
   Arcv::Image::write(cannyMat, "outputCanny.png");
 
-  auto endTime = std::chrono::system_clock::now();
+  Arcv::Webcam cam(cannyMat.getWidth(), cannyMat.getHeight());
+
+  const auto endTime = std::chrono::system_clock::now();
 
   std::cout << "Computing duration: "
     << std::chrono::duration_cast<std::chrono::duration<float>>(endTime - startTime).count()
