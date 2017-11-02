@@ -118,9 +118,7 @@ Window::Window(unsigned int width, unsigned int height, const std::string& name)
   glViewport(0, 0, width, height);
 }
 
-void Window::mapImage(const Matrix<>& mat) {
-  const Matrix<uint8_t> img(mat);
-
+void Window::mapImage(Matrix<uint8_t> mat) {
   shaderProgram = initShaders();
 
   glGenVertexArrays(1, &vaoIndex);
@@ -148,7 +146,7 @@ void Window::mapImage(const Matrix<>& mat) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
   GLenum imgFormat;
-  switch (img.getColorspace()) {
+  switch (mat.getColorspace()) {
     case ARCV_COLORSPACE_GRAY: {
       const std::array<GLint, 4> swizzle = { GL_RED, GL_RED, GL_RED, GL_ONE };
       glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzle.data());
@@ -174,7 +172,7 @@ void Window::mapImage(const Matrix<>& mat) {
       break;
   }
 
-  glTexImage2D(GL_TEXTURE_2D, 0, imgFormat, img.getWidth(), img.getHeight(), 0, imgFormat, GL_UNSIGNED_BYTE, img.getData().data());
+  glTexImage2D(GL_TEXTURE_2D, 0, imgFormat, mat.getWidth(), mat.getHeight(), 0, imgFormat, GL_UNSIGNED_BYTE, mat.getData().data());
 }
 
 void Window::show() const {

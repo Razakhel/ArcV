@@ -55,8 +55,8 @@ template <>
 Matrix<> applyDetector<ARCV_DETECTOR_TYPE_HARRIS>(const Matrix<>& mat) {
   Matrix<> res = changeColorspace<ARCV_COLORSPACE_GRAY>(mat);
 
-  Matrix<float> horizRes = computeHorizontalSobelOperator(mat);
-  Matrix<float> vertRes = computeVerticalSobelOperator(mat);
+  Matrix<float> horizRes = Sobel::computeHorizontalSobelOperator(mat);
+  Matrix<float> vertRes = Sobel::computeVerticalSobelOperator(mat);
 
   Matrix<float> mult = horizRes * vertRes;
   horizRes *= horizRes;

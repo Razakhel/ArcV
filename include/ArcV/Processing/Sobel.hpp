@@ -7,26 +7,6 @@
 
 namespace Arcv {
 
-namespace {
-
-Matrix<> computeHorizontalSobelOperator(const Matrix<>& mat) {
-  const Matrix<float> horizKernel = {{ 1.f, 0.f, -1.f },
-                                     { 2.f, 0.f, -2.f },
-                                     { 1.f, 0.f, -1.f }};
-
-  return mat.convolve(horizKernel);
-}
-
-Matrix<> computeVerticalSobelOperator(const Matrix<>& mat) {
-  const Matrix<float> vertKernel = {{  1.f,  2.f,  1.f },
-                                    {  0.f,  0.f,  0.f },
-                                    { -1.f, -2.f, -1.f }};
-
-  return mat.convolve(vertKernel);
-}
-
-} // namespace
-
 class Sobel {
 public:
   Sobel(const Matrix<>& mat);
@@ -38,6 +18,8 @@ public:
   const Matrix<>& getVerticalGradient() const { return verticalGradient; }
   Matrix<>& getVerticalGradient() { return verticalGradient; }
 
+  static Matrix<> computeHorizontalSobelOperator(const Matrix<>& mat);
+  static Matrix<> computeVerticalSobelOperator(const Matrix<>& mat);
   Matrix<> computeGradientDirection() const;
 
 private:

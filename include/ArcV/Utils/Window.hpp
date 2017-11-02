@@ -12,7 +12,7 @@ class Window {
 public:
   Window(unsigned int width, unsigned int height, const std::string& name = "");
 
-  void mapImage(const Matrix<>& mat);
+  void mapImage(Matrix<uint8_t> mat);
   void show() const;
   void close() const;
 
