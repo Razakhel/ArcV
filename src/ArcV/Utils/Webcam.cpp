@@ -66,8 +66,8 @@ Webcam::Webcam(unsigned int width, unsigned int height, uint8_t videoIndex) {
 #endif
 }
 
-Matrix<> Webcam::captureImage() const {
-  Matrix<> res(frameWidth, frameHeight, 3, 8, ARCV_COLORSPACE_RGB);
+Matrix<uint8_t> Webcam::captureImage() const {
+  Matrix<uint8_t> res(frameWidth, frameHeight, 3, 8, ARCV_COLORSPACE_RGB);
 
 #ifdef __gnu_linux__
   int selectRes = 0;

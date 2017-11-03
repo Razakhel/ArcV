@@ -14,7 +14,7 @@ public:
   std::size_t getFrameWidth() const { return frameWidth; }
   std::size_t getFrameHeight() const { return frameHeight; }
 
-  Matrix<> captureImage() const;
+  Matrix<uint8_t> captureImage() const;
 
   ~Webcam();
 
