@@ -11,6 +11,9 @@ class Webcam {
 public:
   Webcam(unsigned int width, unsigned int height, uint8_t videoIndex = 0);
 
+  std::size_t getFrameWidth() const { return frameWidth; }
+  std::size_t getFrameHeight() const { return frameHeight; }
+
   Matrix<> captureImage() const;
 
   ~Webcam();
