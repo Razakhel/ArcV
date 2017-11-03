@@ -79,7 +79,7 @@ public:
 
 private:
   std::size_t width, height;
-  uint8_t channelCount, imgBitDepth;    // TODO: channels, depth & colorspace have nothing to do with general matrices
+  uint8_t channelCount = 1, imgBitDepth = 8;    // TODO: channels, depth & colorspace have nothing to do with general matrices
   Colorspace colorspace = ARCV_COLORSPACE_GRAY;
   std::vector<T> data;
 };

@@ -60,6 +60,9 @@ Webcam::Webcam(unsigned int width, unsigned int height, uint8_t videoIndex) {
     throw std::runtime_error("Error: Failed memory mapping on webcam instanciation");
 
   checkIoCtl(VIDIOC_QBUF, &frameBuffer);
+
+  v4l2_buf_type bufferType = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+  checkIoCtl(VIDIOC_STREAMON, &bufferType);
 #endif
 }
 
@@ -67,9 +70,6 @@ Matrix<> Webcam::captureImage() const {
   Matrix<> res(frameWidth, frameHeight, 3, 8, ARCV_COLORSPACE_RGB);
 
 #ifdef __gnu_linux__
-  v4l2_buf_type bufferType = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-  checkIoCtl(VIDIOC_STREAMON, &bufferType);
-
   int selectRes = 0;
   do {
     fd_set set;
@@ -92,7 +92,6 @@ Matrix<> Webcam::captureImage() const {
   std::copy(static_cast<char*>(buffer.start), static_cast<char*>(buffer.start) + buffer.length, res.getData().begin());
 
   checkIoCtl(VIDIOC_QBUF, &frameBuffer);
-  checkIoCtl(VIDIOC_STREAMOFF, &bufferType);
 #endif
 
   return res;
@@ -100,6 +99,9 @@ Matrix<> Webcam::captureImage() const {
 
 Webcam::~Webcam() {
 #ifdef __gnu_linux__
+  v4l2_buf_type bufferType = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+  checkIoCtl(VIDIOC_STREAMOFF, &bufferType);
+
   v4l2_munmap(buffer.start, buffer.length);
   v4l2_close(index);
 #endif
