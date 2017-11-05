@@ -9,6 +9,9 @@ elseif (MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 endif ()
 
+option(ARCV_BUILD_STATIC "Build ArcV statically" ON)
+option(ARCV_BUILD_EXAMPLES "Build examples along ArcV" ON)
+
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/extern
     ${CMAKE_CURRENT_SOURCE_DIR}/extern/png
@@ -148,10 +151,19 @@ list(
     ${DISPOSABLE}
 )
 
-#add_library(ArcV SHARED ${SOURCE_FILES})
-add_executable(ArcV ${SOURCE_FILES} examples/main.cpp)
+if (${ARCV_BUILD_STATIC})
+    add_library(ArcV STATIC ${SOURCE_FILES})
+else ()
+    add_library(ArcV SHARED ${SOURCE_FILES})
+endif ()
 
 target_link_libraries(
-    ArcV ${LIBS}
+    ArcV
+
+    ${LIBS}
     ${DEPS}
 )
+
+if (${ARCV_BUILD_EXAMPLES})
+    add_subdirectory(examples)
+endif ()
