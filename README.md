@@ -33,7 +33,7 @@ If you want to get started, [head to the wiki](https://github.com/Razakhel/ArcV/
 | Detecting basic features (corners, lines, circles...) | _In progress_ |
 | Detecting advanced features (object recognition, ORB algorithm) | No |
 | Handle windowing | **Yes** |
-| Getting stream from webcam | No |
+| Getting stream from webcam | **Yes** (Linux) |
 
 May be decided to be added:
 - Facial recognition
